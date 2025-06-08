@@ -11,6 +11,7 @@ import com.chibitaka.tremane_backend.dto.SignUpDto;
 import com.chibitaka.tremane_backend.entity.UserEntity;
 import com.chibitaka.tremane_backend.form.SignUpForm;
 import com.chibitaka.tremane_backend.repository.UserRepository;
+import com.chibitaka.tremane_backend.vo.EmailVo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +33,7 @@ public class SignUpService {
         UserEntity user = new UserEntity();
         SignUpDto dto = new SignUpDto();
 
-        user.setEmail(form.getEmail());
+        user.setEmail(new EmailVo(form.getEmail()));
         user.setPassword(passwordEncoder.encode(form.getPassword()));
 
         if (!userDomain.exists(user.getEmail())) {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.chibitaka.tremane_backend.entity.UserEntity;
 import com.chibitaka.tremane_backend.repository.UserRepository;
+import com.chibitaka.tremane_backend.vo.EmailVo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +18,7 @@ public class UserDomain {
     private final UserRepository userRepository;
 
     /** ユーザー重複チェック */
-    public boolean exists(String email) {
+    public boolean exists(EmailVo email) {
         UserEntity user = userRepository.findByEmail(email);
 
         if (Objects.isNull(user)) {

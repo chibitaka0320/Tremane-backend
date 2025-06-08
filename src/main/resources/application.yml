@@ -7,6 +7,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/tremane
     username: postgres
     password: postgres
+mybatis:
+  type-handlers-package: com.chibitaka.tremane_backend.typehandler
 
 jwt:
   secretKey: ${JWT_SECRET:"mC+gCDTcFDFlbEvVr67QqzGf5Gi+VPVoxPuSj7C1cj4="}
