@@ -5,10 +5,12 @@ import lombok.Getter;
 /** APIエラー時エクセプション */
 @Getter
 public class ApiResponseException extends RuntimeException {
+    private int responseCode;
     private String errorCode;
 
-    public ApiResponseException(String errorCode, String message) {
+    public ApiResponseException(int responseCode, String errorCode, String message) {
         super(message);
+        this.responseCode = responseCode;
         this.errorCode = errorCode;
     }
 }
