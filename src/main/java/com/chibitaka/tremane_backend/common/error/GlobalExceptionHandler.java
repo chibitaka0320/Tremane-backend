@@ -1,5 +1,6 @@
 package com.chibitaka.tremane_backend.common.error;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,12 +27,24 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(e.getResponseCode()));
     }
 
+    /** 認証エラー用ハンドリング */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponseDto> handleAuthException(AuthenticationException e) {
         ErrorResponseDto response = new ErrorResponseDto();
         response.setCode(e.getErrorCode());
         response.setMessage(e.getMessage());
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(e.getResponseCode()));
+    }
+
+    /** その他エラー全てのハンドリング */
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<ErrorResponseDto> handleError(Throwable e) {
+        e.printStackTrace();
+
+        ErrorResponseDto response = new ErrorResponseDto();
+        response.setMessage("その他エラーが発生しました");
+
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // データベース障害
