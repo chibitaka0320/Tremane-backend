@@ -1,9 +1,12 @@
 package com.chibitaka.tremane_backend.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.chibitaka.tremane_backend.common.error.ApiResponseException;
 import com.chibitaka.tremane_backend.common.util.JwtUtil;
+import com.chibitaka.tremane_backend.domain.UserDomain;
 import com.chibitaka.tremane_backend.dto.SignUpDto;
 import com.chibitaka.tremane_backend.entity.UserEntity;
 import com.chibitaka.tremane_backend.form.SignUpForm;
@@ -18,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SignUpService {
 
+    private final UserDomain userDomain;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
@@ -31,13 +35,16 @@ public class SignUpService {
         user.setEmail(form.getEmail());
         user.setPassword(passwordEncoder.encode(form.getPassword()));
 
-        int result = userRepository.insert(user);
+        if (!userDomain.exists(user.getEmail())) {
+            userRepository.insert(user);
 
-        if (result == 1) {
             Long userId = user.getUserId();
             String token = jwtUtil.createJwtToken(userId);
             dto.setAccessToken(token);
+
+            return dto;
+        } else {
+            throw new ApiResponseException(HttpStatus.CONFLICT.value(), null, "すでに存在するメールアドレスです");
         }
-        return dto;
     }
 }
