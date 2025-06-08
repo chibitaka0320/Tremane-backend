@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.dto.SignUpDto;
 import com.chibitaka.tremane_backend.form.SignUpForm;
-import com.chibitaka.tremane_backend.service.AuthService;
+import com.chibitaka.tremane_backend.service.SignUpService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    private final SignUpService signUpService;
 
     /**
      * ユーザー新規登録
@@ -28,7 +28,7 @@ public class AuthController {
      */
     @PostMapping("/auth/signUp")
     public ResponseEntity<SignUpDto> signUp(@Validated @RequestBody SignUpForm form) {
-        SignUpDto dto = authService.signUp(form);
+        SignUpDto dto = signUpService.signUp(form);
         return ResponseEntity.ok(dto);
     }
 }
