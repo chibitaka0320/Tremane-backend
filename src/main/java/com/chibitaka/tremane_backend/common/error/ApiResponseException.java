@@ -1,16 +1,11 @@
 package com.chibitaka.tremane_backend.common.error;
 
-import lombok.Getter;
-
-/** APIエラー時エクセプション */
-@Getter
-public class ApiResponseException extends RuntimeException {
-    private int responseCode;
-    private String errorCode;
+/**
+ * APIエラー時エクセプション
+ */
+public class ApiResponseException extends BaseException {
 
     public ApiResponseException(int responseCode, String errorCode, String message) {
-        super(message);
-        this.responseCode = responseCode;
-        this.errorCode = errorCode;
+        super(responseCode, errorCode, message);
     }
 }

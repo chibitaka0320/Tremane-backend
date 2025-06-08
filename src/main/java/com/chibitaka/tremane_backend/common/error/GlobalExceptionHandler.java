@@ -25,4 +25,19 @@ public class GlobalExceptionHandler {
         response.setMessage(e.getMessage());
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(e.getResponseCode()));
     }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponseDto> handleAuthException(AuthenticationException e) {
+        ErrorResponseDto response = new ErrorResponseDto();
+        response.setCode(e.getErrorCode());
+        response.setMessage(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatusCode.valueOf(e.getResponseCode()));
+    }
+
+    // データベース障害
+    // 外部API通信失敗
+    // ビジネスエラー（重複登録、業務ルール違反）
+    // 認証・認可エラー
+    // リソース未検出エラー
+    // バリデーションエラー
 }
