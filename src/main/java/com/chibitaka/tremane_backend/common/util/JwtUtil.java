@@ -1,7 +1,8 @@
 package com.chibitaka.tremane_backend.common.util;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -10,14 +11,21 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.chibitaka.tremane_backend.common.error.AuthenticationException;
 
 /** JWT関連ユーティリティクラス */
+@Component
+@ConfigurationProperties(prefix = "jwt")
 public class JwtUtil {
 
-    @Value("${jwt.secretKey}")
+    @SuppressWarnings("unused")
     private String secretKey;
-    private final Algorithm algorithm = Algorithm.HMAC256(secretKey);
+    private Algorithm algorithm;
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+        this.algorithm = Algorithm.HMAC256(secretKey); // setterが呼ばれた後に初期化
+    }
 
     /** JWTトークン作成 */
-    public String createJwtToken(Integer userId) {
+    public String createJwtToken(Long userId) {
         try {
             String token = JWT.create()
                     .withSubject(String.valueOf(userId))
