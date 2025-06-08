@@ -7,3 +7,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/tremane
     username: postgres
     password: postgres
+
+jwt:
+  secretKey: ${JWT_SECRET:"mC+gCDTcFDFlbEvVr67QqzGf5Gi+VPVoxPuSj7C1cj4="}
