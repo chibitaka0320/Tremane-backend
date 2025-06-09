@@ -13,25 +13,28 @@ import com.chibitaka.tremane_backend.vo.EmailVo;
 @Mapper
 public interface UserRepositoryImpl extends UserRepository {
 
-    /** ユーザーのID検索 */
-    @Select({
-            "SELECT user_id, name, email, password, created_at, updated_at",
-            "FROM users WHERE user_id = #{userId}"
-    })
-    UserEntity findById(Long id);
+        /** ユーザーのID検索 */
+        @Override
+        @Select({
+                        "SELECT user_id, name, email, password, created_at, updated_at",
+                        "FROM users WHERE user_id = #{userId}"
+        })
+        UserEntity findById(Long id);
 
-    /** ユーザーのメールアドレス検索 */
-    @Select({
-            "SELECT user_id, name, email, password, created_at, updated_at",
-            "FROM users WHERE email = #{email}"
-    })
-    UserEntity findByEmail(EmailVo email);
+        /** ユーザーのメールアドレス検索 */
+        @Override
+        @Select({
+                        "SELECT user_id, name, email, password, created_at, updated_at",
+                        "FROM users WHERE email = #{email}"
+        })
+        UserEntity findByEmail(EmailVo email);
 
-    /** ユーザー登録 */
-    @Insert({
-            "INSERT INTO users(email, password)",
-            "VALUES(#{email}, #{password})"
-    })
-    @Options(useGeneratedKeys = true, keyProperty = "userId")
-    int insert(UserEntity record);
+        /** ユーザー登録 */
+        @Override
+        @Insert({
+                        "INSERT INTO users(email, password)",
+                        "VALUES(#{email}, #{password})"
+        })
+        @Options(useGeneratedKeys = true, keyProperty = "userId")
+        int insert(UserEntity record);
 }

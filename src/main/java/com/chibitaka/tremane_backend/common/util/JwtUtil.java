@@ -1,5 +1,7 @@
 package com.chibitaka.tremane_backend.common.util;
 
+import java.util.Date;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -24,11 +26,24 @@ public class JwtUtil {
         this.algorithm = Algorithm.HMAC256(secretKey); // setterが呼ばれた後に初期化
     }
 
-    /** JWTトークン作成 */
-    public String createJwtToken(Long userId) {
+    /** アクセストークン作成 */
+    public String createAccessToken(Long userId) {
         try {
             String token = JWT.create()
                     .withSubject(String.valueOf(userId))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
+                    .sign(algorithm);
+            return token;
+        } catch (JWTVerificationException e) {
+            throw new AuthenticationException(HttpStatus.UNAUTHORIZED.value(), null, e.getMessage());
+        }
+    }
+
+    /** リフレッシュトークン作成 */
+    public String createRefreshToken() {
+        try {
+            String token = JWT.create()
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 525600 * 60 * 1000))
                     .sign(algorithm);
             return token;
         } catch (JWTVerificationException e) {

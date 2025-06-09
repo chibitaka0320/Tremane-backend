@@ -1,5 +1,6 @@
 package com.chibitaka.tremane_backend.service;
 
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 import org.springframework.context.MessageSource;
@@ -12,8 +13,10 @@ import com.chibitaka.tremane_backend.common.error.ApiResponseException;
 import com.chibitaka.tremane_backend.common.util.JwtUtil;
 import com.chibitaka.tremane_backend.domain.UserDomain;
 import com.chibitaka.tremane_backend.dto.SignUpDto;
+import com.chibitaka.tremane_backend.entity.RefreshTokenEntity;
 import com.chibitaka.tremane_backend.entity.UserEntity;
 import com.chibitaka.tremane_backend.form.SignUpForm;
+import com.chibitaka.tremane_backend.repository.RefreshTokenRepository;
 import com.chibitaka.tremane_backend.repository.UserRepository;
 import com.chibitaka.tremane_backend.vo.EmailVo;
 
@@ -29,6 +32,7 @@ public class SignUpService {
 
     private final UserDomain userDomain;
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final MessageSource messageSource;
@@ -46,8 +50,15 @@ public class SignUpService {
             userRepository.insert(user);
 
             Long userId = user.getUserId();
-            String token = jwtUtil.createJwtToken(userId);
-            dto.setAccessToken(token);
+            String accessToken = jwtUtil.createAccessToken(userId);
+            String refreshToken = jwtUtil.createRefreshToken();
+
+            RefreshTokenEntity refreshEntity = new RefreshTokenEntity(userId, refreshToken,
+                    LocalDateTime.now().plusYears(1));
+            refreshTokenRepository.insert(refreshEntity);
+
+            dto.setAccessToken(accessToken);
+            dto.setRefreshToken(refreshToken);
 
             return dto;
         } else {

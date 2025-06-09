@@ -3,7 +3,7 @@ package com.chibitaka.tremane_backend.repository;
 import com.chibitaka.tremane_backend.entity.UserEntity;
 import com.chibitaka.tremane_backend.vo.EmailVo;
 
-/** ユーザーテーブル操作りポジトリインターフェース */
+/** ユーザーテーブル操作用インターフェース */
 public interface UserRepository {
 
         /** ユーザーのID検索 */
