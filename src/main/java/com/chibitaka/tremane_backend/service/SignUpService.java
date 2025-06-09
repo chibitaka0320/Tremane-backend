@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.chibitaka.tremane_backend.common.error.ApiResponseException;
 import com.chibitaka.tremane_backend.common.util.JwtUtil;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SignUpService {
 
     private final UserDomain userDomain;
