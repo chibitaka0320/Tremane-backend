@@ -7,6 +7,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/tremane
     username: postgres
     password: postgres
+  messages:
+    basename: messages
+    encoding: UTF-8
 mybatis:
   type-handlers-package: com.chibitaka.tremane_backend.typehandler
 
