@@ -11,6 +11,8 @@ spring:
     basename: messages
     encoding: UTF-8
 mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
   type-handlers-package: com.chibitaka.tremane_backend.typehandler
 
 jwt:
