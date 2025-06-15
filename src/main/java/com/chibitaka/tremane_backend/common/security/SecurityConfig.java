@@ -16,7 +16,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/signUp").permitAll()
+                .requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated());
 
         // CSRF（クロスサイトリクエストフォージェリ）保護を無効化

@@ -9,13 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.chibitaka.tremane_backend.common.error.ApiResponseException;
+import com.chibitaka.tremane_backend.common.error.AuthenticationException;
 import com.chibitaka.tremane_backend.common.util.JwtUtil;
-import com.chibitaka.tremane_backend.domain.UserDomain;
-import com.chibitaka.tremane_backend.dto.SignUpDto;
+import com.chibitaka.tremane_backend.dto.SignInDto;
 import com.chibitaka.tremane_backend.entity.RefreshTokenEntity;
 import com.chibitaka.tremane_backend.entity.UserEntity;
-import com.chibitaka.tremane_backend.form.SignUpForm;
+import com.chibitaka.tremane_backend.form.SignInForm;
 import com.chibitaka.tremane_backend.repository.RefreshTokenRepository;
 import com.chibitaka.tremane_backend.repository.UserRepository;
 import com.chibitaka.tremane_backend.vo.EmailVo;
@@ -23,32 +22,25 @@ import com.chibitaka.tremane_backend.vo.EmailVo;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 新規登録サービスクラス
+ * ログイン用サービスクラス
  */
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class SignUpService {
+public class SignInService {
 
-    private final UserDomain userDomain;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final MessageSource messageSource;
 
-    /** ユーザー新規登録 */
-    public SignUpDto signUp(SignUpForm form) {
+    /** ユーザーログイン */
+    public SignInDto singIn(SignInForm form) {
+        SignInDto dto = new SignInDto();
 
-        UserEntity user = new UserEntity();
-        SignUpDto dto = new SignUpDto();
-
-        user.setEmail(new EmailVo(form.getEmail()));
-        user.setPassword(passwordEncoder.encode(form.getPassword()));
-
-        if (!userDomain.exists(user.getEmail())) {
-            userRepository.insert(user);
-
+        UserEntity user = userRepository.findByEmail(new EmailVo(form.getEmail()));
+        if (user != null && passwordEncoder.matches(form.getPassword(), user.getPassword())) {
             Long userId = user.getUserId();
             String accessToken = jwtUtil.createAccessToken(userId);
             String refreshToken = jwtUtil.createRefreshToken();
@@ -62,7 +54,7 @@ public class SignUpService {
 
             return dto;
         } else {
-            throw new ApiResponseException(HttpStatus.CONFLICT.value(), null,
+            throw new AuthenticationException(HttpStatus.UNAUTHORIZED.value(), null,
                     messageSource.getMessage("10002E", null, Locale.JAPAN));
         }
     }
