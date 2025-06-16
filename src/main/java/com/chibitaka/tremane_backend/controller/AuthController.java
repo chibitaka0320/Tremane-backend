@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chibitaka.tremane_backend.dto.RefreshDto;
 import com.chibitaka.tremane_backend.dto.SignInDto;
 import com.chibitaka.tremane_backend.dto.SignUpDto;
+import com.chibitaka.tremane_backend.form.RefreshTokenForm;
 import com.chibitaka.tremane_backend.form.SignInForm;
 import com.chibitaka.tremane_backend.form.SignUpForm;
 import com.chibitaka.tremane_backend.service.AuthService;
@@ -52,8 +53,8 @@ public class AuthController {
      * アクセストークン再発行
      */
     @PostMapping("/refresh")
-    public ResponseEntity<RefreshDto> refreshAccessToken(@RequestBody String refreshToken) {
-        RefreshDto dto = authService.refreshAccessToken(refreshToken);
+    public ResponseEntity<RefreshDto> refreshAccessToken(@RequestBody RefreshTokenForm form) {
+        RefreshDto dto = authService.refreshAccessToken(form);
         return ResponseEntity.ok(dto);
     }
 

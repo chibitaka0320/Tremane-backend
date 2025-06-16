@@ -10,6 +10,7 @@ import com.chibitaka.tremane_backend.common.error.AuthenticationException;
 import com.chibitaka.tremane_backend.common.util.JwtUtil;
 import com.chibitaka.tremane_backend.dto.RefreshDto;
 import com.chibitaka.tremane_backend.entity.RefreshTokenEntity;
+import com.chibitaka.tremane_backend.form.RefreshTokenForm;
 import com.chibitaka.tremane_backend.repository.RefreshTokenRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,17 +26,17 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public RefreshDto refreshAccessToken(String refreshToken) {
+    public RefreshDto refreshAccessToken(RefreshTokenForm form) {
 
-        if (!jwtUtil.validateRefreshToken(refreshToken)) {
+        if (!jwtUtil.validateRefreshToken(form.getRefreshToken())) {
             throw new AuthenticationException(HttpStatus.UNAUTHORIZED.value(), "10006E", null);
         }
 
-        Long userId = jwtUtil.extractUserId(refreshToken);
+        Long userId = jwtUtil.extractUserId(form.getRefreshToken());
         String accessToken = jwtUtil.createAccessToken(userId);
-        refreshToken = jwtUtil.createRefreshToken(userId);
+        String refreshToken = jwtUtil.createRefreshToken(userId);
 
-        RefreshTokenEntity refreshEntity = new RefreshTokenEntity(userId, refreshToken,
+        RefreshTokenEntity refreshEntity = new RefreshTokenEntity(userId, refreshToken, form.getDeviceInfo(),
                 LocalDateTime.now().plusYears(1));
 
         refreshTokenRepository.update(refreshEntity);

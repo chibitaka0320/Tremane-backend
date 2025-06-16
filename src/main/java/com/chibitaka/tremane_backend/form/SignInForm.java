@@ -15,4 +15,6 @@ public class SignInForm {
 
     @NotNull
     private String password;
+
+    private String deviceInfo;
 }
