@@ -53,10 +53,10 @@ public class JwtUtil {
     }
 
     /** ユーザーIDの抽出 */
-    public String extractUserId(String token) {
+    public Long extractUserId(String token) {
         try {
             DecodedJWT claim = JWT.require(algorithm).build().verify(token);
-            String userId = claim.getSubject();
+            Long userId = Long.parseLong(claim.getSubject());
             return userId;
         } catch (JWTVerificationException e) {
             throw new AuthenticationException(HttpStatus.UNAUTHORIZED.value(), "10005E", e.getMessage());

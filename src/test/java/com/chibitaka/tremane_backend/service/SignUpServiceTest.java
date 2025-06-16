@@ -65,7 +65,7 @@ public class SignUpServiceTest {
             return 1;
         }).when(userRepository).insert(any(UserEntity.class));
         when(jwtUtil.createAccessToken(anyLong())).thenReturn("accessToken");
-        when(jwtUtil.createRefreshToken()).thenReturn("refreshToken");
+        when(jwtUtil.createRefreshToken(anyLong())).thenReturn("refreshToken");
 
         SignUpDto dto = signUpService.signUp(form);
 
