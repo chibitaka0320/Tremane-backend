@@ -40,9 +40,10 @@ public class JwtUtil {
     }
 
     /** リフレッシュトークン作成 */
-    public String createRefreshToken() {
+    public String createRefreshToken(Long userId) {
         try {
             String token = JWT.create()
+                    .withSubject(String.valueOf(userId))
                     .withExpiresAt(new Date(System.currentTimeMillis() + 525600 * 60 * 1000))
                     .sign(algorithm);
             return token;
@@ -58,7 +59,17 @@ public class JwtUtil {
             String userId = claim.getSubject();
             return userId;
         } catch (JWTVerificationException e) {
-            throw new AuthenticationException(HttpStatus.UNAUTHORIZED.value(), null, e.getMessage());
+            throw new AuthenticationException(HttpStatus.UNAUTHORIZED.value(), "10005E", e.getMessage());
+        }
+    }
+
+    /** リフレッシュトークンの検証 */
+    public boolean validateRefreshToken(String token) {
+        try {
+            JWT.require(algorithm).build().verify(token);
+            return true;
+        } catch (JWTVerificationException e) {
+            return false;
         }
     }
 }
