@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.chibitaka.tremane_backend.common.security.SecurityConfig;
 import com.chibitaka.tremane_backend.dto.SignUpDto;
 import com.chibitaka.tremane_backend.form.SignUpForm;
+import com.chibitaka.tremane_backend.service.AuthService;
+import com.chibitaka.tremane_backend.service.SignInService;
 import com.chibitaka.tremane_backend.service.SignUpService;
 
 @WebMvcTest(AuthController.class)
@@ -28,7 +30,13 @@ public class AuthControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private SignUpService dependencyService;
+    private SignUpService signUpService;
+
+    @MockitoBean
+    private SignInService signInService;
+
+    @MockitoBean
+    private AuthService authService;
 
     @Test
     @DisplayName("新規登録_正常系")
@@ -36,7 +44,7 @@ public class AuthControllerTest {
         SignUpDto mockDto = new SignUpDto();
         mockDto.setAccessToken("accessToken");
         mockDto.setRefreshToken("refreshToken");
-        when(dependencyService.signUp(any(SignUpForm.class))).thenReturn(mockDto);
+        when(signUpService.signUp(any(SignUpForm.class))).thenReturn(mockDto);
 
         String requestBody = """
                 {
