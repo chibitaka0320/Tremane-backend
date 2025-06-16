@@ -41,8 +41,9 @@ public class RefreshTokenRepositoryTest {
         assertNotNull(userId);
 
         String refreshToken = "sample-refresh-token";
+        String deviceInfo = "iphone16";
         LocalDateTime expiry = LocalDateTime.now().plusDays(7);
-        RefreshTokenEntity entity = new RefreshTokenEntity(userId, refreshToken, expiry);
+        RefreshTokenEntity entity = new RefreshTokenEntity(userId, refreshToken, deviceInfo, expiry);
         int result = refreshTokenRepository.insert(entity);
         assertEquals(1, result);
     }
