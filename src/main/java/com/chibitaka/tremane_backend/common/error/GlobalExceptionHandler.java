@@ -49,7 +49,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleAuthException(AuthenticationException e) {
         ErrorResponseDto response = new ErrorResponseDto();
         response.setCode(e.getErrorCode());
-        response.setMessage(e.getMessage());
+        if (e.getErrorCode() == null) {
+            response.setMessage(e.getMessage());
+        } else {
+            response.setMessage(messageSource.getMessage(e.getErrorCode(), null, Locale.JAPAN));
+        }
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(e.getResponseCode()));
     }
 
