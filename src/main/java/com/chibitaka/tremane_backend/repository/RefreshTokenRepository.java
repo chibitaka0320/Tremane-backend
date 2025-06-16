@@ -7,4 +7,7 @@ public interface RefreshTokenRepository {
 
     /** リフレッシュトークン登録 */
     int insert(RefreshTokenEntity entity);
+
+    /** リフレッシュトークン更新 */
+    int update(RefreshTokenEntity entity);
 }

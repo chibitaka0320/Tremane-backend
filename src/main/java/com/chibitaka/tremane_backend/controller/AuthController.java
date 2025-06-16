@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chibitaka.tremane_backend.dto.RefreshDto;
 import com.chibitaka.tremane_backend.dto.SignInDto;
 import com.chibitaka.tremane_backend.dto.SignUpDto;
 import com.chibitaka.tremane_backend.form.SignInForm;
 import com.chibitaka.tremane_backend.form.SignUpForm;
+import com.chibitaka.tremane_backend.service.AuthService;
 import com.chibitaka.tremane_backend.service.SignInService;
 import com.chibitaka.tremane_backend.service.SignUpService;
 
@@ -26,6 +28,7 @@ public class AuthController {
 
     private final SignUpService signUpService;
     private final SignInService signInService;
+    private final AuthService authService;
 
     /**
      * ユーザー新規登録
@@ -42,6 +45,15 @@ public class AuthController {
     @PostMapping("/signIn")
     public ResponseEntity<SignInDto> signIn(@Validated @RequestBody SignInForm form) {
         SignInDto dto = signInService.singIn(form);
+        return ResponseEntity.ok(dto);
+    }
+
+    /**
+     * アクセストークン再発行
+     */
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshDto> refreshAccessToken(@RequestBody String refreshToken) {
+        RefreshDto dto = authService.refreshAccessToken(refreshToken);
         return ResponseEntity.ok(dto);
     }
 
