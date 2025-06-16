@@ -51,7 +51,7 @@ public class SignUpService {
 
             Long userId = user.getUserId();
             String accessToken = jwtUtil.createAccessToken(userId);
-            String refreshToken = jwtUtil.createRefreshToken();
+            String refreshToken = jwtUtil.createRefreshToken(userId);
 
             RefreshTokenEntity refreshEntity = new RefreshTokenEntity(userId, refreshToken,
                     LocalDateTime.now().plusYears(1));
