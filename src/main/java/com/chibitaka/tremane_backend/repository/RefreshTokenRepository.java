@@ -10,4 +10,7 @@ public interface RefreshTokenRepository {
 
     /** リフレッシュトークン更新 */
     int update(RefreshTokenEntity entity);
+
+    /** リフレッシュトークン削除 */
+    int delete(RefreshTokenEntity entity);
 }

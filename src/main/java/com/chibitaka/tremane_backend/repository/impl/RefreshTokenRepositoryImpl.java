@@ -1,5 +1,6 @@
 package com.chibitaka.tremane_backend.repository.impl;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
@@ -20,7 +21,13 @@ public interface RefreshTokenRepositoryImpl extends RefreshTokenRepository {
         @Override
         @Update({
                         "UPDATE refresh_tokens SET token = #{token}, expiry_date = #{expiryDate}",
-                        "WHERE user_id = #{userId} AND device_info =#{deviceInfo}"
+                        "WHERE user_id = #{userId} AND device_info = #{deviceInfo}"
         })
         int update(RefreshTokenEntity entity);
+
+        @Override
+        @Delete({
+                        "DELETE FROM refresh_tokens WHERE user_id = #{userId} AND device_info = #{deviceInfo}"
+        })
+        int delete(RefreshTokenEntity entity);
 }

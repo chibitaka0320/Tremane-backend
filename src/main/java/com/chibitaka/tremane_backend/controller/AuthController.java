@@ -12,9 +12,11 @@ import com.chibitaka.tremane_backend.dto.SignInDto;
 import com.chibitaka.tremane_backend.dto.SignUpDto;
 import com.chibitaka.tremane_backend.form.RefreshTokenForm;
 import com.chibitaka.tremane_backend.form.SignInForm;
+import com.chibitaka.tremane_backend.form.SignOutForm;
 import com.chibitaka.tremane_backend.form.SignUpForm;
 import com.chibitaka.tremane_backend.service.AuthService;
 import com.chibitaka.tremane_backend.service.SignInService;
+import com.chibitaka.tremane_backend.service.SignOutService;
 import com.chibitaka.tremane_backend.service.SignUpService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class AuthController {
 
     private final SignUpService signUpService;
     private final SignInService signInService;
+    private final SignOutService signOutService;
     private final AuthService authService;
 
     /**
@@ -47,6 +50,15 @@ public class AuthController {
     public ResponseEntity<SignInDto> signIn(@Validated @RequestBody SignInForm form) {
         SignInDto dto = signInService.singIn(form);
         return ResponseEntity.ok(dto);
+    }
+
+    /**
+     * ユーザーログアウト
+     */
+    @PostMapping("/signOut")
+    public ResponseEntity<Void> signOut(@Validated @RequestBody SignOutForm form) {
+        signOutService.signOut(form);
+        return ResponseEntity.ok().build();
     }
 
     /**
