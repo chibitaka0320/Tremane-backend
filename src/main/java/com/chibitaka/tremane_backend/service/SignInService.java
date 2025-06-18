@@ -55,7 +55,7 @@ public class SignInService {
             return dto;
         } else {
             throw new AuthenticationException(HttpStatus.UNAUTHORIZED.value(), null,
-                    messageSource.getMessage("10002E", null, Locale.JAPAN));
+                    messageSource.getMessage("10004E", null, Locale.JAPAN));
         }
     }
 }
