@@ -4,6 +4,7 @@ CREATE TABLE refresh_tokens (
 	token_id SERIAL PRIMARY KEY,
 	user_id BIGINT NOT NULL,
 	token VARCHAR(512) NOT NULL,
+	device_info VARCHAR(255),
 	expiry_date TIMESTAMP NOT NULL,
 	revoked BOOLEAN DEFAULT FALSE,
 	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
