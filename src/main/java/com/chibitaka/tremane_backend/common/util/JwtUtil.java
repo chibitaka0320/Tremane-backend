@@ -31,7 +31,7 @@ public class JwtUtil {
         try {
             String token = JWT.create()
                     .withSubject(String.valueOf(userId))
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000)) // 1時間
                     .sign(algorithm);
             return token;
         } catch (JWTVerificationException e) {
@@ -44,7 +44,7 @@ public class JwtUtil {
         try {
             String token = JWT.create()
                     .withSubject(String.valueOf(userId))
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 525600 * 60 * 1000))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 525600 * 60 * 1000)) // 1年間
                     .sign(algorithm);
             return token;
         } catch (JWTVerificationException e) {

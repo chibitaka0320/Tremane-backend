@@ -43,7 +43,7 @@ public class AuthService {
 
         RefreshDto dto = new RefreshDto();
         dto.setAccessToken(accessToken);
-        dto.setAccessToken(refreshToken);
+        dto.setRefreshToken(refreshToken);
 
         return dto;
     }
