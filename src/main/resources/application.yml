@@ -11,6 +11,8 @@ spring:
     basename: messages
     encoding: UTF-8
 mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.chibitaka.tremane_backend.entity
   configuration:
     map-underscore-to-camel-case: true
   type-handlers-package: com.chibitaka.tremane_backend.typehandler
