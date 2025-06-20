@@ -7,10 +7,10 @@ import lombok.Getter;
  */
 @Getter
 public class BaseException extends RuntimeException {
-    private int responseCode;
+    private Integer responseCode;
     private String errorCode;
 
-    public BaseException(int responseCode, String errorCode, String message) {
+    public BaseException(Integer responseCode, String errorCode, String message) {
         super(message);
         this.responseCode = responseCode;
         this.errorCode = errorCode;

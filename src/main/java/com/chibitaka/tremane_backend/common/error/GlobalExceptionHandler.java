@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
         } else {
             response.setMessage(messageSource.getMessage(e.getErrorCode(), null, Locale.JAPAN));
         }
-        return new ResponseEntity<>(response, HttpStatusCode.valueOf(e.getResponseCode()));
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     /** 不正引数時のエラーハンドリング */
