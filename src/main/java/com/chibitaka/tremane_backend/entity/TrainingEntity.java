@@ -12,7 +12,7 @@ public class TrainingEntity {
     private LocalDate date;
     private Long userId;
     private Long exerciseId;
-    private int weight;
+    private double weight;
     private int reps;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

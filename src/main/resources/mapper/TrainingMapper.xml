@@ -18,6 +18,11 @@
     ORDER BY b.name, e.name
   </select>
 
+  <insert id="insertTraining" parameterType="com.chibitaka.tremane_backend.entity.TrainingEntity">
+    INSERT INTO trainings(date, user_id, exercise_id, weight, reps)
+    VALUES(#{date}, #{userId}, #{exerciseId}, #{weight}, #{reps})
+  </insert>
+
   <!-- ネストした構造をマッピング -->
   <resultMap id="TrainingRecordResultMap" type="com.chibitaka.tremane_backend.entity.TrainingRecordEntity">
     <result property="name" column="body_part_name"/>

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chibitaka.tremane_backend.dto.TrainingRecordDto;
 import com.chibitaka.tremane_backend.entity.TrainingEntity;
 import com.chibitaka.tremane_backend.entity.TrainingRecordEntity;
+import com.chibitaka.tremane_backend.form.TrainingForm;
 import com.chibitaka.tremane_backend.mapper.TrainingRecordMapper;
 import com.chibitaka.tremane_backend.repository.TrainingRepository;
 
@@ -29,6 +30,17 @@ public class TrainingService {
         List<TrainingRecordEntity> recordEntities = trainingRepository.findByUserIdAndDate(trainingEntity);
 
         return TrainingRecordMapper.toDtoList(recordEntities);
+    }
+
+    public void addTraining(Long userId, TrainingForm form) {
+        TrainingEntity trainingEntity = new TrainingEntity();
+        trainingEntity.setDate(form.getDate());
+        trainingEntity.setUserId(userId);
+        trainingEntity.setExerciseId(form.getExerciseId());
+        trainingEntity.setWeight(form.getWeight());
+        trainingEntity.setReps(form.getReps());
+
+        trainingRepository.insertTraining(trainingEntity);
     }
 
 }

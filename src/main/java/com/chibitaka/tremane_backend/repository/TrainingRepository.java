@@ -12,4 +12,7 @@ public interface TrainingRepository {
 
     /** ユーザーID、日付検索 */
     List<TrainingRecordEntity> findByUserIdAndDate(TrainingEntity entity);
+
+    /** トレーニング記録追加 */
+    int insertTraining(TrainingEntity entity);
 }
