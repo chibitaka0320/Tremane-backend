@@ -42,3 +42,18 @@ CREATE TABLE trainings (
 	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
 	FOREIGN KEY (exercise_id) REFERENCES exercises(exercise_id) ON DELETE CASCADE
 );
+
+-- 食事トランザクション
+DROP TABLE IF EXISTS eatings;
+CREATE TABLE eatings (
+	eating_id SERIAL PRIMARY KEY,
+	date DATE NOT NULL,
+	user_id BIGINT NOT NULL,
+	name VARCHAR(255),
+	protein NUMERIC,
+	fat NUMERIC,
+	carbo NUMERIC,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
