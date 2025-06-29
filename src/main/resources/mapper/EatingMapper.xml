@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chibitaka.tremane_backend.repository.EatingRepository">
+  
+  <!-- トレーニング記録を追加 -->
+  <insert id="insertEating" parameterType="com.chibitaka.tremane_backend.entity.EatingEntity">
+    INSERT INTO eatings(date, user_id, name, protein, fat, carbo)
+    VALUES(#{date}, #{userId}, #{name}, #{protein}, #{fat}, #{carbo})
+  </insert>
+
+</mapper>
