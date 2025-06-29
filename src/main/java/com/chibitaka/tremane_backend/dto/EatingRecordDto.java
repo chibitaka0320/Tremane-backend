@@ -10,24 +10,13 @@ import lombok.Data;
 public class EatingRecordDto {
 
     private LocalDate date;
-    private List<Exercise> exercises;
-
-    @Data
-    public static class Exercise {
-        private String name;
-        private List<Set> sets;
-    }
-
-    @Data
-    public static class Set {
-        private Long trainingId;
-        private Integer weight;
-        private Integer reps;
-    }
+    private TotalDto total;
+    private GoalDto goal;
+    private List<EatingDto> meal;
 
     /** 合計 */
     @Data
-    private static class totalDto {
+    public static class TotalDto {
         private int calories;
         private double protein;
         private double fat;
@@ -36,22 +25,10 @@ public class EatingRecordDto {
 
     /** 目標 */
     @Data
-    private static class goalDto {
+    public static class GoalDto {
         private int calories;
         private double protein;
         private double fat;
         private double carbo;
     }
-
-    /** 食事 */
-    @Data
-    private static class MealDto {
-        private Long eatingId;
-        private String name;
-        private int calories;
-        private double protein;
-        private double fat;
-        private double carbo;
-    }
-
 }

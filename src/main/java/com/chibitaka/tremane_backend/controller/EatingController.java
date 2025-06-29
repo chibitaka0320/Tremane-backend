@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
+import com.chibitaka.tremane_backend.dto.EatingRecordDto;
 import com.chibitaka.tremane_backend.form.EatingForm;
 import com.chibitaka.tremane_backend.service.EatingService;
 
@@ -26,8 +28,10 @@ public class EatingController {
     private final EatingService eatingService;
 
     @GetMapping("")
-    public ResponseEntity<Void> getEating(@RequestBody LocalDate date) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<EatingRecordDto> getEating(@RequestParam LocalDate date) {
+        Long userId = UserInfo.getUserId();
+        EatingRecordDto eatingRecordDto = eatingService.getEating(userId, date);
+        return ResponseEntity.ok(eatingRecordDto);
     }
 
     /** 食事記録追加 */

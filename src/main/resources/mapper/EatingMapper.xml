@@ -2,11 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chibitaka.tremane_backend.repository.EatingRepository">
+
+  <!-- 食事記録取得 -->
+  <select id="findByUserIdAndDate" resultMap="EatingEntityResultMap">
+    SELECT
+      eating_id,
+      date,
+      user_id,
+      name,
+      calories,
+      protein,
+      fat,
+      carbo
+    FROM eatings
+    WHERE user_id = #{userId}
+      AND date = #{date}
+    ORDER BY created_at;
+  </select>
   
-  <!-- トレーニング記録を追加 -->
+  <!-- 食事記録を追加 -->
   <insert id="insertEating" parameterType="com.chibitaka.tremane_backend.entity.EatingEntity">
-    INSERT INTO eatings(date, user_id, name, protein, fat, carbo)
-    VALUES(#{date}, #{userId}, #{name}, #{protein}, #{fat}, #{carbo})
+    INSERT INTO eatings(date, user_id, name, calories, protein, fat, carbo)
+    VALUES(#{date}, #{userId}, #{name}, #{calories}, #{protein}, #{fat}, #{carbo})
   </insert>
 
+  <!-- マッピング -->
+  <resultMap id="EatingEntityResultMap" type="com.chibitaka.tremane_backend.entity.EatingEntity">
+    <result property="eatingId" column="eating_id" />
+    <result property="date" column="date" />
+    <result property="userId" column="user_id" />
+    <result property="name" column="name" />
+    <result property="calories" column="calories" />
+    <result property="protein" column="protein" />
+    <result property="fat" column="fat" />
+    <result property="carbo" column="carbo" />
+  </resultMap>
 </mapper>
