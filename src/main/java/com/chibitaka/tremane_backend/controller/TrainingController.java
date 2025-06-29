@@ -40,7 +40,7 @@ public class TrainingController {
         return ResponseEntity.ok(dto);
     }
 
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<Void> postTraining(@RequestBody TrainingForm form) {
         Long userId = UserInfo.getUserId();
 
