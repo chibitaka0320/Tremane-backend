@@ -29,7 +29,7 @@ public class EatingService {
 
         EatingRecordDto eatingDto = new EatingRecordDto();
         eatingDto.setDate(date);
-        eatingDto.setMeal(EatingMapper.toDtoList(eatings));
+        eatingDto.setMeals(EatingMapper.toDtoList(eatings));
         eatingDto.setTotal(calcTotal(eatings));
 
         return eatingDto;

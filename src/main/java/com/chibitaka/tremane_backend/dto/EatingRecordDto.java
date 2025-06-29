@@ -12,7 +12,7 @@ public class EatingRecordDto {
     private LocalDate date;
     private TotalDto total;
     private GoalDto goal;
-    private List<EatingDto> meal;
+    private List<EatingDto> meals;
 
     /** 合計 */
     @Data
