@@ -35,12 +35,19 @@
     WHERE email = #{email}
   </select>
 
+  <!-- 新規追加 -->
   <insert id="insert" parameterType="com.chibitaka.tremane_backend.entity.UserEntity" useGeneratedKeys="true" keyProperty="userId">
     INSERT INTO users(email, password)
     VALUES(#{email}, #{password})
   </insert>
 
-  <!-- ネストした構造をマッピング -->
+  <!-- 更新 -->
+  <update id="update">
+    UPDATE users SET nickname=#{nickname}, height=#{height}, weight=#{weight}, birthday=#{birthday}, gender=#{gender}, active_level=#{activeLevel}
+    WHERE user_id=#{userId}
+  </update>
+
+  <!-- マッピング -->
   <resultMap id="UserResultMap" type="com.chibitaka.tremane_backend.entity.UserEntity">
     <result property="userId" column="user_id"/>
     <result property="email" column="email"/>

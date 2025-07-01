@@ -18,4 +18,7 @@ public interface UserRepository {
         /** ユーザー登録 */
         int insert(UserEntity record);
 
+        /* + ユーザー更新 */
+        int update(UserEntity record);
+
 }
