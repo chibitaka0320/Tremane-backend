@@ -19,6 +19,7 @@ public class UserController {
 
     private final UserService userService;
 
+    /** ユーザープロフィール情報取得 */
     @GetMapping("/profile")
     public ResponseEntity<UserProfileDto> getUser() {
         Long userId = UserInfo.getUserId();
