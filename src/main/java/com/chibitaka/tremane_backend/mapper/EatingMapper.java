@@ -14,7 +14,7 @@ public class EatingMapper {
         dto.setCalories(entity.getCalories());
         dto.setProtein(entity.getProtein());
         dto.setFat(entity.getFat());
-        dto.setCalories(entity.getCalories());
+        dto.setCarbo(entity.getCarbo());
         return dto;
     }
 
