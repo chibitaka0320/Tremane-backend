@@ -14,8 +14,8 @@ public class UserEntity {
     private EmailVo email;
     private String password;
     private String nickname;
-    private Integer height;
-    private Integer weight;
+    private Double height;
+    private Double weight;
     private Date birthday;
     private Integer gender;
     private Integer activeLevel;
