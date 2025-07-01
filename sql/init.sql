@@ -2,9 +2,14 @@
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
 	user_id SERIAL PRIMARY KEY,
-	name VARCHAR(50),
 	email VARCHAR(255) NOT NULL UNIQUE,
 	password TEXT NOT NULL,
+	nickname VARCHAR(50),
+	height INT,
+	weight INT,
+	birthday DATE,
+	gender INT,
+	active_level INT,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -30,6 +35,7 @@ CREATE TABLE exercises (
 );
 
 -- トレーニングトランザクション
+DROP TABLE IF EXISTS trainings;
 CREATE TABLE trainings (
 	training_id SERIAL PRIMARY KEY,
 	date DATE NOT NULL,
