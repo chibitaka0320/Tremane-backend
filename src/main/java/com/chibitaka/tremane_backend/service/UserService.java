@@ -3,6 +3,7 @@ package com.chibitaka.tremane_backend.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.chibitaka.tremane_backend.common.util.Calc;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
 import com.chibitaka.tremane_backend.entity.UserProfileEntity;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
@@ -32,8 +33,11 @@ public class UserService {
         userDto.setHeight(userEntity.getHeight());
         userDto.setWeight(userEntity.getWeight());
         userDto.setBirthday(userEntity.getBirthday());
+        userDto.setAge(Calc.getAge(userDto.getBirthday()));
         userDto.setGender(userEntity.getGender());
         userDto.setActiveLevel(userEntity.getActiveLevel());
+        userDto.setBmr(Calc.getBmr(userDto.getGender(), userDto.getHeight(), userDto.getWeight(), userDto.getAge()));
+        userDto.setTotalCalorie(Calc.getTotalCalorie(userDto.getBmr(), userDto.getActiveLevel()));
 
         return userDto;
     }

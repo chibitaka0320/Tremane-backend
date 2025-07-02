@@ -1,6 +1,6 @@
 package com.chibitaka.tremane_backend.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.Data;
 
@@ -10,7 +10,10 @@ public class UserProfileDto {
     private String nickname;
     private Double weight;
     private Double height;
-    private Date birthday;
+    private LocalDate birthday;
+    private Integer age;
     private Integer gender;
     private Integer activeLevel;
+    private Integer bmr;
+    private Integer totalCalorie;
 }

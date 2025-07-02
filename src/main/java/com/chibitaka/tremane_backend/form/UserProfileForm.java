@@ -1,6 +1,6 @@
 package com.chibitaka.tremane_backend.form;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ public class UserProfileForm {
     private String nickname;
     private Double weight;
     private Double height;
-    private Date birthday;
+    private LocalDate birthday;
     private Integer gender;
     private Integer activeLevel;
 }

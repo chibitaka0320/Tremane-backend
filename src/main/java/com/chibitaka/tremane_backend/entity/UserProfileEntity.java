@@ -1,7 +1,7 @@
 package com.chibitaka.tremane_backend.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import lombok.Data;
 
@@ -12,7 +12,7 @@ public class UserProfileEntity {
     private String nickname;
     private Double height;
     private Double weight;
-    private Date birthday;
+    private LocalDate birthday;
     private Integer gender;
     private Integer activeLevel;
     private LocalDateTime createdAt;
