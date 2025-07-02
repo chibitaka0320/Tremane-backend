@@ -21,6 +21,17 @@ CREATE TABLE users_profile (
 	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
+-- ユーザー目標テーブル
+DROP TABLE IF EXISTS users_goal;
+CREATE TABLE users_goal (
+	user_id SERIAL PRIMARY KEY,
+	goal_weight NUMERIC,
+	start DATE,
+	finish DATE,
+	pfc INT,
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
 -- 部位マスタ
 DROP TABLE IF EXISTS body_parts;
 CREATE TABLE body_parts (
