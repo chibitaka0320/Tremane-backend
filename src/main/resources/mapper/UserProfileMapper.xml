@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chibitaka.tremane_backend.repository.UserProfileRepository">
+  
+  <!-- ID検索 -->
+  <select id="findById" resultMap="UserResultMap">
+    SELECT
+      user_id,
+      nickname,
+      height,
+      weight,
+      birthday,
+      gender,
+      active_level
+    FROM users_profile
+    WHERE user_id = #{userId}
+  </select>
+
+  <!-- 更新 -->
+  <update id="update">
+    UPDATE users_profile SET nickname=#{nickname}, height=#{height}, weight=#{weight}, birthday=#{birthday}, gender=#{gender}, active_level=#{activeLevel}
+    WHERE user_id=#{userId}
+  </update>
+
+  <!-- マッピング -->
+  <resultMap id="UserResultMap" type="com.chibitaka.tremane_backend.entity.UserProfileEntity">
+    <result property="userId" column="user_id"/>
+    <result property="nickname" column="nickname"/>
+    <result property="height" column="height"/>
+    <result property="weight" column="weight"/>
+    <result property="birthday" column="birthday"/>
+    <result property="gender" column="gender"/>
+    <result property="activeLevel" column="active_level"/>
+  </resultMap>
+
+</mapper>

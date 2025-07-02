@@ -28,7 +28,11 @@ public class UserController {
         Long userId = UserInfo.getUserId();
         UserProfileDto userDto = userService.getUserInfo(userId);
 
-        return ResponseEntity.ok(userDto);
+        if (userDto == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(userDto);
+        }
     }
 
     /** ユーザープロフィール情報更新 */

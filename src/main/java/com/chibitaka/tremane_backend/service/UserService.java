@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
-import com.chibitaka.tremane_backend.entity.UserEntity;
+import com.chibitaka.tremane_backend.entity.UserProfileEntity;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
-import com.chibitaka.tremane_backend.repository.UserRepository;
+import com.chibitaka.tremane_backend.repository.UserProfileRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,12 +16,16 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserProfileRepository userProfileRepository;
 
     /** ユーザープロフィール情報取得 */
     public UserProfileDto getUserInfo(Long userId) {
 
-        UserEntity userEntity = userRepository.findById(userId);
+        UserProfileEntity userEntity = userProfileRepository.findById(userId);
+
+        if (userEntity == null) {
+            return null;
+        }
 
         UserProfileDto userDto = new UserProfileDto();
         userDto.setNickname(userEntity.getNickname());
@@ -36,7 +40,7 @@ public class UserService {
 
     /** プロフィール情報更新 */
     public void updateUserInfo(Long userId, UserProfileForm form) {
-        UserEntity userEntity = new UserEntity();
+        UserProfileEntity userEntity = new UserProfileEntity();
         userEntity.setUserId(userId);
         userEntity.setNickname(form.getNickname());
         userEntity.setHeight(form.getHeight());
@@ -45,6 +49,6 @@ public class UserService {
         userEntity.setGender(form.getGender());
         userEntity.setActiveLevel(form.getActiveLevel());
 
-        userRepository.update(userEntity);
+        userProfileRepository.update(userEntity);
     }
 }

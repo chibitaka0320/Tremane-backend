@@ -8,13 +8,7 @@
     SELECT
       user_id,
       email,
-      password,
-      nickname,
-      height,
-      weight,
-      birthday,
-      gender,
-      active_level
+      password
     FROM users
     WHERE user_id = #{userId}
   </select>
@@ -24,13 +18,7 @@
     SELECT
       user_id,
       email,
-      password,
-      nickname,
-      height,
-      weight,
-      birthday,
-      gender,
-      active_level
+      password
     FROM users
     WHERE email = #{email}
   </select>
@@ -41,23 +29,11 @@
     VALUES(#{email}, #{password})
   </insert>
 
-  <!-- 更新 -->
-  <update id="update">
-    UPDATE users SET nickname=#{nickname}, height=#{height}, weight=#{weight}, birthday=#{birthday}, gender=#{gender}, active_level=#{activeLevel}
-    WHERE user_id=#{userId}
-  </update>
-
   <!-- マッピング -->
   <resultMap id="UserResultMap" type="com.chibitaka.tremane_backend.entity.UserEntity">
     <result property="userId" column="user_id"/>
     <result property="email" column="email"/>
     <result property="password" column="password"/>
-    <result property="nickname" column="nickname"/>
-    <result property="height" column="height"/>
-    <result property="weight" column="weight"/>
-    <result property="birthday" column="birthday"/>
-    <result property="gender" column="gender"/>
-    <result property="activeLevel" column="active_level"/>
   </resultMap>
 
 </mapper>

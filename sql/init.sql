@@ -4,14 +4,21 @@ CREATE TABLE users (
 	user_id SERIAL PRIMARY KEY,
 	email VARCHAR(255) NOT NULL UNIQUE,
 	password TEXT NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ユーザープロフィールテーブル
+DROP TABLE IF EXISTS users_profile;
+CREATE TABLE users_profile (
+	user_id SERIAL PRIMARY KEY,
 	nickname VARCHAR(50),
 	height INT,
 	weight INT,
 	birthday DATE,
 	gender INT,
 	active_level INT,
-	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 -- 部位マスタ
