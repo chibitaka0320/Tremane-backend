@@ -10,6 +10,6 @@ public interface UserProfileRepository {
     /** 取得 */
     UserProfileEntity findById(Long userId);
 
-    /* + ユーザー更新 */
-    int update(UserProfileEntity record);
+    /* + ユーザー追加更新 */
+    int upsert(UserProfileEntity record);
 }

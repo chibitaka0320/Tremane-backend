@@ -38,8 +38,8 @@ public class UserService {
         return userDto;
     }
 
-    /** プロフィール情報更新 */
-    public void updateUserInfo(Long userId, UserProfileForm form) {
+    /** プロフィール情報追加更新 */
+    public void upsertUserInfo(Long userId, UserProfileForm form) {
         UserProfileEntity userEntity = new UserProfileEntity();
         userEntity.setUserId(userId);
         userEntity.setNickname(form.getNickname());
@@ -49,6 +49,6 @@ public class UserService {
         userEntity.setGender(form.getGender());
         userEntity.setActiveLevel(form.getActiveLevel());
 
-        userProfileRepository.update(userEntity);
+        userProfileRepository.upsert(userEntity);
     }
 }

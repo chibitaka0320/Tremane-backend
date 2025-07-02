@@ -35,11 +35,11 @@ public class UserController {
         }
     }
 
-    /** ユーザープロフィール情報更新 */
+    /** ユーザープロフィール情報追加更新 */
     @PostMapping("/profile")
     public ResponseEntity<Void> updateUser(@RequestBody UserProfileForm form) {
         Long userId = UserInfo.getUserId();
-        userService.updateUserInfo(userId, form);
+        userService.upsertUserInfo(userId, form);
 
         return ResponseEntity.status(204).build();
     }

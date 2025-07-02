@@ -17,11 +17,18 @@
     WHERE user_id = #{userId}
   </select>
 
-  <!-- 更新 -->
-  <update id="update">
-    UPDATE users_profile SET nickname=#{nickname}, height=#{height}, weight=#{weight}, birthday=#{birthday}, gender=#{gender}, active_level=#{activeLevel}
-    WHERE user_id=#{userId}
-  </update>
+  <!-- 追加更新 -->
+  <insert id="upsert" parameterType="com.chibitaka.tremane_backend.entity.UserProfileEntity">
+    INSERT INTO users_profile (user_id, nickname, height, weight, birthday, gender, active_level)
+    VALUES (#{userId}, #{nickname}, #{height}, #{weight}, #{birthday}, #{gender}, #{activeLevel})
+    ON CONFLICT (user_id) DO UPDATE SET
+    nickname=EXCLUDED.nickname,
+    height = EXCLUDED.height,
+    weight = EXCLUDED.weight,
+    birthday = EXCLUDED.birthday,
+    gender = EXCLUDED.gender,
+    active_level = EXCLUDED.active_level
+  </insert>
 
   <!-- マッピング -->
   <resultMap id="UserResultMap" type="com.chibitaka.tremane_backend.entity.UserProfileEntity">
