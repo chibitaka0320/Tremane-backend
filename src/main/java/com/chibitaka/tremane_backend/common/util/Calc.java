@@ -58,16 +58,21 @@ public class Calc {
 
     /** 目標摂取カロリー算出 */
     public static Integer getGoalCalorie(UserProfileEntity profile, UserGoalEntity goal) {
-        // 基礎情報取得
-        Integer age = getAge(profile.getBirthday());
-        Integer bmr = getBmr(profile.getGender(), profile.getHeight(), profile.getWeight(), age);
-        Integer totalCalorie = getTotalCalorie(bmr, profile.getActiveLevel());
+        try {
+            // 基礎情報取得
+            Integer age = getAge(profile.getBirthday());
+            Integer bmr = getBmr(profile.getGender(), profile.getHeight(), profile.getWeight(), age);
+            Integer totalCalorie = getTotalCalorie(bmr, profile.getActiveLevel());
 
-        // 目標消費カロリー算出
-        Double lossWeight = goal.getWeight() - goal.getGoalWeight();
-        long days = ChronoUnit.DAYS.between(goal.getStart(), goal.getFinish());
-        Double lossCalorie = (lossWeight * 7200) / days;
+            // 目標消費カロリー算出
+            Double lossWeight = goal.getWeight() - goal.getGoalWeight();
+            long days = ChronoUnit.DAYS.between(goal.getStart(), goal.getFinish());
+            Double lossCalorie = (lossWeight * 7200) / days;
 
-        return (int) (totalCalorie - lossCalorie);
+            return (int) (totalCalorie - lossCalorie);
+        } catch (NullPointerException e) {
+            return null;
+        }
+
     }
 }

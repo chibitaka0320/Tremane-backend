@@ -12,6 +12,7 @@ public class EatingRecordDto {
     private LocalDate date;
     private TotalDto total;
     private GoalDto goal;
+    private RateDto rate;
     private List<EatingDto> meals;
 
     /** 合計 */
@@ -27,6 +28,14 @@ public class EatingRecordDto {
     @Data
     public static class GoalDto {
         private int calories;
+        private double protein;
+        private double fat;
+        private double carbo;
+    }
+
+    /** 達成率 */
+    @Data
+    public static class RateDto {
         private double protein;
         private double fat;
         private double carbo;
