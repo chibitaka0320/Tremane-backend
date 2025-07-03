@@ -9,4 +9,7 @@ import com.chibitaka.tremane_backend.entity.UserGoalEntity;
 public interface UserGoalRepository {
     /** 取得 */
     UserGoalEntity findById(Long userId);
+
+    /** 追加・更新 */
+    int upsert(UserGoalEntity record);
 }

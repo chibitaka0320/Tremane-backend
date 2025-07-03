@@ -1,13 +1,12 @@
-package com.chibitaka.tremane_backend.entity;
+package com.chibitaka.tremane_backend.form;
 
 import java.time.LocalDate;
 
 import lombok.Data;
 
-/** ユーザー目標テーブルエンティティ */
+/** ユーザー目標設定更新form */
 @Data
-public class UserGoalEntity {
-    private Long userId;
+public class UserGoalForm {
     private Double weight;
     private Double goalWeight;
     private LocalDate start;

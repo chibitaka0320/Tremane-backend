@@ -8,6 +8,7 @@ import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
 import com.chibitaka.tremane_backend.entity.UserGoalEntity;
 import com.chibitaka.tremane_backend.entity.UserProfileEntity;
+import com.chibitaka.tremane_backend.form.UserGoalForm;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
 import com.chibitaka.tremane_backend.repository.UserGoalRepository;
 import com.chibitaka.tremane_backend.repository.UserProfileRepository;
@@ -81,5 +82,18 @@ public class UserService {
         }
 
         return dto;
+    }
+
+    /** 目標設定 */
+    public void upsertUserGoal(Long userId, UserGoalForm form) {
+        UserGoalEntity entity = new UserGoalEntity();
+        entity.setUserId(userId);
+        entity.setWeight(form.getWeight());
+        entity.setGoalWeight(form.getGoalWeight());
+        entity.setStart(form.getStart());
+        entity.setFinish(form.getFinish());
+        entity.setPfc(form.getPfc());
+
+        userGoalRepository.upsert(entity);
     }
 }
