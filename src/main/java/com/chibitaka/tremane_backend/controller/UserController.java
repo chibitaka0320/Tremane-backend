@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
+import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
 import com.chibitaka.tremane_backend.service.UserService;
@@ -42,5 +43,18 @@ public class UserController {
         userService.upsertUserInfo(userId, form);
 
         return ResponseEntity.status(204).build();
+    }
+
+    /* ユーザー目標取得 */
+    @GetMapping("/goal")
+    public ResponseEntity<UserGoalDto> getUserGoal() {
+        Long userId = UserInfo.getUserId();
+        UserGoalDto goalDto = userService.getUserGoal(userId);
+
+        if (goalDto == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(goalDto);
+        }
     }
 }

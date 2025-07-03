@@ -25,6 +25,7 @@ CREATE TABLE users_profile (
 DROP TABLE IF EXISTS users_goal;
 CREATE TABLE users_goal (
 	user_id SERIAL PRIMARY KEY,
+	weight NUMERIC,
 	goal_weight NUMERIC,
 	start DATE,
 	finish DATE,

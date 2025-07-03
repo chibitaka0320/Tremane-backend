@@ -4,9 +4,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chibitaka.tremane_backend.common.util.Calc;
+import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
+import com.chibitaka.tremane_backend.entity.UserGoalEntity;
 import com.chibitaka.tremane_backend.entity.UserProfileEntity;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
+import com.chibitaka.tremane_backend.repository.UserGoalRepository;
 import com.chibitaka.tremane_backend.repository.UserProfileRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
     private final UserProfileRepository userProfileRepository;
+    private final UserGoalRepository userGoalRepository;
 
     /** ユーザープロフィール情報取得 */
     public UserProfileDto getUserInfo(Long userId) {
@@ -54,5 +58,28 @@ public class UserService {
         userEntity.setActiveLevel(form.getActiveLevel());
 
         userProfileRepository.upsert(userEntity);
+    }
+
+    /** 目標取得 */
+    public UserGoalDto getUserGoal(Long userId) {
+
+        // 目標を取得し未設定であればnullを返す
+        UserGoalEntity goalEntity = userGoalRepository.findById(userId);
+        if (goalEntity == null) {
+            return null;
+        }
+        UserGoalDto dto = new UserGoalDto();
+        dto.setWeight(goalEntity.getWeight());
+        dto.setGoalWeight(goalEntity.getGoalWeight());
+        dto.setStart(goalEntity.getStart());
+        dto.setFinish(goalEntity.getFinish());
+        dto.setPfc(goalEntity.getPfc());
+
+        UserProfileEntity userEntity = userProfileRepository.findById(userId);
+        if (userEntity != null) {
+            dto.setGoalCalorie(Calc.getGoalCalorie(userEntity, goalEntity));
+        }
+
+        return dto;
     }
 }
