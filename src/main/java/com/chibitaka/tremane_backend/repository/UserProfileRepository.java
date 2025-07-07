@@ -8,7 +8,7 @@ import com.chibitaka.tremane_backend.entity.UserProfileEntity;
 @Mapper
 public interface UserProfileRepository {
     /** 取得 */
-    UserProfileEntity findById(Long userId);
+    UserProfileEntity findById(String userId);
 
     /* + ユーザー追加更新 */
     int upsert(UserProfileEntity record);

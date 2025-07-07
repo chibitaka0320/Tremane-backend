@@ -7,7 +7,7 @@ import lombok.Data;
 /** ユーザー目標テーブルエンティティ */
 @Data
 public class UserGoalEntity {
-    private Long userId;
+    private String userId;
     private Double weight;
     private Double goalWeight;
     private LocalDate start;

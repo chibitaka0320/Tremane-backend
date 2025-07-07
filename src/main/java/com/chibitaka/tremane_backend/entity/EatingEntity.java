@@ -9,7 +9,7 @@ import lombok.Data;
 public class EatingEntity {
     private Long eatingId;
     private LocalDate date;
-    private Long userId;
+    private String userId;
     private String name;
     private int calories;
     private double protein;

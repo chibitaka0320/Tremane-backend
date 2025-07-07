@@ -9,8 +9,10 @@ import org.springframework.stereotype.Component;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.chibitaka.tremane_backend.common.error.AuthenticationException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 
 /** JWT関連ユーティリティクラス */
 @Component
@@ -27,7 +29,7 @@ public class JwtUtil {
     }
 
     /** アクセストークン作成 */
-    public String createAccessToken(Long userId) {
+    public String createAccessToken(String userId) {
         try {
             String token = JWT.create()
                     .withSubject(String.valueOf(userId))
@@ -40,7 +42,7 @@ public class JwtUtil {
     }
 
     /** リフレッシュトークン作成 */
-    public String createRefreshToken(Long userId) {
+    public String createRefreshToken(String userId) {
         try {
             String token = JWT.create()
                     .withSubject(String.valueOf(userId))
@@ -53,12 +55,11 @@ public class JwtUtil {
     }
 
     /** ユーザーIDの抽出 */
-    public Long extractUserId(String token) {
+    public String extractUserId(String token) {
         try {
-            DecodedJWT claim = JWT.require(algorithm).build().verify(token);
-            Long userId = Long.parseLong(claim.getSubject());
-            return userId;
-        } catch (JWTVerificationException e) {
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            return decodedToken.getUid();
+        } catch (FirebaseAuthException e) {
             throw new AuthenticationException(HttpStatus.UNAUTHORIZED.value(), "10005E", e.getMessage());
         }
     }

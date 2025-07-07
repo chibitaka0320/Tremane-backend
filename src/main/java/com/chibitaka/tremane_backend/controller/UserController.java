@@ -27,7 +27,7 @@ public class UserController {
     /** ユーザープロフィール情報取得 */
     @GetMapping("/profile")
     public ResponseEntity<UserProfileDto> getUser() {
-        Long userId = UserInfo.getUserId();
+        String userId = UserInfo.getUserId();
         UserProfileDto userDto = userService.getUserInfo(userId);
 
         if (userDto == null) {
@@ -40,7 +40,7 @@ public class UserController {
     /** ユーザープロフィール情報追加更新 */
     @PostMapping("/profile")
     public ResponseEntity<Void> updateUser(@RequestBody UserProfileForm form) {
-        Long userId = UserInfo.getUserId();
+        String userId = UserInfo.getUserId();
         userService.upsertUserInfo(userId, form);
 
         return ResponseEntity.status(204).build();
@@ -49,7 +49,7 @@ public class UserController {
     /* ユーザー目標取得 */
     @GetMapping("/goal")
     public ResponseEntity<UserGoalDto> getUserGoal() {
-        Long userId = UserInfo.getUserId();
+        String userId = UserInfo.getUserId();
         UserGoalDto goalDto = userService.getUserGoal(userId);
 
         if (goalDto == null) {
@@ -61,7 +61,7 @@ public class UserController {
 
     @PostMapping("/goal")
     public ResponseEntity<Void> updateUserGoal(@RequestBody UserGoalForm form) {
-        Long userId = UserInfo.getUserId();
+        String userId = UserInfo.getUserId();
         userService.upsertUserGoal(userId, form);
 
         return ResponseEntity.status(204).build();

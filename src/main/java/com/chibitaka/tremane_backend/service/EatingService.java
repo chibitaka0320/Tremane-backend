@@ -30,7 +30,7 @@ public class EatingService {
     private final UserGoalRepository userGoalRepository;
 
     /** 食事記録取得 */
-    public EatingRecordDto getEating(Long userId, LocalDate date) {
+    public EatingRecordDto getEating(String userId, LocalDate date) {
         // 食事記録一覧取得
         List<EatingEntity> eatings = eatingRepository.findByUserIdAndDate(userId, date);
 
@@ -58,7 +58,7 @@ public class EatingService {
     }
 
     /** 食事記録追加 */
-    public void addEating(Long userId, EatingForm form) {
+    public void addEating(String userId, EatingForm form) {
         EatingEntity entity = new EatingEntity();
         entity.setDate(form.getDate());
         entity.setUserId(userId);

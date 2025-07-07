@@ -25,7 +25,7 @@ public class UserService {
     private final UserGoalRepository userGoalRepository;
 
     /** ユーザープロフィール情報取得 */
-    public UserProfileDto getUserInfo(Long userId) {
+    public UserProfileDto getUserInfo(String userId) {
 
         UserProfileEntity userEntity = userProfileRepository.findById(userId);
 
@@ -48,7 +48,7 @@ public class UserService {
     }
 
     /** プロフィール情報追加更新 */
-    public void upsertUserInfo(Long userId, UserProfileForm form) {
+    public void upsertUserInfo(String userId, UserProfileForm form) {
         UserProfileEntity userEntity = new UserProfileEntity();
         userEntity.setUserId(userId);
         userEntity.setNickname(form.getNickname());
@@ -62,7 +62,7 @@ public class UserService {
     }
 
     /** 目標取得 */
-    public UserGoalDto getUserGoal(Long userId) {
+    public UserGoalDto getUserGoal(String userId) {
 
         // 目標を取得し未設定であればnullを返す
         UserGoalEntity goalEntity = userGoalRepository.findById(userId);
@@ -85,7 +85,7 @@ public class UserService {
     }
 
     /** 目標設定 */
-    public void upsertUserGoal(Long userId, UserGoalForm form) {
+    public void upsertUserGoal(String userId, UserGoalForm form) {
         UserGoalEntity entity = new UserGoalEntity();
         entity.setUserId(userId);
         entity.setWeight(form.getWeight());

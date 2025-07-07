@@ -22,9 +22,9 @@ public class TrainingService {
 
     private final TrainingRepository trainingRepository;
 
-    public List<TrainingRecordDto> getTraining(Long userId, LocalDate date) {
+    public List<TrainingRecordDto> getTraining(String userId, LocalDate date) {
         TrainingEntity trainingEntity = new TrainingEntity();
-        trainingEntity.setUserId(1L);
+        trainingEntity.setUserId(userId);
         trainingEntity.setDate(date);
 
         List<TrainingRecordEntity> recordEntities = trainingRepository.findByUserIdAndDate(trainingEntity);
@@ -32,7 +32,7 @@ public class TrainingService {
         return TrainingRecordMapper.toDtoList(recordEntities);
     }
 
-    public void addTraining(Long userId, TrainingForm form) {
+    public void addTraining(String userId, TrainingForm form) {
         TrainingEntity trainingEntity = new TrainingEntity();
         trainingEntity.setDate(form.getDate());
         trainingEntity.setUserId(userId);

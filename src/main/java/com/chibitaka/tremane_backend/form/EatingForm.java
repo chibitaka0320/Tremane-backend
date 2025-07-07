@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class EatingForm {
     private LocalDate date;
-    private Long userId;
+    private String userId;
     private String name;
     private double protein;
     private double fat;

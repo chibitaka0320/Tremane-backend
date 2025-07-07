@@ -10,7 +10,7 @@ import lombok.Data;
 public class TrainingEntity {
     private Long trainingId;
     private LocalDate date;
-    private Long userId;
+    private String userId;
     private Long exerciseId;
     private double weight;
     private int reps;

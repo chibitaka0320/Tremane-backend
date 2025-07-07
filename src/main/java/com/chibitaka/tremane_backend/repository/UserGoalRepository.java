@@ -8,7 +8,7 @@ import com.chibitaka.tremane_backend.entity.UserGoalEntity;
 @Mapper
 public interface UserGoalRepository {
     /** 取得 */
-    UserGoalEntity findById(Long userId);
+    UserGoalEntity findById(String userId);
 
     /** 追加・更新 */
     int upsert(UserGoalEntity record);

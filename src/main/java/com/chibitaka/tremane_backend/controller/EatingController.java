@@ -29,7 +29,7 @@ public class EatingController {
 
     @GetMapping("")
     public ResponseEntity<EatingRecordDto> getEating(@RequestParam LocalDate date) {
-        Long userId = UserInfo.getUserId();
+        String userId = UserInfo.getUserId();
         EatingRecordDto eatingRecordDto = eatingService.getEating(userId, date);
         return ResponseEntity.ok(eatingRecordDto);
     }
@@ -37,7 +37,7 @@ public class EatingController {
     /** 食事記録追加 */
     @PostMapping("")
     public ResponseEntity<Void> postEating(@RequestBody EatingForm form) {
-        Long userId = UserInfo.getUserId();
+        String userId = UserInfo.getUserId();
 
         eatingService.addEating(userId, form);
         return ResponseEntity.status(204).build();

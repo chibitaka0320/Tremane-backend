@@ -8,7 +8,7 @@ import lombok.Data;
 /** ユーザープロフィール */
 @Data
 public class UserProfileEntity {
-    private Long userId;
+    private String userId;
     private String nickname;
     private Double height;
     private Double weight;

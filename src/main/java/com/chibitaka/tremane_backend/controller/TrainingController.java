@@ -34,7 +34,7 @@ public class TrainingController {
      */
     @GetMapping("")
     public ResponseEntity<List<TrainingRecordDto>> getTraining(@RequestParam LocalDate date) {
-        Long userId = UserInfo.getUserId();
+        String userId = UserInfo.getUserId();
 
         List<TrainingRecordDto> dto = trainingService.getTraining(userId, date);
         return ResponseEntity.ok(dto);
@@ -42,7 +42,7 @@ public class TrainingController {
 
     @PostMapping("")
     public ResponseEntity<Void> postTraining(@RequestBody TrainingForm form) {
-        Long userId = UserInfo.getUserId();
+        String userId = UserInfo.getUserId();
 
         trainingService.addTraining(userId, form);
         return ResponseEntity.status(204).build();

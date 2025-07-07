@@ -11,7 +11,7 @@ import com.chibitaka.tremane_backend.entity.EatingEntity;
 @Mapper
 public interface EatingRepository {
     /** 食事記録取得 */
-    List<EatingEntity> findByUserIdAndDate(Long userId, LocalDate date);
+    List<EatingEntity> findByUserIdAndDate(String userId, LocalDate date);
 
     /** 食事記録追加 */
     int insertEating(EatingEntity entity);
