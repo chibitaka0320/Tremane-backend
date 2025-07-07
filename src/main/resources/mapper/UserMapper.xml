@@ -6,34 +6,20 @@
   <!-- ID検索 -->
   <select id="findById" resultMap="UserResultMap">
     SELECT
-      user_id,
-      email,
-      password
+      user_id
     FROM users
     WHERE user_id = #{userId}
   </select>
 
-  <!-- メールアドレス検索 -->
-  <select id="findByEmail" resultMap="UserResultMap">
-    SELECT
-      user_id,
-      email,
-      password
-    FROM users
-    WHERE email = #{email}
-  </select>
-
   <!-- 新規追加 -->
-  <insert id="insert" parameterType="com.chibitaka.tremane_backend.entity.UserEntity" useGeneratedKeys="true" keyProperty="userId">
-    INSERT INTO users(email, password)
-    VALUES(#{email}, #{password})
+  <insert id="insert" parameterType="com.chibitaka.tremane_backend.entity.UserEntity">
+    INSERT INTO users (user_id)
+    VALUES (#{userId})
   </insert>
 
   <!-- マッピング -->
   <resultMap id="UserResultMap" type="com.chibitaka.tremane_backend.entity.UserEntity">
     <result property="userId" column="user_id"/>
-    <result property="email" column="email"/>
-    <result property="password" column="password"/>
   </resultMap>
 
 </mapper>

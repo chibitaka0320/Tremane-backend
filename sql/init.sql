@@ -1,9 +1,7 @@
 -- ユーザーテーブル
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
-	user_id SERIAL PRIMARY KEY,
-	email VARCHAR(255) NOT NULL UNIQUE,
-	password TEXT NOT NULL,
+	user_id TEXT PRIMARY KEY,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -11,7 +9,7 @@ CREATE TABLE users (
 -- ユーザープロフィールテーブル
 DROP TABLE IF EXISTS users_profile;
 CREATE TABLE users_profile (
-	user_id SERIAL PRIMARY KEY,
+	user_id TEXT PRIMARY KEY,
 	nickname VARCHAR(50),
 	height INT,
 	weight INT,
@@ -24,7 +22,7 @@ CREATE TABLE users_profile (
 -- ユーザー目標テーブル
 DROP TABLE IF EXISTS users_goal;
 CREATE TABLE users_goal (
-	user_id SERIAL PRIMARY KEY,
+	user_id TEXT PRIMARY KEY,
 	weight NUMERIC,
 	goal_weight NUMERIC,
 	start DATE,
@@ -58,7 +56,7 @@ DROP TABLE IF EXISTS trainings;
 CREATE TABLE trainings (
 	training_id SERIAL PRIMARY KEY,
 	date DATE NOT NULL,
-	user_id BIGINT NOT NULL,
+	user_id TEXT NOT NULL,
 	exercise_id BIGINT NOT NULL,
 	weight int,
 	reps int,
@@ -73,7 +71,7 @@ DROP TABLE IF EXISTS eatings;
 CREATE TABLE eatings (
 	eating_id SERIAL PRIMARY KEY,
 	date DATE NOT NULL,
-	user_id BIGINT NOT NULL,
+	user_id TEXT NOT NULL,
 	name VARCHAR(255),
 	calories int,
 	protein NUMERIC,

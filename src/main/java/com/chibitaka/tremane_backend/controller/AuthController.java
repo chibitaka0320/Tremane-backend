@@ -8,14 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.dto.RefreshDto;
-import com.chibitaka.tremane_backend.dto.SignInDto;
-import com.chibitaka.tremane_backend.dto.SignUpDto;
 import com.chibitaka.tremane_backend.form.RefreshTokenForm;
-import com.chibitaka.tremane_backend.form.SignInForm;
 import com.chibitaka.tremane_backend.form.SignOutForm;
 import com.chibitaka.tremane_backend.form.SignUpForm;
 import com.chibitaka.tremane_backend.service.AuthService;
-import com.chibitaka.tremane_backend.service.SignInService;
 import com.chibitaka.tremane_backend.service.SignOutService;
 import com.chibitaka.tremane_backend.service.SignUpService;
 
@@ -30,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final SignUpService signUpService;
-    private final SignInService signInService;
     private final SignOutService signOutService;
     private final AuthService authService;
 
@@ -38,18 +33,9 @@ public class AuthController {
      * ユーザー新規登録
      */
     @PostMapping("/signUp")
-    public ResponseEntity<SignUpDto> signUp(@Validated @RequestBody SignUpForm form) {
-        SignUpDto dto = signUpService.signUp(form);
-        return ResponseEntity.ok(dto);
-    }
-
-    /**
-     * ユーザーログイン
-     */
-    @PostMapping("/signIn")
-    public ResponseEntity<SignInDto> signIn(@Validated @RequestBody SignInForm form) {
-        SignInDto dto = signInService.singIn(form);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<Void> signUp(@Validated @RequestBody SignUpForm form) {
+        signUpService.signUp(form);
+        return ResponseEntity.status(204).build();
     }
 
     /**
