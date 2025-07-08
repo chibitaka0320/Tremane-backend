@@ -16,6 +16,3 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
   type-handlers-package: com.chibitaka.tremane_backend.typehandler
-
-jwt:
-  secretKey: ${JWT_SECRET:"mC+gCDTcFDFlbEvVr67QqzGf5Gi+VPVoxPuSj7C1cj4="}
