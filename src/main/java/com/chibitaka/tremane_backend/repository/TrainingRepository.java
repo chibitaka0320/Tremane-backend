@@ -22,4 +22,7 @@ public interface TrainingRepository {
 
     /** トレーニング記録更新 */
     int update(TrainingEntity entity);
+
+    /** トレーニング記録削除 */
+    int delete(String userId, long trainingId);
 }

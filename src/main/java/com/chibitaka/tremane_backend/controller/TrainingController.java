@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,7 +66,17 @@ public class TrainingController {
      */
     @PutMapping("/{trainingId}")
     public ResponseEntity<Void> updateTraining(@PathVariable long trainingId, @RequestBody TrainingForm form) {
-        trainingService.updateTraining(trainingId, form);
+        String userId = UserInfo.getUserId();
+
+        trainingService.updateTraining(userId, trainingId, form);
+        return ResponseEntity.status(204).build();
+    }
+
+    @DeleteMapping("/{trainingId}")
+    public ResponseEntity<Void> deleteTraining(@PathVariable long trainingId) {
+        String userId = UserInfo.getUserId();
+
+        trainingService.deleteTraining(userId, trainingId);
         return ResponseEntity.status(204).build();
     }
 

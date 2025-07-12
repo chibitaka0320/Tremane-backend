@@ -51,8 +51,9 @@ public class TrainingService {
     }
 
     /** トレーニング記録更新 */
-    public void updateTraining(long trainingId, TrainingForm form) {
+    public void updateTraining(String userId, long trainingId, TrainingForm form) {
         TrainingEntity trainingEntity = new TrainingEntity();
+        trainingEntity.setUserId(userId);
         trainingEntity.setDate(form.getDate());
         trainingEntity.setTrainingId(trainingId);
         trainingEntity.setExerciseId(form.getExerciseId());
@@ -60,6 +61,11 @@ public class TrainingService {
         trainingEntity.setReps(form.getReps());
 
         trainingRepository.update(trainingEntity);
+    }
+
+    /** トレーニング記録削除 */
+    public void deleteTraining(String userId, long trainingId) {
+        trainingRepository.delete(userId, trainingId);
     }
 
 }
