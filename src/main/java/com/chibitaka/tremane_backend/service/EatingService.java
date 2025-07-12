@@ -107,8 +107,17 @@ public class EatingService {
     /** PFC目標値設定 */
     private void setGoal(Integer goalCalorie, Integer pfc, EatingRecordDto dto) {
         EatingRecordDto.GoalDto goalDto = new EatingRecordDto.GoalDto();
-        goalDto.setCalories(goalCalorie);
 
+        if (goalCalorie == null) {
+            goalDto.setCalories(0);
+            goalDto.setProtein(0);
+            goalDto.setFat(0);
+            goalDto.setCarbo(0);
+            dto.setGoal(goalDto);
+            return;
+        }
+
+        goalDto.setCalories(goalCalorie);
         if (pfc == 0) {
             goalDto.setProtein(Math.round(goalCalorie * 0.4 / 4));
             goalDto.setFat(Math.round(goalCalorie * 0.2 / 9));
@@ -130,14 +139,38 @@ public class EatingService {
     private void setRate(EatingRecordDto dto) {
         try {
             EatingRecordDto.RateDto rateDto = new EatingRecordDto.RateDto();
+            EatingRecordDto.TotalDto totalDto = dto.getTotal();
+            EatingRecordDto.GoalDto goalDto = dto.getGoal();
 
-            double protein = dto.getTotal().getProtein() / dto.getGoal().getProtein();
-            double fat = dto.getTotal().getFat() / dto.getGoal().getFat();
-            double carbo = dto.getTotal().getCarbo() / dto.getGoal().getCarbo();
+            double totalProtein = totalDto.getProtein();
+            double totalFat = totalDto.getFat();
+            double totalCarbo = totalDto.getCarbo();
 
-            rateDto.setProtein(protein > 1 ? 1 : protein);
-            rateDto.setFat(fat > 1 ? 1 : fat);
-            rateDto.setCarbo(carbo > 1 ? 1 : carbo);
+            double goalProtein = goalDto.getProtein();
+            double goalFat = goalDto.getFat();
+            double goalCarbo = goalDto.getCarbo();
+
+            double protein = totalProtein / goalProtein;
+            double fat = totalFat / goalFat;
+            double carbo = totalCarbo / goalCarbo;
+
+            if (goalProtein <= 0) {
+                rateDto.setProtein(0);
+            } else {
+                rateDto.setProtein(protein > 1 ? 1 : (Double.isNaN(protein) ? 0 : protein));
+            }
+
+            if (goalFat <= 0) {
+                rateDto.setFat(0);
+            } else {
+                rateDto.setFat(fat > 1 ? 1 : (Double.isNaN(fat) ? 0 : fat));
+            }
+
+            if (goalCarbo <= 0) {
+                rateDto.setCarbo(0);
+            } else {
+                rateDto.setCarbo(carbo > 1 ? 1 : (Double.isNaN(carbo) ? 0 : carbo));
+            }
 
             dto.setRate(rateDto);
         } catch (NullPointerException e) {
