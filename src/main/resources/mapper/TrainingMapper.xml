@@ -37,6 +37,12 @@
     VALUES(#{date}, #{userId}, #{exerciseId}, #{weight}, #{reps})
   </insert>
 
+  <!-- トレーニングデータ更新 -->
+  <update id="update">
+    UPDATE trainings SET date = #{date}, exercise_id = #{exerciseId}, weight = #{weight}, reps = #{reps}
+    WHERE training_id = #{trainingId}
+  </update>
+
   <!-- ネストした構造をマッピング -->
   <resultMap id="TrainingRecordResultMap" type="com.chibitaka.tremane_backend.entity.TrainingRecordEntity">
     <result property="name" column="body_part_name"/>

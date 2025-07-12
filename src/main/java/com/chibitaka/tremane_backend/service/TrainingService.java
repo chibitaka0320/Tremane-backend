@@ -34,7 +34,7 @@ public class TrainingService {
     }
 
     /** トレーニング詳細データ取得 */
-    public TrainingResponseDto getTraining(Integer trainingId) {
+    public TrainingResponseDto getTraining(long trainingId) {
         TrainingResponseDto trainingDto = trainingRepository.findById(trainingId);
         return trainingDto;
     }
@@ -48,6 +48,18 @@ public class TrainingService {
         trainingEntity.setReps(form.getReps());
 
         trainingRepository.insertTraining(trainingEntity);
+    }
+
+    /** トレーニング記録更新 */
+    public void updateTraining(long trainingId, TrainingForm form) {
+        TrainingEntity trainingEntity = new TrainingEntity();
+        trainingEntity.setDate(form.getDate());
+        trainingEntity.setTrainingId(trainingId);
+        trainingEntity.setExerciseId(form.getExerciseId());
+        trainingEntity.setWeight(form.getWeight());
+        trainingEntity.setReps(form.getReps());
+
+        trainingRepository.update(trainingEntity);
     }
 
 }

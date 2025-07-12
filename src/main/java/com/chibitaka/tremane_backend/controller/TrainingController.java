@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
@@ -46,7 +47,7 @@ public class TrainingController {
      * 個別トレーニング情報
      */
     @GetMapping("/{trainingId}")
-    public ResponseEntity<TrainingResponseDto> getTraining(@PathVariable Integer trainingId) {
+    public ResponseEntity<TrainingResponseDto> getTraining(@PathVariable long trainingId) {
         TrainingResponseDto dto = trainingService.getTraining(trainingId);
         return ResponseEntity.ok(dto);
     }
@@ -56,6 +57,15 @@ public class TrainingController {
         String userId = UserInfo.getUserId();
 
         trainingService.addTraining(userId, form);
+        return ResponseEntity.status(204).build();
+    }
+
+    /**
+     * トレーニング記録更新
+     */
+    @PutMapping("/{trainingId}")
+    public ResponseEntity<Void> updateTraining(@PathVariable long trainingId, @RequestBody TrainingForm form) {
+        trainingService.updateTraining(trainingId, form);
         return ResponseEntity.status(204).build();
     }
 

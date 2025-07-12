@@ -15,10 +15,11 @@ public interface TrainingRepository {
     List<TrainingRecordEntity> findByUserIdAndDate(TrainingEntity entity);
 
     /** トレーニングID検索 */
-    TrainingResponseDto findById(int trainingId);
+    TrainingResponseDto findById(long trainingId);
 
     /** トレーニング記録追加 */
     int insertTraining(TrainingEntity entity);
 
     /** トレーニング記録更新 */
+    int update(TrainingEntity entity);
 }
