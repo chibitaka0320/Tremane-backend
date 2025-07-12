@@ -18,6 +18,20 @@
     ORDER BY b.name, e.name
   </select>
 
+  <!-- トレーニングデータ詳細情報取得 -->
+  <select id="findById">
+    SELECT
+      t.training_id,
+      t.date,
+      e.parts_id,
+      e.exercise_id,
+      t.weight,
+      t.reps
+    FROM trainings t
+    LEFT JOIN exercises e ON t.exercise_id = e.exercise_id
+    WHERE t.training_id = #{trainingId}
+  </select>
+
   <insert id="insertTraining" parameterType="com.chibitaka.tremane_backend.entity.TrainingEntity">
     INSERT INTO trainings(date, user_id, exercise_id, weight, reps)
     VALUES(#{date}, #{userId}, #{exerciseId}, #{weight}, #{reps})

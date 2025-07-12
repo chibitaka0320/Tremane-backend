@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chibitaka.tremane_backend.dto.TrainingRecordDto;
+import com.chibitaka.tremane_backend.dto.response.TrainingResponseDto;
 import com.chibitaka.tremane_backend.entity.TrainingEntity;
 import com.chibitaka.tremane_backend.entity.TrainingRecordEntity;
 import com.chibitaka.tremane_backend.form.TrainingForm;
@@ -22,7 +23,7 @@ public class TrainingService {
 
     private final TrainingRepository trainingRepository;
 
-    public List<TrainingRecordDto> getTraining(String userId, LocalDate date) {
+    public List<TrainingRecordDto> getTrainings(String userId, LocalDate date) {
         TrainingEntity trainingEntity = new TrainingEntity();
         trainingEntity.setUserId(userId);
         trainingEntity.setDate(date);
@@ -30,6 +31,12 @@ public class TrainingService {
         List<TrainingRecordEntity> recordEntities = trainingRepository.findByUserIdAndDate(trainingEntity);
 
         return TrainingRecordMapper.toDtoList(recordEntities);
+    }
+
+    /** トレーニング詳細データ取得 */
+    public TrainingResponseDto getTraining(Integer trainingId) {
+        TrainingResponseDto trainingDto = trainingRepository.findById(trainingId);
+        return trainingDto;
     }
 
     public void addTraining(String userId, TrainingForm form) {

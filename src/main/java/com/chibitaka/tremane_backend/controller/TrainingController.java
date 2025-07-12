@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
 import com.chibitaka.tremane_backend.dto.TrainingRecordDto;
+import com.chibitaka.tremane_backend.dto.response.TrainingResponseDto;
 import com.chibitaka.tremane_backend.form.TrainingForm;
 import com.chibitaka.tremane_backend.service.TrainingService;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -33,10 +35,19 @@ public class TrainingController {
      * ユーザーの日別トレーニング情報取得
      */
     @GetMapping("")
-    public ResponseEntity<List<TrainingRecordDto>> getTraining(@RequestParam LocalDate date) {
+    public ResponseEntity<List<TrainingRecordDto>> getTrainings(@RequestParam LocalDate date) {
         String userId = UserInfo.getUserId();
 
-        List<TrainingRecordDto> dto = trainingService.getTraining(userId, date);
+        List<TrainingRecordDto> dto = trainingService.getTrainings(userId, date);
+        return ResponseEntity.ok(dto);
+    }
+
+    /*
+     * 個別トレーニング情報
+     */
+    @GetMapping("/{trainingId}")
+    public ResponseEntity<TrainingResponseDto> getTraining(@PathVariable Integer trainingId) {
+        TrainingResponseDto dto = trainingService.getTraining(trainingId);
         return ResponseEntity.ok(dto);
     }
 
