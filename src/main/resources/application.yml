@@ -1,12 +1,13 @@
 spring:
   application:
     name: tremane-backend
-
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${DB_URL:jdbc:postgresql://localhost:5432/tremane}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 5
   messages:
     basename: messages
     encoding: UTF-8
