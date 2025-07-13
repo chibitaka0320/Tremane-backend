@@ -136,6 +136,7 @@
 				</executions>
 				</plugin>
 		</plugins>
+		<finalName>tremane-app</finalName>
 	</build>
 	<repositories>
 		<repository>
