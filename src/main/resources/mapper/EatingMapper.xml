@@ -19,12 +19,40 @@
       AND date = #{date}
     ORDER BY created_at;
   </select>
+
+  <!-- 食事記録詳細取得 -->
+  <select id="findById">
+    SELECT
+      eating_id,
+      date,
+      name,
+      protein,
+      fat,
+      carbo
+    FROM eatings
+    WHERE eating_id = #{eatingId}
+  </select>
   
   <!-- 食事記録を追加 -->
   <insert id="insertEating" parameterType="com.chibitaka.tremane_backend.entity.EatingEntity">
     INSERT INTO eatings(date, user_id, name, calories, protein, fat, carbo)
     VALUES(#{date}, #{userId}, #{name}, #{calories}, #{protein}, #{fat}, #{carbo})
   </insert>
+
+  <!-- 食事記録更新 -->
+  <update id="update">
+    UPDATE eatings
+    SET date = #{date}, name = #{name}, calories = #{calories}, protein = #{protein}, fat = #{fat}, carbo = #{carbo}
+    WHERE eating_id = #{eatingId}
+      AND user_id = #{userId}
+  </update>
+
+  <!-- 食事記録削除 -->
+  <delete id="delete">
+    DELETE FROM eatings
+    WHERE eating_id = #{eatingId}
+      AND user_id = #{userId}
+  </delete>
 
   <!-- マッピング -->
   <resultMap id="EatingEntityResultMap" type="com.chibitaka.tremane_backend.entity.EatingEntity">

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chibitaka.tremane_backend.common.util.Calc;
+import com.chibitaka.tremane_backend.dto.EatingDto;
 import com.chibitaka.tremane_backend.dto.EatingRecordDto;
 import com.chibitaka.tremane_backend.entity.EatingEntity;
 import com.chibitaka.tremane_backend.entity.UserGoalEntity;
@@ -30,7 +31,7 @@ public class EatingService {
     private final UserGoalRepository userGoalRepository;
 
     /** 食事記録取得 */
-    public EatingRecordDto getEating(String userId, LocalDate date) {
+    public EatingRecordDto getEatings(String userId, LocalDate date) {
         // 食事記録一覧取得
         List<EatingEntity> eatings = eatingRepository.findByUserIdAndDate(userId, date);
 
@@ -57,6 +58,12 @@ public class EatingService {
         return eatingDto;
     }
 
+    /** 食事記録詳細取得 */
+    public EatingDto getEating(long eatingId) {
+        EatingDto dto = eatingRepository.findById(eatingId);
+        return dto;
+    }
+
     /** 食事記録追加 */
     public void addEating(String userId, EatingForm form) {
         EatingEntity entity = new EatingEntity();
@@ -70,6 +77,27 @@ public class EatingService {
         entity.setCalories(calcKcal(entity));
 
         eatingRepository.insertEating(entity);
+    }
+
+    /** 食事記録更新 */
+    public void updateEating(String userId, long eatingId, EatingForm form) {
+        EatingEntity entity = new EatingEntity();
+        entity.setEatingId(eatingId);
+        entity.setDate(form.getDate());
+        entity.setUserId(userId);
+        entity.setName(form.getName());
+        entity.setProtein(form.getProtein());
+        entity.setFat(form.getFat());
+        entity.setCarbo(form.getCarbo());
+
+        entity.setCalories(calcKcal(entity));
+
+        eatingRepository.update(entity);
+    }
+
+    /** 食事記録削除 */
+    public void deleteEating(String userId, long eatingId) {
+        eatingRepository.delete(userId, eatingId);
     }
 
     /** カロリー計算 */

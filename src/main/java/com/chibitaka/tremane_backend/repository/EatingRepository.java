@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.chibitaka.tremane_backend.dto.EatingDto;
 import com.chibitaka.tremane_backend.entity.EatingEntity;
 
 /** eatingsテーブル管理用リポジトリ */
@@ -13,6 +14,16 @@ public interface EatingRepository {
     /** 食事記録取得 */
     List<EatingEntity> findByUserIdAndDate(String userId, LocalDate date);
 
+    /** 食事記録詳細取得 */
+    EatingDto findById(long eatingId);
+
     /** 食事記録追加 */
     int insertEating(EatingEntity entity);
+
+    /** 食事記録更新 */
+    int update(EatingEntity entity);
+
+    /** 食事記録削除 */
+    int delete(String userId, long eatingId);
+
 }
