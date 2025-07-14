@@ -5,7 +5,9 @@
   <!-- ユーザーのトレーニング記録を外部結合で取得 -->
   <select id="findByUserIdAndDate" resultMap="TrainingRecordResultMap">
     SELECT
+      b.parts_id,
       b.name AS body_part_name,
+      e.exercise_id,
       e.name AS exercise_name,
       t.training_id,
       t.weight,
@@ -50,8 +52,10 @@
 
   <!-- ネストした構造をマッピング -->
   <resultMap id="TrainingRecordResultMap" type="com.chibitaka.tremane_backend.entity.TrainingRecordEntity">
+    <result property="partsId" column="parts_id"/>
     <result property="name" column="body_part_name"/>
     <collection property="exercises" ofType="com.chibitaka.tremane_backend.entity.TrainingRecordEntity$ExerciseEntity">
+      <result property="exerciseId" column="exercise_id"/>
       <result property="name" column="exercise_name"/>
       <collection property="sets" ofType="com.chibitaka.tremane_backend.entity.TrainingRecordEntity$SetEntity">
         <result property="trainingId" column="training_id" />

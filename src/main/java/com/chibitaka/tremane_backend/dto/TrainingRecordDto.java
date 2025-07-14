@@ -6,11 +6,13 @@ import lombok.Data;
 
 @Data
 public class TrainingRecordDto {
+    private long partsId;
     private String name;
     private List<Exercise> exercises;
 
     @Data
     public static class Exercise {
+        private long exerciseId;
         private String name;
         private List<Set> sets;
     }

@@ -10,11 +10,13 @@ public class TrainingRecordMapper {
 
     public static TrainingRecordDto toDto(TrainingRecordEntity entity) {
         TrainingRecordDto dto = new TrainingRecordDto();
+        dto.setPartsId(entity.getPartsId());
         dto.setName(entity.getName());
         dto.setExercises(
                 entity.getExercises().stream()
                         .map(ex -> {
                             TrainingRecordDto.Exercise exDto = new TrainingRecordDto.Exercise();
+                            exDto.setExerciseId(ex.getExerciseId());
                             exDto.setName(ex.getName());
                             exDto.setSets(
                                     ex.getSets().stream()
