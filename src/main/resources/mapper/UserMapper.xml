@@ -17,6 +17,11 @@
     VALUES (#{userId})
   </insert>
 
+  <!-- 削除 -->
+  <delete id="delete">
+    DELETE FROM users WHERE user_id = #{userId}
+  </delete>
+
   <!-- マッピング -->
   <resultMap id="UserResultMap" type="com.chibitaka.tremane_backend.entity.UserEntity">
     <result property="userId" column="user_id"/>

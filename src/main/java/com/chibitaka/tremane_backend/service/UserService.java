@@ -12,6 +12,7 @@ import com.chibitaka.tremane_backend.form.UserGoalForm;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
 import com.chibitaka.tremane_backend.repository.UserGoalRepository;
 import com.chibitaka.tremane_backend.repository.UserProfileRepository;
+import com.chibitaka.tremane_backend.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +24,7 @@ public class UserService {
 
     private final UserProfileRepository userProfileRepository;
     private final UserGoalRepository userGoalRepository;
+    private final UserRepository userRepository;
 
     /** ユーザープロフィール情報取得 */
     public UserProfileDto getUserInfo(String userId) {
@@ -95,5 +97,10 @@ public class UserService {
         entity.setPfc(form.getPfc());
 
         userGoalRepository.upsert(entity);
+    }
+
+    /** ユーザー削除 */
+    public void deleteUser(String userId) {
+        userRepository.delete(userId);
     }
 }

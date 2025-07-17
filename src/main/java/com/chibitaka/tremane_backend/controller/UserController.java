@@ -1,6 +1,7 @@
 package com.chibitaka.tremane_backend.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,6 +64,14 @@ public class UserController {
     public ResponseEntity<Void> updateUserGoal(@RequestBody UserGoalForm form) {
         String userId = UserInfo.getUserId();
         userService.upsertUserGoal(userId, form);
+
+        return ResponseEntity.status(204).build();
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<Void> deleteUser() {
+        String userId = UserInfo.getUserId();
+        userService.deleteUser(userId);
 
         return ResponseEntity.status(204).build();
     }

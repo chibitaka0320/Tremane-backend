@@ -14,4 +14,7 @@ public interface UserRepository {
         /** ユーザー登録 */
         int insert(UserEntity record);
 
+        /** 削除 */
+        int delete(String userId);
+
 }
