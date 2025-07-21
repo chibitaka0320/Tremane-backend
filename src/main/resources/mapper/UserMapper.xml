@@ -4,9 +4,11 @@
 <mapper namespace="com.chibitaka.tremane_backend.repository.UserRepository">
   
   <!-- ID検索 -->
-  <select id="findById" resultMap="UserResultMap">
+  <select id="findById">
     SELECT
-      user_id
+      user_id,
+      created_at,
+      updated_at
     FROM users
     WHERE user_id = #{userId}
   </select>
@@ -21,10 +23,5 @@
   <delete id="delete">
     DELETE FROM users WHERE user_id = #{userId}
   </delete>
-
-  <!-- マッピング -->
-  <resultMap id="UserResultMap" type="com.chibitaka.tremane_backend.entity.UserEntity">
-    <result property="userId" column="user_id"/>
-  </resultMap>
 
 </mapper>

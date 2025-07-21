@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chibitaka.tremane_backend.common.util.Calc;
+import com.chibitaka.tremane_backend.dto.UserDto;
 import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
 import com.chibitaka.tremane_backend.entity.UserGoalEntity;
@@ -25,6 +26,11 @@ public class UserService {
     private final UserProfileRepository userProfileRepository;
     private final UserGoalRepository userGoalRepository;
     private final UserRepository userRepository;
+
+    public UserDto getUser(String userId) {
+        UserDto dto = userRepository.findById(userId);
+        return dto;
+    }
 
     /** ユーザープロフィール情報取得 */
     public UserProfileDto getUserInfo(String userId) {

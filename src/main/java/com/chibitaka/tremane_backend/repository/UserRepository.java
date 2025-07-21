@@ -2,6 +2,7 @@ package com.chibitaka.tremane_backend.repository;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.chibitaka.tremane_backend.dto.UserDto;
 import com.chibitaka.tremane_backend.entity.UserEntity;
 
 /** ユーザーテーブル操作用インターフェース */
@@ -9,7 +10,7 @@ import com.chibitaka.tremane_backend.entity.UserEntity;
 public interface UserRepository {
 
         /** ユーザーのID検索 */
-        UserEntity findById(Long id);
+        UserDto findById(String id);
 
         /** ユーザー登録 */
         int insert(UserEntity record);
