@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
+import com.chibitaka.tremane_backend.dto.TrainingDto;
 import com.chibitaka.tremane_backend.dto.TrainingRecordDto;
 import com.chibitaka.tremane_backend.dto.response.TrainingResponseDto;
 import com.chibitaka.tremane_backend.form.TrainingForm;
@@ -13,6 +14,7 @@ import com.chibitaka.tremane_backend.service.TrainingService;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -42,6 +44,16 @@ public class TrainingController {
 
         List<TrainingRecordDto> dto = trainingService.getTrainings(userId, date);
         return ResponseEntity.ok(dto);
+    }
+
+    /**
+     * ユーザートレーニング更新情報取得
+     */
+    @GetMapping("/sync")
+    public ResponseEntity<List<TrainingDto>> getUpdateTraining(@RequestParam LocalDateTime updatedAt) {
+        String userId = UserInfo.getUserId();
+        List<TrainingDto> dtos = trainingService.getUpdateTrainings(userId, updatedAt);
+        return ResponseEntity.ok(dtos);
     }
 
     /*

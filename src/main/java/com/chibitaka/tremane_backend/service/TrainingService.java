@@ -1,11 +1,13 @@
 package com.chibitaka.tremane_backend.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.chibitaka.tremane_backend.dto.TrainingDto;
 import com.chibitaka.tremane_backend.dto.TrainingRecordDto;
 import com.chibitaka.tremane_backend.dto.response.TrainingResponseDto;
 import com.chibitaka.tremane_backend.entity.TrainingEntity;
@@ -22,6 +24,11 @@ import lombok.RequiredArgsConstructor;
 public class TrainingService {
 
     private final TrainingRepository trainingRepository;
+
+    public List<TrainingDto> getUpdateTrainings(String userId, LocalDateTime updatedAt) {
+        List<TrainingDto> trainingDtos = trainingRepository.getTrainings(userId, updatedAt);
+        return trainingDtos;
+    }
 
     public List<TrainingRecordDto> getTrainings(String userId, LocalDate date) {
         TrainingEntity trainingEntity = new TrainingEntity();

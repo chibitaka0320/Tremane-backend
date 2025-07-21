@@ -2,6 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chibitaka.tremane_backend.repository.TrainingRepository">
+  <select id="getTrainings">
+    SELECT
+      training_id, date, user_id, exercise_id, weight, reps, created_at, updated_at
+    FROM trainings
+    WHERE user_id = #{userId}
+      AND updated_at > #{updatedAt}
+    ORDER BY training_id
+  </select>
+
   <!-- ユーザーのトレーニング記録を外部結合で取得 -->
   <select id="findByUserIdAndDate" resultMap="TrainingRecordResultMap">
     SELECT
