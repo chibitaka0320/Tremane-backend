@@ -10,6 +10,14 @@
     ORDER BY b.parts_id, e.exercise_id
   </select>
 
+  <select id="getBodyPart">
+    SELECT
+      parts_id, name, created_at, updated_at
+    FROM body_parts
+    WHERE updated_at > #{updatedAt}
+    ORDER BY parts_id
+  </select>
+
   <resultMap id="BodyPartListResultMap" type="com.chibitaka.tremane_backend.entity.BodyPartEntity">
     <result property="partsId" column="parts_id"/>
     <result property="name" column="body_part_name"/>
