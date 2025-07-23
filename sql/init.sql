@@ -54,7 +54,7 @@ CREATE TABLE exercises (
 -- トレーニングトランザクション
 DROP TABLE IF EXISTS trainings;
 CREATE TABLE trainings (
-	training_id SERIAL PRIMARY KEY,
+	training_id TEXT PRIMARY KEY,
 	date DATE NOT NULL,
 	user_id TEXT NOT NULL,
 	exercise_id BIGINT NOT NULL,

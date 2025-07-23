@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +51,8 @@ public class TrainingController {
      * ユーザートレーニング更新情報取得
      */
     @GetMapping("/sync")
-    public ResponseEntity<List<TrainingDto>> getUpdateTraining(@RequestParam LocalDateTime updatedAt) {
+    public ResponseEntity<List<TrainingDto>> getUpdateTraining(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime updatedAt) {
         String userId = UserInfo.getUserId();
         List<TrainingDto> dtos = trainingService.getUpdateTrainings(userId, updatedAt);
         return ResponseEntity.ok(dtos);
@@ -66,7 +68,7 @@ public class TrainingController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> postTraining(@RequestBody TrainingForm form) {
+    public ResponseEntity<Void> postTraining(@RequestBody TrainingForm[] form) {
         String userId = UserInfo.getUserId();
 
         trainingService.addTraining(userId, form);

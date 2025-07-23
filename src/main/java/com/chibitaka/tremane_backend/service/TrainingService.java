@@ -46,15 +46,18 @@ public class TrainingService {
         return trainingDto;
     }
 
-    public void addTraining(String userId, TrainingForm form) {
-        TrainingEntity trainingEntity = new TrainingEntity();
-        trainingEntity.setDate(form.getDate());
-        trainingEntity.setUserId(userId);
-        trainingEntity.setExerciseId(form.getExerciseId());
-        trainingEntity.setWeight(form.getWeight());
-        trainingEntity.setReps(form.getReps());
+    public void addTraining(String userId, TrainingForm[] forms) {
 
-        trainingRepository.insertTraining(trainingEntity);
+        for (TrainingForm form : forms) {
+            TrainingEntity trainingEntity = new TrainingEntity();
+            trainingEntity.setDate(form.getDate());
+            trainingEntity.setUserId(userId);
+            trainingEntity.setExerciseId(form.getExerciseId());
+            trainingEntity.setWeight(form.getWeight());
+            trainingEntity.setReps(form.getReps());
+
+            trainingRepository.insertTraining(trainingEntity);
+        }
     }
 
     /** トレーニング記録更新 */
