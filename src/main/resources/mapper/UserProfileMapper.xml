@@ -12,22 +12,27 @@
       weight,
       birthday,
       gender,
-      active_level
+      active_level,
+      created_at,
+      updated_at
     FROM users_profile
     WHERE user_id = #{userId}
+      AND updated_at > #{updatedAt}
   </select>
 
   <!-- 追加更新 -->
   <insert id="upsert" parameterType="com.chibitaka.tremane_backend.entity.UserProfileEntity">
-    INSERT INTO users_profile (user_id, nickname, height, weight, birthday, gender, active_level)
-    VALUES (#{userId}, #{nickname}, #{height}, #{weight}, #{birthday}, #{gender}, #{activeLevel})
+    INSERT INTO users_profile (user_id, nickname, height, weight, birthday, gender, active_level, created_at, updated_at)
+    VALUES (#{userId}, #{nickname}, #{height}, #{weight}, #{birthday}, #{gender}, #{activeLevel}, #{createdAt}, #{updatedAt})
     ON CONFLICT (user_id) DO UPDATE SET
     nickname=EXCLUDED.nickname,
     height = EXCLUDED.height,
     weight = EXCLUDED.weight,
     birthday = EXCLUDED.birthday,
     gender = EXCLUDED.gender,
-    active_level = EXCLUDED.active_level
+    active_level = EXCLUDED.active_level,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at
   </insert>
 
   <!-- マッピング -->

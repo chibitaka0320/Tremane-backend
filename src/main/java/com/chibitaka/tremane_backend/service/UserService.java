@@ -1,5 +1,7 @@
 package com.chibitaka.tremane_backend.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,24 +35,24 @@ public class UserService {
     }
 
     /** ユーザープロフィール情報取得 */
-    public UserProfileDto getUserInfo(String userId) {
+    public UserProfileDto getUserInfo(String userId, LocalDateTime updatedAt) {
 
-        UserProfileEntity userEntity = userProfileRepository.findById(userId);
+        UserProfileEntity userEntity = userProfileRepository.findById(userId, updatedAt);
 
         if (userEntity == null) {
             return null;
         }
 
         UserProfileDto userDto = new UserProfileDto();
+        userDto.setUserId(userId);
         userDto.setNickname(userEntity.getNickname());
         userDto.setHeight(userEntity.getHeight());
         userDto.setWeight(userEntity.getWeight());
         userDto.setBirthday(userEntity.getBirthday());
-        userDto.setAge(Calc.getAge(userDto.getBirthday()));
         userDto.setGender(userEntity.getGender());
         userDto.setActiveLevel(userEntity.getActiveLevel());
-        userDto.setBmr(Calc.getBmr(userDto.getGender(), userDto.getHeight(), userDto.getWeight(), userDto.getAge()));
-        userDto.setTotalCalorie(Calc.getTotalCalorie(userDto.getBmr(), userDto.getActiveLevel()));
+        userDto.setCreatedAt(userEntity.getCreatedAt());
+        userDto.setUpdatedAt(userEntity.getUpdatedAt());
 
         return userDto;
     }
@@ -65,6 +67,8 @@ public class UserService {
         userEntity.setBirthday(form.getBirthday());
         userEntity.setGender(form.getGender());
         userEntity.setActiveLevel(form.getActiveLevel());
+        userEntity.setCreatedAt(form.getCreatedAt());
+        userEntity.setUpdatedAt(form.getUpdatedAt());
 
         userProfileRepository.upsert(userEntity);
     }
@@ -84,7 +88,7 @@ public class UserService {
         dto.setFinish(goalEntity.getFinish());
         dto.setPfc(goalEntity.getPfc());
 
-        UserProfileEntity userEntity = userProfileRepository.findById(userId);
+        UserProfileEntity userEntity = userProfileRepository.findById(userId, null);
         if (userEntity != null) {
             dto.setGoalCalorie(Calc.getGoalCalorie(userEntity, goalEntity));
         }

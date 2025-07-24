@@ -1,11 +1,14 @@
 package com.chibitaka.tremane_backend.controller;
 
+import java.time.LocalDateTime;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
@@ -28,9 +31,9 @@ public class UserController {
 
     /** ユーザープロフィール情報取得 */
     @GetMapping("/profile")
-    public ResponseEntity<UserProfileDto> getUserProfile() {
+    public ResponseEntity<UserProfileDto> getUserProfile(@RequestParam LocalDateTime updatedAt) {
         String userId = UserInfo.getUserId();
-        UserProfileDto userDto = userService.getUserInfo(userId);
+        UserProfileDto userDto = userService.getUserInfo(userId, updatedAt);
 
         if (userDto == null) {
             return ResponseEntity.notFound().build();

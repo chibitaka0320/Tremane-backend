@@ -1,19 +1,20 @@
 package com.chibitaka.tremane_backend.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
 /** ユーザープロフィール情報DTO */
 @Data
 public class UserProfileDto {
+    private String userId;
     private String nickname;
-    private Double weight;
     private Double height;
+    private Double weight;
     private LocalDate birthday;
-    private Integer age;
     private Integer gender;
     private Integer activeLevel;
-    private Integer bmr;
-    private Integer totalCalorie;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

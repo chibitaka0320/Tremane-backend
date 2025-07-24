@@ -41,7 +41,7 @@ public class EatingService {
         eatingDto.setTotal(calcTotal(eatings));
 
         // ユーザー情報取得
-        UserProfileEntity profileEntity = userProfileRepository.findById(userId);
+        UserProfileEntity profileEntity = userProfileRepository.findById(userId, null);
         UserGoalEntity goalEntity = userGoalRepository.findById(userId);
 
         // 一日の目標カロリー
