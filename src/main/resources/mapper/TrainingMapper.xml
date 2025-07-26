@@ -43,9 +43,10 @@
     WHERE t.training_id = #{trainingId}
   </select>
 
+  <!-- トレーニング記録追加 -->
   <insert id="insertTraining" parameterType="com.chibitaka.tremane_backend.entity.TrainingEntity">
-    INSERT INTO trainings(date, user_id, exercise_id, weight, reps)
-    VALUES(#{date}, #{userId}, #{exerciseId}, #{weight}, #{reps})
+    INSERT INTO trainings(training_id, date, user_id, exercise_id, weight, reps, created_at, updated_at)
+    VALUES(#{trainingId}, #{date}, #{userId}, #{exerciseId}, #{weight}, #{reps}, #{createdAt}, #{updatedAt})
   </insert>
 
   <!-- トレーニングデータ更新 -->

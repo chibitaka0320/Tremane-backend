@@ -29,5 +29,5 @@ public interface TrainingRepository {
     int update(TrainingEntity entity);
 
     /** トレーニング記録削除 */
-    int delete(String userId, long trainingId);
+    int delete(String userId, String trainingId);
 }

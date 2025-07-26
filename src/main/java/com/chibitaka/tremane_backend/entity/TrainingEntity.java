@@ -8,7 +8,7 @@ import lombok.Data;
 /** トレーニングエンティティ */
 @Data
 public class TrainingEntity {
-    private Long trainingId;
+    private String trainingId;
     private LocalDate date;
     private String userId;
     private Long exerciseId;

@@ -79,7 +79,7 @@ public class TrainingController {
      * トレーニング記録更新
      */
     @PutMapping("/{trainingId}")
-    public ResponseEntity<Void> updateTraining(@PathVariable long trainingId, @RequestBody TrainingForm form) {
+    public ResponseEntity<Void> updateTraining(@PathVariable String trainingId, @RequestBody TrainingForm form) {
         String userId = UserInfo.getUserId();
 
         trainingService.updateTraining(userId, trainingId, form);
@@ -87,7 +87,7 @@ public class TrainingController {
     }
 
     @DeleteMapping("/{trainingId}")
-    public ResponseEntity<Void> deleteTraining(@PathVariable long trainingId) {
+    public ResponseEntity<Void> deleteTraining(@PathVariable String trainingId) {
         String userId = UserInfo.getUserId();
 
         trainingService.deleteTraining(userId, trainingId);

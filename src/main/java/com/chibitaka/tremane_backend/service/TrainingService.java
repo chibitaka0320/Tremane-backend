@@ -46,22 +46,26 @@ public class TrainingService {
         return trainingDto;
     }
 
+    /** トレーニング記録追加 */
     public void addTraining(String userId, TrainingForm[] forms) {
 
         for (TrainingForm form : forms) {
             TrainingEntity trainingEntity = new TrainingEntity();
+            trainingEntity.setTrainingId(form.getTrainingId());
             trainingEntity.setDate(form.getDate());
             trainingEntity.setUserId(userId);
             trainingEntity.setExerciseId(form.getExerciseId());
             trainingEntity.setWeight(form.getWeight());
             trainingEntity.setReps(form.getReps());
+            trainingEntity.setCreatedAt(form.getCreatedAt());
+            trainingEntity.setUpdatedAt(form.getUpdatedAt());
 
             trainingRepository.insertTraining(trainingEntity);
         }
     }
 
     /** トレーニング記録更新 */
-    public void updateTraining(String userId, long trainingId, TrainingForm form) {
+    public void updateTraining(String userId, String trainingId, TrainingForm form) {
         TrainingEntity trainingEntity = new TrainingEntity();
         trainingEntity.setUserId(userId);
         trainingEntity.setDate(form.getDate());
@@ -74,7 +78,7 @@ public class TrainingService {
     }
 
     /** トレーニング記録削除 */
-    public void deleteTraining(String userId, long trainingId) {
+    public void deleteTraining(String userId, String trainingId) {
         trainingRepository.delete(userId, trainingId);
     }
 
