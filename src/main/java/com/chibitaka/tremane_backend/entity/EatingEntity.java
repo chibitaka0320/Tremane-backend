@@ -7,7 +7,7 @@ import lombok.Data;
 /** eatingsテーブル用エンティティ */
 @Data
 public class EatingEntity {
-    private Long eatingId;
+    private String eatingId;
     private LocalDate date;
     private String userId;
     private String name;

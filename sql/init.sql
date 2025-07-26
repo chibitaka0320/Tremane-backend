@@ -73,7 +73,7 @@ CREATE TABLE trainings (
 -- 食事トランザクション
 DROP TABLE IF EXISTS eatings;
 CREATE TABLE eatings (
-	eating_id SERIAL PRIMARY KEY,
+	eating_id TEXT PRIMARY KEY,
 	date DATE NOT NULL,
 	user_id TEXT NOT NULL,
 	name VARCHAR(255),

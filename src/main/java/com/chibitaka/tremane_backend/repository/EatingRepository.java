@@ -15,7 +15,7 @@ public interface EatingRepository {
     List<EatingEntity> findByUserIdAndDate(String userId, LocalDate date);
 
     /** 食事記録詳細取得 */
-    EatingDto findById(long eatingId);
+    EatingDto findById(String eatingId);
 
     /** 食事記録追加 */
     int insertEating(EatingEntity entity);
@@ -24,6 +24,6 @@ public interface EatingRepository {
     int update(EatingEntity entity);
 
     /** 食事記録削除 */
-    int delete(String userId, long eatingId);
+    int delete(String userId, String eatingId);
 
 }

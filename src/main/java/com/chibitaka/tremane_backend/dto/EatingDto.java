@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class EatingDto {
-    private Long eatingId;
+    private String eatingId;
     private LocalDate date;
     private String name;
     private int calories;

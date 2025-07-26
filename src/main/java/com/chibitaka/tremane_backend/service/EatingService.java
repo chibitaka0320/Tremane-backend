@@ -59,7 +59,7 @@ public class EatingService {
     }
 
     /** 食事記録詳細取得 */
-    public EatingDto getEating(long eatingId) {
+    public EatingDto getEating(String eatingId) {
         EatingDto dto = eatingRepository.findById(eatingId);
         return dto;
     }
@@ -80,7 +80,7 @@ public class EatingService {
     }
 
     /** 食事記録更新 */
-    public void updateEating(String userId, long eatingId, EatingForm form) {
+    public void updateEating(String userId, String eatingId, EatingForm form) {
         EatingEntity entity = new EatingEntity();
         entity.setEatingId(eatingId);
         entity.setDate(form.getDate());
@@ -96,7 +96,7 @@ public class EatingService {
     }
 
     /** 食事記録削除 */
-    public void deleteEating(String userId, long eatingId) {
+    public void deleteEating(String userId, String eatingId) {
         eatingRepository.delete(userId, eatingId);
     }
 
