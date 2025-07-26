@@ -44,9 +44,17 @@
   </select>
   
   <!-- 食事記録を追加 -->
-  <insert id="insertEating" parameterType="com.chibitaka.tremane_backend.entity.EatingEntity">
-    INSERT INTO eatings(date, user_id, name, calories, protein, fat, carbo)
-    VALUES(#{date}, #{userId}, #{name}, #{calories}, #{protein}, #{fat}, #{carbo})
+  <insert id="upsertEating" parameterType="com.chibitaka.tremane_backend.entity.EatingEntity">
+    INSERT INTO eatings(eating_id, date, user_id, name, calories, protein, fat, carbo, created_at, updated_at)
+    VALUES( #{eatingId}, #{date}, #{userId}, #{name}, #{calories}, #{protein}, #{fat}, #{carbo}, #{createdAt}, #{updatedAt})
+    ON CONFLICT (eating_id) DO UPDATE SET
+    date=EXCLUDED.date,
+    name=EXCLUDED.name,
+    calories=EXCLUDED.calories,
+    protein=EXCLUDED.protein,
+    fat=EXCLUDED.fat,
+    carbo=EXCLUDED.carbo,
+    updated_at=EXCLUDED.updated_at
   </insert>
 
   <!-- 食事記録更新 -->

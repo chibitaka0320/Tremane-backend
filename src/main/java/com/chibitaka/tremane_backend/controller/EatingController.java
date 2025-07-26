@@ -59,10 +59,10 @@ public class EatingController {
 
     /** 食事記録追加 */
     @PostMapping("")
-    public ResponseEntity<Void> postEating(@RequestBody EatingForm form) {
+    public ResponseEntity<Void> postEating(@RequestBody EatingForm[] forms) {
         String userId = UserInfo.getUserId();
 
-        eatingService.addEating(userId, form);
+        eatingService.addEating(userId, forms);
         return ResponseEntity.status(204).build();
     }
 

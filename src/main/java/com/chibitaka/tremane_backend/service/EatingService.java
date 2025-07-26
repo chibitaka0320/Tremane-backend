@@ -72,18 +72,23 @@ public class EatingService {
     }
 
     /** 食事記録追加 */
-    public void addEating(String userId, EatingForm form) {
-        EatingEntity entity = new EatingEntity();
-        entity.setDate(form.getDate());
-        entity.setUserId(userId);
-        entity.setName(form.getName());
-        entity.setProtein(form.getProtein());
-        entity.setFat(form.getFat());
-        entity.setCarbo(form.getCarbo());
+    public void addEating(String userId, EatingForm[] forms) {
 
-        entity.setCalories(calcKcal(entity));
+        for (EatingForm form : forms) {
+            EatingEntity entity = new EatingEntity();
+            entity.setEatingId(form.getEatingId());
+            entity.setDate(form.getDate());
+            entity.setUserId(userId);
+            entity.setName(form.getName());
+            entity.setCalories(form.getCalories());
+            entity.setProtein(form.getProtein());
+            entity.setFat(form.getFat());
+            entity.setCarbo(form.getCarbo());
+            entity.setCreatedAt(form.getCreatedAt());
+            entity.setUpdatedAt(form.getUpdatedAt());
 
-        eatingRepository.insertEating(entity);
+            eatingRepository.upsertEating(entity);
+        }
     }
 
     /** 食事記録更新 */

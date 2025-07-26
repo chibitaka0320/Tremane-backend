@@ -23,7 +23,7 @@ public interface EatingRepository {
     EatingDto findById(String eatingId);
 
     /** 食事記録追加 */
-    int insertEating(EatingEntity entity);
+    int upsertEating(EatingEntity entity);
 
     /** 食事記録更新 */
     int update(EatingEntity entity);
