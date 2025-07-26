@@ -47,7 +47,7 @@ public class TrainingService {
     }
 
     /** トレーニング記録追加 */
-    public void addTraining(String userId, TrainingForm[] forms) {
+    public void upsertTraining(String userId, TrainingForm[] forms) {
 
         for (TrainingForm form : forms) {
             TrainingEntity trainingEntity = new TrainingEntity();
@@ -60,21 +60,8 @@ public class TrainingService {
             trainingEntity.setCreatedAt(form.getCreatedAt());
             trainingEntity.setUpdatedAt(form.getUpdatedAt());
 
-            trainingRepository.insertTraining(trainingEntity);
+            trainingRepository.upsertTraining(trainingEntity);
         }
-    }
-
-    /** トレーニング記録更新 */
-    public void updateTraining(String userId, String trainingId, TrainingForm form) {
-        TrainingEntity trainingEntity = new TrainingEntity();
-        trainingEntity.setUserId(userId);
-        trainingEntity.setDate(form.getDate());
-        trainingEntity.setTrainingId(trainingId);
-        trainingEntity.setExerciseId(form.getExerciseId());
-        trainingEntity.setWeight(form.getWeight());
-        trainingEntity.setReps(form.getReps());
-
-        trainingRepository.update(trainingEntity);
     }
 
     /** トレーニング記録削除 */

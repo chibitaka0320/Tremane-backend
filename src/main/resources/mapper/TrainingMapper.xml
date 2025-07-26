@@ -44,9 +44,15 @@
   </select>
 
   <!-- トレーニング記録追加 -->
-  <insert id="insertTraining" parameterType="com.chibitaka.tremane_backend.entity.TrainingEntity">
-    INSERT INTO trainings(training_id, date, user_id, exercise_id, weight, reps, created_at, updated_at)
-    VALUES(#{trainingId}, #{date}, #{userId}, #{exerciseId}, #{weight}, #{reps}, #{createdAt}, #{updatedAt})
+  <insert id="upsertTraining" parameterType="com.chibitaka.tremane_backend.entity.TrainingEntity">
+    INSERT INTO trainings (training_id, date, user_id, exercise_id, weight, reps, created_at, updated_at)
+    VALUES (#{trainingId}, #{date}, #{userId}, #{exerciseId}, #{weight}, #{reps}, #{createdAt}, #{updatedAt})
+    ON CONFLICT (training_id) DO UPDATE SET
+    date=EXCLUDED.date,
+    exercise_id=EXCLUDED.exercise_id,
+    weight=EXCLUDED.weight,
+    reps=EXCLUDED.reps,
+    updated_at=EXCLUDED.updated_at
   </insert>
 
   <!-- トレーニングデータ更新 -->

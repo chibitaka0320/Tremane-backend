@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
@@ -71,18 +70,7 @@ public class TrainingController {
     public ResponseEntity<Void> postTraining(@RequestBody TrainingForm[] form) {
         String userId = UserInfo.getUserId();
 
-        trainingService.addTraining(userId, form);
-        return ResponseEntity.status(204).build();
-    }
-
-    /**
-     * トレーニング記録更新
-     */
-    @PutMapping("/{trainingId}")
-    public ResponseEntity<Void> updateTraining(@PathVariable String trainingId, @RequestBody TrainingForm form) {
-        String userId = UserInfo.getUserId();
-
-        trainingService.updateTraining(userId, trainingId, form);
+        trainingService.upsertTraining(userId, form);
         return ResponseEntity.status(204).build();
     }
 

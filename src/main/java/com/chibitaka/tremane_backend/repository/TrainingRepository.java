@@ -23,7 +23,7 @@ public interface TrainingRepository {
     TrainingResponseDto findById(long trainingId);
 
     /** トレーニング記録追加 */
-    int insertTraining(TrainingEntity entity);
+    int upsertTraining(TrainingEntity entity);
 
     /** トレーニング記録更新 */
     int update(TrainingEntity entity);
