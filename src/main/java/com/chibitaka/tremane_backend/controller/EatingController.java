@@ -41,11 +41,12 @@ public class EatingController {
         return ResponseEntity.ok(eatingRecordDto);
     }
 
+    /** ユーザー食事記録更新情報取得 */
     @GetMapping("/sync")
     public ResponseEntity<List<EatingDto>> getUpdateEating(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime updatedAt) {
         String userId = UserInfo.getUserId();
-        List<EatingDto> dtos = null;
+        List<EatingDto> dtos = eatingService.getUpdateEatings(userId, updatedAt);
         return ResponseEntity.ok(dtos);
     }
 

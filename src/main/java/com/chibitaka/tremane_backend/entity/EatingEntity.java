@@ -1,6 +1,7 @@
 package com.chibitaka.tremane_backend.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -15,4 +16,6 @@ public class EatingEntity {
     private double protein;
     private double fat;
     private double carbo;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

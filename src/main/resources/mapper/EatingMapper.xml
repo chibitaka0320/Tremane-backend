@@ -3,6 +3,16 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chibitaka.tremane_backend.repository.EatingRepository">
 
+  <!-- 食事記録更新情報取得 -->
+  <select id="getEatings">
+    SELECT
+      eating_id, date, user_id, name, calories, protein, fat, carbo, created_at, updated_at
+    FROM eatings
+    WHERE user_id = #{userId}
+      AND updated_at > #{updatedAt}
+    ORDER BY eating_id
+  </select>
+
   <!-- 食事記録取得 -->
   <select id="findByUserIdAndDate" resultMap="EatingEntityResultMap">
     SELECT

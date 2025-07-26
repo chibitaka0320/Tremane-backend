@@ -1,6 +1,7 @@
 package com.chibitaka.tremane_backend.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -29,6 +30,12 @@ public class EatingService {
     private final EatingRepository eatingRepository;
     private final UserProfileRepository userProfileRepository;
     private final UserGoalRepository userGoalRepository;
+
+    /** 食事更新記録取得 */
+    public List<EatingDto> getUpdateEatings(String userId, LocalDateTime updatedAt) {
+        List<EatingDto> eatingDtos = eatingRepository.getEatings(userId, updatedAt);
+        return eatingDtos;
+    }
 
     /** 食事記録取得 */
     public EatingRecordDto getEatings(String userId, LocalDate date) {
