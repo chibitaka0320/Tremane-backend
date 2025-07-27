@@ -1,6 +1,7 @@
 package com.chibitaka.tremane_backend.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -13,4 +14,6 @@ public class UserGoalEntity {
     private LocalDate start;
     private LocalDate finish;
     private Integer pfc;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

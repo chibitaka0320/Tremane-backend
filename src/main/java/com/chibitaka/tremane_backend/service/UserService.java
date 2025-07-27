@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.chibitaka.tremane_backend.common.util.Calc;
 import com.chibitaka.tremane_backend.dto.UserDto;
 import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
@@ -74,24 +73,24 @@ public class UserService {
     }
 
     /** 目標取得 */
-    public UserGoalDto getUserGoal(String userId) {
+    public UserGoalDto getUserGoal(String userId, LocalDateTime updatedAt) {
 
         // 目標を取得し未設定であればnullを返す
-        UserGoalEntity goalEntity = userGoalRepository.findById(userId);
+        UserGoalEntity goalEntity = userGoalRepository.findById(userId, updatedAt);
+
         if (goalEntity == null) {
             return null;
         }
+
         UserGoalDto dto = new UserGoalDto();
+        dto.setUserId(userId);
         dto.setWeight(goalEntity.getWeight());
         dto.setGoalWeight(goalEntity.getGoalWeight());
         dto.setStart(goalEntity.getStart());
         dto.setFinish(goalEntity.getFinish());
         dto.setPfc(goalEntity.getPfc());
-
-        UserProfileEntity userEntity = userProfileRepository.findById(userId, null);
-        if (userEntity != null) {
-            dto.setGoalCalorie(Calc.getGoalCalorie(userEntity, goalEntity));
-        }
+        dto.setCreatedAt(goalEntity.getCreatedAt());
+        dto.setUpdatedAt(goalEntity.getUpdatedAt());
 
         return dto;
     }
@@ -105,6 +104,8 @@ public class UserService {
         entity.setStart(form.getStart());
         entity.setFinish(form.getFinish());
         entity.setPfc(form.getPfc());
+        entity.setCreatedAt(form.getCreatedAt());
+        entity.setUpdatedAt(form.getUpdatedAt());
 
         userGoalRepository.upsert(entity);
     }

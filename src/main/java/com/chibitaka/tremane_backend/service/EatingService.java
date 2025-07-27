@@ -49,7 +49,7 @@ public class EatingService {
 
         // ユーザー情報取得
         UserProfileEntity profileEntity = userProfileRepository.findById(userId, null);
-        UserGoalEntity goalEntity = userGoalRepository.findById(userId);
+        UserGoalEntity goalEntity = userGoalRepository.findById(userId, null);
 
         // 一日の目標カロリー
         Integer goalCalorie = Calc.getGoalCalorie(profileEntity, goalEntity);

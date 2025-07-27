@@ -11,21 +11,25 @@
       goal_weight,
       start,
       finish,
-      pfc
+      pfc,
+      created_at,
+      updated_at
     FROM users_goal
     WHERE user_id = #{userId}
+      AND updated_at > #{updatedAt}
   </select>
 
   <!-- 追加更新 -->
   <insert id="upsert" parameterType="com.chibitaka.tremane_backend.entity.UserGoalEntity">
-    INSERT INTO users_goal (user_id, weight, goal_weight, start, finish, pfc)
-    VALUES (#{userId}, #{weight}, #{goalWeight}, #{start}, #{finish}, #{pfc})
+    INSERT INTO users_goal (user_id, weight, goal_weight, start, finish, pfc, created_at, updated_at)
+    VALUES (#{userId}, #{weight}, #{goalWeight}, #{start}, #{finish}, #{pfc}, #{createdAt}, #{updatedAt})
     ON CONFLICT (user_id) DO UPDATE SET
     weight=EXCLUDED.weight,
     goal_weight=EXCLUDED.goal_weight,
     start=EXCLUDED.start,
     finish=EXCLUDED.finish,
-    pfc=EXCLUDED.pfc
+    pfc=EXCLUDED.pfc,
+    updated_at=EXCLUDED.updated_at
   </insert>
 
   <!-- マッピング -->

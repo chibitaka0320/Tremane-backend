@@ -53,9 +53,9 @@ public class UserController {
 
     /* ユーザー目標取得 */
     @GetMapping("/goal")
-    public ResponseEntity<UserGoalDto> getUserGoal() {
+    public ResponseEntity<UserGoalDto> getUserGoal(@RequestParam LocalDateTime updatedAt) {
         String userId = UserInfo.getUserId();
-        UserGoalDto goalDto = userService.getUserGoal(userId);
+        UserGoalDto goalDto = userService.getUserGoal(userId, updatedAt);
 
         if (goalDto == null) {
             return ResponseEntity.notFound().build();
