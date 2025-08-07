@@ -24,7 +24,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/bodyparts/**").permitAll()
-                .requestMatchers("/exercise/**").permitAll()
+                .requestMatchers("/exercise").permitAll()
                 .requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated());
 
