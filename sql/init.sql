@@ -55,6 +55,20 @@ CREATE TABLE exercises (
 	FOREIGN KEY (parts_id) REFERENCES body_parts(parts_id) ON DELETE CASCADE
 );
 
+-- ユーザー種目テーブル
+DROP TABLE IF EXISTS my_exercises;
+CREATE TABLE my_exercises (
+	exercise_id BIGINT,
+	user_id TEXT,
+	parts_id BIGINT NOT NULL,
+	name VARCHAR(255),
+	created_at TIMESTAMP NOT NULL,
+	updated_at TIMESTAMP NOT NULL,
+	PRIMARY KEY (exercise_id, user_id),
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+	FOREIGN KEY (parts_id) REFERENCES body_parts(parts_id) ON DELETE CASCADE
+);
+
 -- トレーニングトランザクション
 DROP TABLE IF EXISTS trainings;
 CREATE TABLE trainings (
