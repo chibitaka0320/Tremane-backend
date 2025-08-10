@@ -19,7 +19,7 @@ public class TrainingRecordEntity {
 
     @Data
     public static class SetEntity {
-        private Long trainingId;
+        private String trainingId;
         private Integer weight;
         private Integer reps;
     }

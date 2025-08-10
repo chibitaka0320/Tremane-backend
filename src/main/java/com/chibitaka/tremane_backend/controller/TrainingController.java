@@ -61,7 +61,7 @@ public class TrainingController {
      * 個別トレーニング情報
      */
     @GetMapping("/{trainingId}")
-    public ResponseEntity<TrainingResponseDto> getTraining(@PathVariable long trainingId) {
+    public ResponseEntity<TrainingResponseDto> getTraining(@PathVariable String trainingId) {
         TrainingResponseDto dto = trainingService.getTraining(trainingId);
         return ResponseEntity.ok(dto);
     }

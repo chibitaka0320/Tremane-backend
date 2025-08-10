@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class TrainingDto {
-    private long trainingId;
+    private String trainingId;
     private LocalDate date;
     private String userId;
     private long exerciseId;

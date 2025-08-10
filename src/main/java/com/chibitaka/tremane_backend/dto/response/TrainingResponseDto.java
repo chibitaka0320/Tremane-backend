@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class TrainingResponseDto {
-    private long trainingId;
+    private String trainingId;
     private LocalDate date;
     private int partsId;
     private int exerciseId;

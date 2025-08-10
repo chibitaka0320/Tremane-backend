@@ -41,7 +41,7 @@ public class TrainingService {
     }
 
     /** トレーニング詳細データ取得 */
-    public TrainingResponseDto getTraining(long trainingId) {
+    public TrainingResponseDto getTraining(String trainingId) {
         TrainingResponseDto trainingDto = trainingRepository.findById(trainingId);
         return trainingDto;
     }

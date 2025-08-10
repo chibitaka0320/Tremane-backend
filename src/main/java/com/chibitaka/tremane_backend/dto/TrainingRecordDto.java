@@ -19,7 +19,7 @@ public class TrainingRecordDto {
 
     @Data
     public static class Set {
-        private Long trainingId;
+        private String trainingId;
         private Integer weight;
         private Integer reps;
     }

@@ -20,7 +20,7 @@ public interface TrainingRepository {
     List<TrainingRecordEntity> findByUserIdAndDate(TrainingEntity entity);
 
     /** トレーニングID検索 */
-    TrainingResponseDto findById(long trainingId);
+    TrainingResponseDto findById(String trainingId);
 
     /** トレーニング記録追加 */
     int upsertTraining(TrainingEntity entity);
