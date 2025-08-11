@@ -47,7 +47,7 @@ public class ExerciseService {
     }
 
     // マイ種目削除
-    public void deleteMyExercises(String userId, int exerciseId) {
+    public void deleteMyExercises(String userId, String exerciseId) {
         exerciseRepository.deleteMyExercise(userId, exerciseId);
     }
 

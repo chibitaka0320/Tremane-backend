@@ -10,7 +10,7 @@ public class TrainingDto {
     private String trainingId;
     private LocalDate date;
     private String userId;
-    private long exerciseId;
+    private String exerciseId;
     private double weight;
     private double reps;
     private LocalDateTime createdAt;

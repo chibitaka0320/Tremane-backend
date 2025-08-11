@@ -53,7 +53,7 @@ public class ExerciseController {
 
     /** マイ種目削除 */
     @DeleteMapping("/myself/{exerciseId}")
-    public ResponseEntity<Void> deleteMyExercises(@PathVariable int exerciseId) {
+    public ResponseEntity<Void> deleteMyExercises(@PathVariable String exerciseId) {
         String userId = UserInfo.getUserId();
 
         exerciseService.deleteMyExercises(userId, exerciseId);

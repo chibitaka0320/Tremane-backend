@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ExerciseEntity {
-    private Long exerciseId;
+    private String exerciseId;
     private Long partsId;
     private String name;
 }

@@ -12,7 +12,7 @@ public class TrainingRecordEntity {
 
     @Data
     public static class ExerciseEntity {
-        private long exerciseId;
+        private String exerciseId;
         private String name;
         private List<SetEntity> sets;
     }

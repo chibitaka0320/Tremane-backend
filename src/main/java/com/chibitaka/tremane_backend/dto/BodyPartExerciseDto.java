@@ -12,7 +12,7 @@ public class BodyPartExerciseDto {
 
     @Data
     public static class ExerciseDto {
-        private Long exerciseId;
+        private String exerciseId;
         private String name;
     }
 }

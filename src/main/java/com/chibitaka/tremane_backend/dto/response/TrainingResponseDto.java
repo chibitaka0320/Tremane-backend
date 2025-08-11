@@ -9,7 +9,7 @@ public class TrainingResponseDto {
     private String trainingId;
     private LocalDate date;
     private int partsId;
-    private int exerciseId;
+    private String exerciseId;
     private double weight;
     private double reps;
 }

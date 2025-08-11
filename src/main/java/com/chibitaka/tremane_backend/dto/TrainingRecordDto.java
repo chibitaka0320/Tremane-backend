@@ -12,7 +12,7 @@ public class TrainingRecordDto {
 
     @Data
     public static class Exercise {
-        private long exerciseId;
+        private String exerciseId;
         private String name;
         private List<Set> sets;
     }

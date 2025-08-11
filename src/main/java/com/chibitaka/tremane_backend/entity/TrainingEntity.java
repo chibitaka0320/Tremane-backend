@@ -11,7 +11,7 @@ public class TrainingEntity {
     private String trainingId;
     private LocalDate date;
     private String userId;
-    private Long exerciseId;
+    private String exerciseId;
     private double weight;
     private int reps;
     private LocalDateTime createdAt;

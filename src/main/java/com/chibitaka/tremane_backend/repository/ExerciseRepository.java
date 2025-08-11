@@ -19,5 +19,5 @@ public interface ExerciseRepository {
     int upsertMyExercise(MyExerciseEntity entity);
 
     /** マイ種目削除 */
-    int deleteMyExercise(String userId, int exerciseId);
+    int deleteMyExercise(String userId, String exerciseId);
 }

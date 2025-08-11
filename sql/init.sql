@@ -47,7 +47,7 @@ CREATE TABLE body_parts (
 -- 種目マスタ
 DROP TABLE IF EXISTS exercises;
 CREATE TABLE exercises (
-	exercise_id SERIAL PRIMARY KEY,
+	exercise_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	parts_id BIGINT NOT NULL,
 	name VARCHAR(255),
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -58,7 +58,7 @@ CREATE TABLE exercises (
 -- ユーザー種目テーブル
 DROP TABLE IF EXISTS my_exercises;
 CREATE TABLE my_exercises (
-	exercise_id BIGINT,
+	exercise_id TEXT,
 	user_id TEXT,
 	parts_id BIGINT NOT NULL,
 	name VARCHAR(255),
@@ -75,7 +75,7 @@ CREATE TABLE trainings (
 	training_id TEXT PRIMARY KEY,
 	date DATE NOT NULL,
 	user_id TEXT NOT NULL,
-	exercise_id BIGINT NOT NULL,
+	exercise_id TEXT NOT NULL,
 	weight int,
 	reps int,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

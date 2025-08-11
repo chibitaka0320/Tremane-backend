@@ -7,7 +7,7 @@ import lombok.Data;
 /** マイ種目リクエストフォーム */
 @Data
 public class ExerciseForm {
-    private long exerciseId;
+    private String exerciseId;
     private long partsId;
     private String name;
     private LocalDateTime createdAt;

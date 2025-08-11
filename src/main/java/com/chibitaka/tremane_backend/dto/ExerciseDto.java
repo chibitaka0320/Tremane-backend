@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class ExerciseDto {
-    private long exerciseId;
+    private String exerciseId;
     private long partsId;
     private String name;
     private LocalDateTime createdAt;
