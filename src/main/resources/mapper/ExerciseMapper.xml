@@ -7,32 +7,35 @@
       exercise_id, parts_id, name, created_at, updated_at
     FROM exercises
     WHERE updated_at > #{updatedAt}
+      AND owner_user_id IS NULL
     ORDER BY exercise_id, parts_id
   </select>
 
   <select id="getMyExercise">
     SELECT
-      exercise_id, parts_id, name, created_at, updated_at
-    FROM my_exercises
-    WHERE user_id = #{userId}
+      exercise_id, owner_user_id, parts_id, name, created_at, updated_at
+    FROM exercises
+    WHERE owner_user_id = #{userId}
       AND updated_at > #{updatedAt}
+      AND is_deleted = 0
     ORDER BY exercise_id, parts_id
   </select>
 
   <!-- 種目追加・更新 -->
   <insert id="upsertMyExercise">
-    INSERT INTO my_exercises(exercise_id, user_id, parts_id, name, created_at, updated_at)
-    VALUES(#{exerciseId}, #{userId}, #{partsId}, #{name}, #{createdAt}, #{updatedAt})
-    ON CONFLICT (exercise_id, user_id) DO UPDATE SET
+    INSERT INTO exercises(exercise_id, owner_user_id, parts_id, name, created_at, updated_at)
+    VALUES(#{exerciseId}::uuid, #{userId}, #{partsId}, #{name}, #{createdAt}, #{updatedAt})
+    ON CONFLICT (exercise_id) DO UPDATE SET
     parts_id=EXCLUDED.parts_id,
     name=EXCLUDED.name,
     updated_at=EXCLUDED.updated_at
   </insert>
 
   <!-- 種目削除 -->
-  <delete id="deleteMyExercise">
-    DELETE FROM my_exercises
-    WHERE exercise_id = #{exerciseId}
-      AND user_id = #{userId}
-  </delete>
+  <update id="deleteMyExercise">
+    UPDATE exercises
+    SET is_deleted = 1
+    WHERE exercise_id = #{exerciseId}::uuid
+      AND owner_user_id = #{userId}
+  </update>
 </mapper>

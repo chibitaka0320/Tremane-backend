@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class ExerciseForm {
     private String exerciseId;
+    private String ownerUserId;
     private long partsId;
     private String name;
     private LocalDateTime createdAt;

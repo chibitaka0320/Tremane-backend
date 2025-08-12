@@ -47,9 +47,11 @@ CREATE TABLE body_parts (
 -- 種目マスタ
 DROP TABLE IF EXISTS exercises;
 CREATE TABLE exercises (
-	exercise_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	exercise_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+	owner_user_id TEXT DEFAULT NULL,
 	parts_id BIGINT NOT NULL,
 	name VARCHAR(255),
+	is_deleted INT DEFAULT 0,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (parts_id) REFERENCES body_parts(parts_id) ON DELETE CASCADE
@@ -80,8 +82,7 @@ CREATE TABLE trainings (
 	reps int,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-	FOREIGN KEY (exercise_id) REFERENCES exercises(exercise_id) ON DELETE CASCADE
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 -- 食事トランザクション
