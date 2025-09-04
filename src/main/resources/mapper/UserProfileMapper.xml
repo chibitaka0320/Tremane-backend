@@ -7,7 +7,6 @@
   <select id="findById" resultMap="UserResultMap">
     SELECT
       user_id,
-      nickname,
       height,
       weight,
       birthday,
@@ -22,10 +21,9 @@
 
   <!-- 追加更新 -->
   <insert id="upsert" parameterType="com.chibitaka.tremane_backend.entity.UserProfileEntity">
-    INSERT INTO users_profile (user_id, nickname, height, weight, birthday, gender, active_level, created_at, updated_at)
-    VALUES (#{userId}, #{nickname}, #{height}, #{weight}, #{birthday}, #{gender}, #{activeLevel}, #{createdAt}, #{updatedAt})
+    INSERT INTO users_profile (user_id, height, weight, birthday, gender, active_level, created_at, updated_at)
+    VALUES (#{userId}, #{height}, #{weight}, #{birthday}, #{gender}, #{activeLevel}, #{createdAt}, #{updatedAt})
     ON CONFLICT (user_id) DO UPDATE SET
-    nickname=EXCLUDED.nickname,
     height = EXCLUDED.height,
     weight = EXCLUDED.weight,
     birthday = EXCLUDED.birthday,
@@ -38,7 +36,6 @@
   <!-- マッピング -->
   <resultMap id="UserResultMap" type="com.chibitaka.tremane_backend.entity.UserProfileEntity">
     <result property="userId" column="user_id"/>
-    <result property="nickname" column="nickname"/>
     <result property="height" column="height"/>
     <result property="weight" column="weight"/>
     <result property="birthday" column="birthday"/>

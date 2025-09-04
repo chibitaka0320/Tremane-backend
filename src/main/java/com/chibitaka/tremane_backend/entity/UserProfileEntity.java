@@ -9,7 +9,6 @@ import lombok.Data;
 @Data
 public class UserProfileEntity {
     private String userId;
-    private String nickname;
     private Double height;
     private Double weight;
     private LocalDate birthday;

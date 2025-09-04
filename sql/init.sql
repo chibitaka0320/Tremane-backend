@@ -10,7 +10,6 @@ CREATE TABLE users (
 DROP TABLE IF EXISTS users_profile;
 CREATE TABLE users_profile (
 	user_id TEXT PRIMARY KEY,
-	nickname VARCHAR(50),
 	height INT,
 	weight INT,
 	birthday DATE,

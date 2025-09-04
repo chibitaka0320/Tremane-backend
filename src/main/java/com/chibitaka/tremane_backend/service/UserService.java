@@ -49,7 +49,6 @@ public class UserService {
 
         UserProfileDto userDto = new UserProfileDto();
         userDto.setUserId(userId);
-        userDto.setNickname(userEntity.getNickname());
         userDto.setHeight(userEntity.getHeight());
         userDto.setWeight(userEntity.getWeight());
         userDto.setBirthday(userEntity.getBirthday());
@@ -65,7 +64,6 @@ public class UserService {
     public void upsertUserInfo(String userId, UserProfileForm form) {
         UserProfileEntity userEntity = new UserProfileEntity();
         userEntity.setUserId(userId);
-        userEntity.setNickname(form.getNickname());
         userEntity.setHeight(form.getHeight());
         userEntity.setWeight(form.getWeight());
         userEntity.setBirthday(form.getBirthday());
