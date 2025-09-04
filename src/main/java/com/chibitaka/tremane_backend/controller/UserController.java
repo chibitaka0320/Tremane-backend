@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
+import com.chibitaka.tremane_backend.dto.UserAccountInfoDto;
 import com.chibitaka.tremane_backend.dto.UserDto;
 import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
@@ -86,5 +87,12 @@ public class UserController {
         userService.deleteUser(userId);
 
         return ResponseEntity.status(204).build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<UserAccountInfoDto> searchUserByEmail(@RequestParam String email) {
+        UserAccountInfoDto userDto = userService.searchUserByEmail(email);
+
+        return ResponseEntity.ok(userDto);
     }
 }

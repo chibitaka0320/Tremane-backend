@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.chibitaka.tremane_backend.common.error.ApiResponseException;
+import com.chibitaka.tremane_backend.dto.UserAccountInfoDto;
 import com.chibitaka.tremane_backend.dto.UserDto;
 import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
@@ -15,6 +17,9 @@ import com.chibitaka.tremane_backend.form.UserProfileForm;
 import com.chibitaka.tremane_backend.repository.UserGoalRepository;
 import com.chibitaka.tremane_backend.repository.UserProfileRepository;
 import com.chibitaka.tremane_backend.repository.UserRepository;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
 
 import lombok.RequiredArgsConstructor;
 
@@ -113,5 +118,21 @@ public class UserService {
     /** ユーザー削除 */
     public void deleteUser(String userId) {
         userRepository.delete(userId);
+    }
+
+    /** ユーザーEmail検索 */
+    public UserAccountInfoDto searchUserByEmail(String email) {
+        UserAccountInfoDto userDto = new UserAccountInfoDto();
+        try {
+            UserRecord record = FirebaseAuth.getInstance().getUserByEmail(email);
+            userDto.setUserId(record.getUid());
+            userDto.setEmail(record.getEmail());
+            userDto.setNickname(record.getDisplayName());
+            userDto.setStatus("accepted");
+
+            return userDto;
+        } catch (FirebaseAuthException e) {
+            throw new ApiResponseException(400, e.getErrorCode().toString(), e.getMessage());
+        }
     }
 }
