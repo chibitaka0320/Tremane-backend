@@ -92,7 +92,8 @@ public class UserController {
     // ユーザーメールアドレス検索
     @GetMapping("/search")
     public ResponseEntity<UserAccountInfoDto> searchUserByEmail(@RequestParam String email) {
-        UserAccountInfoDto userDto = userService.searchUserByEmail(email);
+        String userId = UserInfo.getUserId();
+        UserAccountInfoDto userDto = userService.searchUserByEmail(email, userId);
 
         return ResponseEntity.ok(userDto);
     }

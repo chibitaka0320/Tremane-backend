@@ -16,4 +16,7 @@ public class UserAccountInfoDto {
 
     /** フレンドフラグ */
     private String status;
+
+    /** リクエストID */
+    private String requestId;
 }

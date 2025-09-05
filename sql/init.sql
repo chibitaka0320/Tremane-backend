@@ -99,3 +99,17 @@ CREATE TABLE eatings (
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+-- 友達管理テーブル
+DROP TABLE IF EXISTS friend_requests;
+CREATE TABLE friend_requests (
+	request_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+	request_user_id TEXT NOT NULL,
+	receive_user_id TEXT NOT NULL,
+	status VARCHAR(20) NOT NULL CHECK(status IN ('pending', 'accepted', 'rejected')),
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	UNIQUE(request_user_id, receive_user_id),
+	FOREIGN KEY (request_user_id) REFERENCES users(user_id),
+	FOREIGN KEY (receive_user_id) REFERENCES users(user_id)
+);

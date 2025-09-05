@@ -10,10 +10,12 @@ import com.chibitaka.tremane_backend.dto.UserAccountInfoDto;
 import com.chibitaka.tremane_backend.dto.UserDto;
 import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
+import com.chibitaka.tremane_backend.entity.FriendRequestEntity;
 import com.chibitaka.tremane_backend.entity.UserGoalEntity;
 import com.chibitaka.tremane_backend.entity.UserProfileEntity;
 import com.chibitaka.tremane_backend.form.UserGoalForm;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
+import com.chibitaka.tremane_backend.repository.FriendRequestRepository;
 import com.chibitaka.tremane_backend.repository.UserGoalRepository;
 import com.chibitaka.tremane_backend.repository.UserProfileRepository;
 import com.chibitaka.tremane_backend.repository.UserRepository;
@@ -32,6 +34,9 @@ public class UserService {
     private final UserProfileRepository userProfileRepository;
     private final UserGoalRepository userGoalRepository;
     private final UserRepository userRepository;
+
+    /** 友達リクエストリポジトリ */
+    private final FriendRequestRepository friendRepository;
 
     public UserDto getUser(String userId) {
         UserDto dto = userRepository.findById(userId);
@@ -119,14 +124,24 @@ public class UserService {
     }
 
     /** ユーザーEmail検索 */
-    public UserAccountInfoDto searchUserByEmail(String email) {
+    public UserAccountInfoDto searchUserByEmail(String email, String userId) {
         UserAccountInfoDto userDto = new UserAccountInfoDto();
         try {
+            // firebaseからメールアドレス検索
             UserRecord record = FirebaseAuth.getInstance().getUserByEmail(email);
-            userDto.setUserId(record.getUid());
+
+            // 取得したIDからフレンド情報取得
+            String receiveUserId = record.getUid();
+            FriendRequestEntity friendEntity = friendRepository.getFirendRequest(userId, receiveUserId);
+
+            userDto.setUserId(receiveUserId);
             userDto.setEmail(record.getEmail());
             userDto.setNickname(record.getDisplayName());
-            userDto.setStatus("accepted");
+
+            if (friendEntity != null) {
+                userDto.setStatus(friendEntity.getStatus());
+                userDto.setRequestId(friendEntity.getRequestId());
+            }
 
             return userDto;
         } catch (FirebaseAuthException e) {
