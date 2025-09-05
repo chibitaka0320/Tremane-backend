@@ -89,6 +89,7 @@ public class UserController {
         return ResponseEntity.status(204).build();
     }
 
+    // ユーザーメールアドレス検索
     @GetMapping("/search")
     public ResponseEntity<UserAccountInfoDto> searchUserByEmail(@RequestParam String email) {
         UserAccountInfoDto userDto = userService.searchUserByEmail(email);
