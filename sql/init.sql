@@ -106,7 +106,7 @@ CREATE TABLE friend_requests (
 	request_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 	request_user_id TEXT NOT NULL,
 	receive_user_id TEXT NOT NULL,
-	status VARCHAR(20) NOT NULL CHECK(status IN ('pending', 'accepted', 'rejected')),
+	status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'accepted')),
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	UNIQUE(request_user_id, receive_user_id),

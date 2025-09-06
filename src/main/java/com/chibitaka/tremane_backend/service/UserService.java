@@ -140,7 +140,7 @@ public class UserService {
 
             if (friendEntity != null) {
                 userDto.setStatus(friendEntity.getStatus());
-                userDto.setRequestId(friendEntity.getRequestId());
+                userDto.setRequestId(friendEntity.getRequestId().toString());
             }
 
             return userDto;

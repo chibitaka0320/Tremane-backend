@@ -10,4 +10,7 @@ public interface FriendRequestRepository {
 
     /** 友達リクエスト情報取得 */
     FriendRequestEntity getFirendRequest(String userId, String receiveUserId);
+
+    /** 友人リクエスト追加（戻り値：リクエストID） */
+    void insertFriendRequest(FriendRequestEntity entity);
 }

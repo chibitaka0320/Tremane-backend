@@ -5,9 +5,15 @@
 
   <!-- 友達リクエスト情報取得 -->
   <select id="getFirendRequest">
-    SELECT request_id, status
+    SELECT request_id, request_user_id, receive_user_id, status, created_at, updated_at
     FROM friend_requests
     WHERE request_user_id = #{userId}
     AND receive_user_id = #{receiveUserId}
   </select>
+
+  <!-- 友達リクエスト追加 -->
+  <insert id="insertFriendRequest" useGeneratedKeys="true" keyProperty="requestId">
+    INSERT INTO friend_requests(request_user_id, receive_user_id)
+    VALUES (#{requestUserId}, #{receiveUserId})
+  </insert>
 </mapper>
