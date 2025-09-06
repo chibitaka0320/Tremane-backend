@@ -11,6 +11,9 @@ public interface FriendRequestRepository {
     /** 友達リクエスト情報取得 */
     FriendRequestEntity getFirendRequest(String userId, String receiveUserId);
 
-    /** 友人リクエスト追加（戻り値：リクエストID） */
+    /** 友達リクエスト追加（戻り値：リクエストID） */
     void insertFriendRequest(FriendRequestEntity entity);
+
+    /** 友達リクエスト削除 */
+    void deleteFriendRequest(String requestId);
 }

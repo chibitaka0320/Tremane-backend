@@ -16,4 +16,10 @@
     INSERT INTO friend_requests(request_user_id, receive_user_id)
     VALUES (#{requestUserId}, #{receiveUserId})
   </insert>
+
+  <!-- 友達リクエスト削除 -->
+  <delete id="deleteFriendRequest">
+    DELETE FROM friend_requests
+    WHERE request_id = CAST(#{requestId} AS UUID)
+  </delete>
 </mapper>

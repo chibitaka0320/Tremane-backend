@@ -28,4 +28,9 @@ public class FriendService {
         return friendEntity.getRequestId();
     }
 
+    /** 友達申請削除 */
+    public void deleteFriendRequest(String requestId) {
+        friendRepository.deleteFriendRequest(requestId);
+    }
+
 }
