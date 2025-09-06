@@ -132,15 +132,22 @@ public class UserService {
 
             // 取得したIDからフレンド情報取得
             String receiveUserId = record.getUid();
-            FriendRequestEntity friendEntity = friendRepository.getFirendRequest(userId, receiveUserId);
+            FriendRequestEntity friendRequestEntity = friendRepository.getFirendRequest(userId, receiveUserId);
 
             userDto.setUserId(receiveUserId);
             userDto.setEmail(record.getEmail());
             userDto.setNickname(record.getDisplayName());
 
-            if (friendEntity != null) {
-                userDto.setStatus(friendEntity.getStatus());
-                userDto.setRequestId(friendEntity.getRequestId().toString());
+            if (friendRequestEntity != null) {
+                userDto.setStatus(friendRequestEntity.getStatus());
+                userDto.setRequestId(friendRequestEntity.getRequestId());
+            } else {
+                FriendRequestEntity friendReceiveEntity = friendRepository.getFirendRequest(receiveUserId, userId);
+
+                if (friendReceiveEntity != null) {
+                    userDto.setStatus("receive");
+                    userDto.setRequestId(friendReceiveEntity.getRequestId());
+                }
             }
 
             return userDto;

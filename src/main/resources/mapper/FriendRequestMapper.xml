@@ -11,10 +11,17 @@
     AND receive_user_id = #{receiveUserId}
   </select>
 
+  <!-- 友達リクエスト情報検索 -->
+  <select id="findById">
+    SELECT request_id, request_user_id, receive_user_id, status, created_at, updated_at
+    FROM friend_requests
+    WHERE request_id = CAST(#{requestId} AS UUID)
+  </select>
+
   <!-- 友達リクエスト追加 -->
   <insert id="insertFriendRequest" useGeneratedKeys="true" keyProperty="requestId">
-    INSERT INTO friend_requests(request_user_id, receive_user_id)
-    VALUES (#{requestUserId}, #{receiveUserId})
+    INSERT INTO friend_requests(request_user_id, receive_user_id, status)
+    VALUES (#{requestUserId}, #{receiveUserId}, #{status})
   </insert>
 
   <!-- 友達リクエスト削除 -->
@@ -22,4 +29,10 @@
     DELETE FROM friend_requests
     WHERE request_id = CAST(#{requestId} AS UUID)
   </delete>
+
+  <!-- 友達リクエスト更新 -->
+  <update id="updateFriendRequest">
+    UPDATE friend_requests SET status = #{status}, updated_at = #{updatedAt}
+    WHERE request_id = CAST(#{requestId} AS UUID)
+  </update>
 </mapper>
