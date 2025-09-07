@@ -132,6 +132,11 @@ public class UserService {
 
             // 取得したIDからフレンド情報取得
             String receiveUserId = record.getUid();
+
+            if (userId.equals(receiveUserId)) {
+                throw new ApiResponseException(404, "404", "見つかりませんでした");
+            }
+
             FriendRequestEntity friendRequestEntity = friendRepository.getFirendRequest(userId, receiveUserId);
 
             userDto.setUserId(receiveUserId);
