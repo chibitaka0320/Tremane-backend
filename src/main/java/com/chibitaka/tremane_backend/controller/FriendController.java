@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
+import com.chibitaka.tremane_backend.dto.response.InsertFriendRequestResponseDto;
 import com.chibitaka.tremane_backend.service.FriendService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,9 +28,26 @@ public class FriendController {
     public ResponseEntity<String> requestFriend(@PathVariable String receiveUserId) {
         String userId = UserInfo.getUserId();
 
-        String requestId = friendService.insertFriendRequest(userId, receiveUserId);
+        InsertFriendRequestResponseDto resultDto = friendService.insertFriendRequest(userId, receiveUserId);
+        String requestId = resultDto.getRequestId();
+        String status = resultDto.getStatus();
 
-        return ResponseEntity.ok(requestId);
+        if ("success".equals(status)) {
+            return ResponseEntity.ok(requestId);
+        }
+
+        else if ("conflict".equals(status)) {
+            return ResponseEntity.status(409).body(requestId);
+        }
+
+        else if ("receive".equals(status)) {
+            return ResponseEntity.status(418).body(requestId);
+        }
+
+        else {
+            return ResponseEntity.badRequest().body(null);
+        }
+
     }
 
     /** 友達取り消し（友達取り消し、申請取り消し、申請拒否） */
@@ -39,6 +57,7 @@ public class FriendController {
         friendService.deleteFriendRequest(requestId);
 
         return ResponseEntity.ok().build();
+
     }
 
     /** 友達申請許可 */
@@ -47,6 +66,10 @@ public class FriendController {
         String userId = UserInfo.getUserId();
         requestId = friendService.receiveFriendRequest(requestId, userId);
 
-        return ResponseEntity.ok(requestId);
+        if (requestId == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(requestId);
+        }
     }
 }
