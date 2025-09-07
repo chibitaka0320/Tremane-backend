@@ -66,6 +66,20 @@
     DELETE FROM trainings WHERE training_id = #{trainingId} AND user_id = #{userId}
   </delete>
 
+  <!-- 月別トレーニング件数取得 -->
+  <select id="getMonthlyTrainingCount">
+    SELECT
+      user_id,
+      COUNT(DISTINCT date) AS training_counts
+    FROM trainings
+    WHERE user_id IN
+      <foreach item="userId" collection="userIds" open="(" separator="," close=")">
+        #{userId}
+      </foreach>
+      AND date BETWEEN #{startDate} AND #{endDate}
+    GROUP BY user_id
+  </select>
+
   <!-- ネストした構造をマッピング -->
   <resultMap id="TrainingRecordResultMap" type="com.chibitaka.tremane_backend.entity.TrainingRecordEntity">
     <result property="partsId" column="parts_id"/>

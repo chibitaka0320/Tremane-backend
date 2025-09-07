@@ -1,5 +1,7 @@
 package com.chibitaka.tremane_backend.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.chibitaka.tremane_backend.entity.FriendRequestEntity;
@@ -22,4 +24,7 @@ public interface FriendRequestRepository {
 
     /** 友達リクエスト更新 */
     void updateFriendRequest(FriendRequestEntity entity);
+
+    /** 友達一覧取得 */
+    List<String> getFriends(String userId);
 }

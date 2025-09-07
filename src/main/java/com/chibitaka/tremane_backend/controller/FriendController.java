@@ -1,7 +1,11 @@
 package com.chibitaka.tremane_backend.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
 import com.chibitaka.tremane_backend.dto.response.InsertFriendRequestResponseDto;
+import com.chibitaka.tremane_backend.dto.response.TrainingRankingResponseDto;
 import com.chibitaka.tremane_backend.service.FriendService;
 
 import lombok.RequiredArgsConstructor;
@@ -71,5 +76,14 @@ public class FriendController {
         } else {
             return ResponseEntity.ok(requestId);
         }
+    }
+
+    /** 月間トレーニング数ランキング取得 */
+    @GetMapping("/ranking")
+    public ResponseEntity<List<TrainingRankingResponseDto>> getRankingMonthly() {
+        String userId = UserInfo.getUserId();
+        List<TrainingRankingResponseDto> trainingRankingResponseDtos = friendService.getRankingMonthly(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(trainingRankingResponseDtos);
     }
 }

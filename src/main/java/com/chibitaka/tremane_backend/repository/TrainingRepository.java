@@ -1,7 +1,9 @@
 package com.chibitaka.tremane_backend.repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -30,4 +32,7 @@ public interface TrainingRepository {
 
     /** トレーニング記録削除 */
     int delete(String userId, String trainingId);
+
+    /** 月別トレーニング日数取得 */
+    List<Map<String, Object>> getMonthlyTrainingCount(List<String> userIds, LocalDate startDate, LocalDate endDate);
 }

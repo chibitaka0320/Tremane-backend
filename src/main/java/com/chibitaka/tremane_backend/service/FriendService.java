@@ -1,13 +1,28 @@
 package com.chibitaka.tremane_backend.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.chibitaka.tremane_backend.common.error.ApiResponseException;
 import com.chibitaka.tremane_backend.dto.response.InsertFriendRequestResponseDto;
+import com.chibitaka.tremane_backend.dto.response.TrainingRankingResponseDto;
 import com.chibitaka.tremane_backend.entity.FriendRequestEntity;
 import com.chibitaka.tremane_backend.repository.FriendRequestRepository;
+import com.chibitaka.tremane_backend.repository.TrainingRepository;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.GetUsersResult;
+import com.google.firebase.auth.UidIdentifier;
+import com.google.firebase.auth.UserIdentifier;
+import com.google.firebase.auth.UserRecord;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +34,9 @@ public class FriendService {
 
     /** 友達申請Repository */
     private final FriendRequestRepository friendRepository;
+
+    /** トレーニングRepository */
+    private final TrainingRepository trainingRepository;
 
     /** 友達申請（追加） */
     public InsertFriendRequestResponseDto insertFriendRequest(String requestUserId, String receiveUserId) {
@@ -115,6 +133,61 @@ public class FriendService {
         friendRepository.insertFriendRequest(acceptRequestEntity);
 
         return acceptRequestEntity.getRequestId();
+    }
+
+    /** 月間トレーニング数ランキング取得 */
+    public List<TrainingRankingResponseDto> getRankingMonthly(String userId) {
+
+        List<TrainingRankingResponseDto> rankingList = new ArrayList<>();
+
+        // 友達一覧取得
+        List<String> friendList = friendRepository.getFriends(userId);
+
+        // 自身も含めてユーザー情報を取得
+        friendList.add(userId);
+
+        try {
+            List<UserIdentifier> identifiers = new ArrayList<>();
+
+            for (String uid : friendList) {
+                identifiers.add(new UidIdentifier(uid));
+            }
+            GetUsersResult result = FirebaseAuth.getInstance().getUsers(identifiers);
+
+            for (UserRecord userRecord : result.getUsers()) {
+                TrainingRankingResponseDto rankingResponseDto = new TrainingRankingResponseDto();
+                rankingResponseDto.setUserId(userRecord.getUid());
+                rankingResponseDto.setNickname(userRecord.getDisplayName());
+
+                rankingList.add(rankingResponseDto);
+            }
+
+        } catch (FirebaseAuthException e) {
+            throw new ApiResponseException(400, e.getErrorCode().toString(), e.getMessage());
+        }
+
+        // 月別トレーニング情報の取得
+        LocalDate now = LocalDate.now();
+        LocalDate startDate = now.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endDate = now.with(TemporalAdjusters.lastDayOfMonth());
+        List<Map<String, Object>> monthlyTrainingList = trainingRepository.getMonthlyTrainingCount(friendList,
+                startDate,
+                endDate);
+
+        for (TrainingRankingResponseDto dto : rankingList) {
+            for (Map<String, Object> map : monthlyTrainingList) {
+
+                if (dto.getUserId().equals(String.valueOf(map.get("user_id")))) {
+                    dto.setTrainingCounts(Integer.parseInt(String.valueOf(map.get("training_counts"))));
+                }
+            }
+        }
+
+        rankingList.sort(
+                Comparator.comparingInt(TrainingRankingResponseDto::getTrainingCounts)
+                        .reversed());
+
+        return rankingList;
     }
 
 }
