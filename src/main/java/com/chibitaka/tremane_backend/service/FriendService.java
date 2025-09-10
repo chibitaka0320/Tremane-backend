@@ -18,7 +18,9 @@ import com.chibitaka.tremane_backend.dto.response.TimelineTrainingResponseDto;
 import com.chibitaka.tremane_backend.dto.response.TimelineTrainingResponseDto.TimelineBodyParts;
 import com.chibitaka.tremane_backend.dto.response.TrainingRankingResponseDto;
 import com.chibitaka.tremane_backend.entity.FriendRequestEntity;
+import com.chibitaka.tremane_backend.entity.NotificationEntity;
 import com.chibitaka.tremane_backend.repository.FriendRequestRepository;
+import com.chibitaka.tremane_backend.repository.NotificationRepository;
 import com.chibitaka.tremane_backend.repository.TrainingRepository;
 import com.chibitaka.tremane_backend.repository.UserPushTokenRepository;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,17 +38,11 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class FriendService {
 
-    /** 友達申請Repository */
-    private final FriendRequestRepository friendRepository;
-
-    /** トレーニングRepository */
-    private final TrainingRepository trainingRepository;
-
-    /** プッシュ通知トークンRepository */
-    private final UserPushTokenRepository pushTokenRepository;
-
-    /** プッシュ通知Service */
-    private final PushNotificationService pushNotificationService;
+    private final FriendRequestRepository friendRepository; // 友達申請Repository
+    private final TrainingRepository trainingRepository; // トレーニングRepository
+    private final UserPushTokenRepository pushTokenRepository; // プッシュ通知トークンRepository
+    private final NotificationRepository notificationRepository; // 通知Repository
+    private final PushNotificationService pushNotificationService; // プッシュ通知Service
 
     /** 友達申請（追加） */
     public InsertFriendRequestResponseDto insertFriendRequest(String requestUserId, String receiveUserId) {
@@ -70,17 +66,21 @@ public class FriendService {
             return resultDto;
         }
 
+        // 申請をDBに保存
         FriendRequestEntity friendEntity = new FriendRequestEntity();
         friendEntity.setRequestUserId(requestUserId);
         friendEntity.setReceiveUserId(receiveUserId);
         friendEntity.setStatus("pending");
-
-        // 申請をDBに保存
         friendRepository.insertFriendRequest(friendEntity);
 
         // 作成されたリクエストIDと、結果をセットしreturn
         resultDto.setRequestId(friendEntity.getRequestId());
         resultDto.setStatus("success");
+
+        // 通知テーブルにレコード追加
+        NotificationEntity notificationEntity = new NotificationEntity(null, friendEntity.getReceiveUserId(),
+                "FRIEND_REQUEST", friendEntity.getRequestId(), requestUserId + " があなたに友達申請しました。", false, null, null);
+        notificationRepository.insert(notificationEntity);
 
         // プッシュ通知処理
         String token = pushTokenRepository.findTokenByUserId(receiveUserId);
@@ -112,6 +112,7 @@ public class FriendService {
         // ステータス = pennding：対象リクエスト削除
         if ("pending".equals(targetRequestEntity.getStatus())) {
             friendRepository.deleteFriendRequest(requestId);
+            notificationRepository.deleteByRelatedId(requestId);
             return true;
         }
 

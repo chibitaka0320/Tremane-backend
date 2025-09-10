@@ -124,3 +124,17 @@ CREATE TABLE user_push_tokens (
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+-- 通知テーブル
+DROP TABLE IF EXISTS notifications;
+CREATE TABLE notifications (
+	notification_id SERIAL PRIMARY KEY,
+	user_id VARCHAR(128) NOT NULL,
+	type VARCHAR(50) NOT NULL,
+	message TEXT NOT NULL,
+	related_id VARCHAR(128),
+	is_read BOOLEAN DEFAULT false,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
