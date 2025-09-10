@@ -11,4 +11,10 @@
         SET push_token = EXCLUDED.push_token,
             updated_at = NOW()
     </insert>
+
+    <!-- トークンの取得 -->
+    <select id="findTokenByUserId">
+      SELECT push_token FROM user_push_tokens
+      WHERE user_id = #{userId}
+    </select>
 </mapper>

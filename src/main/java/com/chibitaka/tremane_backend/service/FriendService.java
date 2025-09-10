@@ -20,6 +20,7 @@ import com.chibitaka.tremane_backend.dto.response.TrainingRankingResponseDto;
 import com.chibitaka.tremane_backend.entity.FriendRequestEntity;
 import com.chibitaka.tremane_backend.repository.FriendRequestRepository;
 import com.chibitaka.tremane_backend.repository.TrainingRepository;
+import com.chibitaka.tremane_backend.repository.UserPushTokenRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.GetUsersResult;
@@ -40,6 +41,12 @@ public class FriendService {
 
     /** トレーニングRepository */
     private final TrainingRepository trainingRepository;
+
+    /** プッシュ通知トークンRepository */
+    private final UserPushTokenRepository pushTokenRepository;
+
+    /** プッシュ通知Service */
+    private final PushNotificationService pushNotificationService;
 
     /** 友達申請（追加） */
     public InsertFriendRequestResponseDto insertFriendRequest(String requestUserId, String receiveUserId) {
@@ -68,11 +75,25 @@ public class FriendService {
         friendEntity.setReceiveUserId(receiveUserId);
         friendEntity.setStatus("pending");
 
+        // 申請をDBに保存
         friendRepository.insertFriendRequest(friendEntity);
 
+        // 作成されたリクエストIDと、結果をセットしreturn
         resultDto.setRequestId(friendEntity.getRequestId());
         resultDto.setStatus("success");
-        ;
+
+        // プッシュ通知処理
+        String token = pushTokenRepository.findTokenByUserId(receiveUserId);
+        String title = "友達申請が届きました";
+        String body = "ユーザー " + requestUserId + " から友達リクエストがあります";
+        int tryCount = 3;
+        if (token != null) {
+            try {
+                pushNotificationService.sendPushNotificationWithRetry(token, title, body, tryCount);
+            } catch (Exception e) {
+                System.err.println("プッシュ通知に失敗しました：" + e.getMessage());
+            }
+        }
 
         return resultDto;
     }

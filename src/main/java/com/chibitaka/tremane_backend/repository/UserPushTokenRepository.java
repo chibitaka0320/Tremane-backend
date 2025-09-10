@@ -8,4 +8,7 @@ public interface UserPushTokenRepository {
 
     /** 追加 or 更新 */
     void saveOrUpdate(String userId, String token);
+
+    /** プッシュ通知トークン取得 */
+    String findTokenByUserId(String userId);
 }
