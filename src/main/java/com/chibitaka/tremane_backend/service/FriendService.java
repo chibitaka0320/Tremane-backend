@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.chibitaka.tremane_backend.common.error.ApiResponseException;
 import com.chibitaka.tremane_backend.dto.response.InsertFriendRequestResponseDto;
+import com.chibitaka.tremane_backend.dto.response.TimelineTrainingResponseDto;
+import com.chibitaka.tremane_backend.dto.response.TimelineTrainingResponseDto.TimelineBodyParts;
 import com.chibitaka.tremane_backend.dto.response.TrainingRankingResponseDto;
 import com.chibitaka.tremane_backend.entity.FriendRequestEntity;
 import com.chibitaka.tremane_backend.repository.FriendRequestRepository;
@@ -188,6 +191,38 @@ public class FriendService {
                         .reversed());
 
         return rankingList;
+    }
+
+    public List<TimelineTrainingResponseDto> getTimelineTraining(String userId) {
+        // 友達一覧取得
+        List<String> friendList = friendRepository.getFriends(userId);
+        friendList.add(userId);
+
+        List<Map<String, Object>> rows = trainingRepository.getTimelineTraining(friendList);
+        Map<String, TimelineTrainingResponseDto> timelineMap = new LinkedHashMap<>();
+
+        for (Map<String, Object> row : rows) {
+            String id = row.get("user_id").toString();
+            LocalDate date = LocalDate.parse(row.get("date").toString());
+            String key = id + "_" + date;
+
+            TimelineTrainingResponseDto dto = timelineMap.get(key);
+
+            if (dto == null) {
+                dto = new TimelineTrainingResponseDto();
+                dto.setUserId(id);
+                dto.setDate(date);
+                dto.setBodyParts(new ArrayList<>());
+                timelineMap.put(key, dto);
+            }
+
+            TimelineBodyParts bodyParts = new TimelineBodyParts();
+            bodyParts.setPartsId(Integer.parseInt(row.get("parts_id").toString()));
+            bodyParts.setBodyPartsName(row.get("body_parts_name").toString());
+            dto.getBodyParts().add(bodyParts);
+        }
+
+        return new ArrayList<>(timelineMap.values());
     }
 
 }

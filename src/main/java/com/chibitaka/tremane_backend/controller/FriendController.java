@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
 import com.chibitaka.tremane_backend.dto.response.InsertFriendRequestResponseDto;
+import com.chibitaka.tremane_backend.dto.response.TimelineTrainingResponseDto;
 import com.chibitaka.tremane_backend.dto.response.TrainingRankingResponseDto;
 import com.chibitaka.tremane_backend.service.FriendService;
 
@@ -85,5 +86,14 @@ public class FriendController {
         List<TrainingRankingResponseDto> trainingRankingResponseDtos = friendService.getRankingMonthly(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(trainingRankingResponseDtos);
+    }
+
+    /** タイムライン情報取得 */
+    @GetMapping("/timeline")
+    public ResponseEntity<List<TimelineTrainingResponseDto>> getTimelineTraining() {
+        String userId = UserInfo.getUserId();
+        List<TimelineTrainingResponseDto> timelineTrainingResponseDtos = friendService.getTimelineTraining(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(timelineTrainingResponseDtos);
     }
 }

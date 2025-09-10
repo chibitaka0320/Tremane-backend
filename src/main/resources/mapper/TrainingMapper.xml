@@ -80,6 +80,20 @@
     GROUP BY user_id
   </select>
 
+  <!-- タイムライン取得 -->
+  <select id="getTimelineTraining">
+    SELECT t.user_id, t.date, b.parts_id, b.name body_parts_name
+    FROM trainings t
+    LEFT JOIN exercises e ON t.exercise_id = CAST(e.exercise_id AS TEXT)
+    LEFT JOIN body_parts b ON e.parts_id = CAST(b.parts_id AS BIGINT)
+    WHERE t.user_id IN
+      <foreach item="userId" collection="userIds" open="(" separator="," close=")">
+        #{userId}
+      </foreach>
+    GROUP BY t.user_id, t.date, b.parts_id, b.name
+    ORDER BY t.date DESC, b.parts_id, MAX(t.created_at) DESC;
+  </select>
+
   <!-- ネストした構造をマッピング -->
   <resultMap id="TrainingRecordResultMap" type="com.chibitaka.tremane_backend.entity.TrainingRecordEntity">
     <result property="partsId" column="parts_id"/>

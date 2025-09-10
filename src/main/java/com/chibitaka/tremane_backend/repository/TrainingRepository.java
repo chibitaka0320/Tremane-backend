@@ -35,4 +35,6 @@ public interface TrainingRepository {
 
     /** 月別トレーニング日数取得 */
     List<Map<String, Object>> getMonthlyTrainingCount(List<String> userIds, LocalDate startDate, LocalDate endDate);
+
+    List<Map<String, Object>> getTimelineTraining(List<String> userIds);
 }
