@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class UserEntity {
     private String userId;
+    private String nickname;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

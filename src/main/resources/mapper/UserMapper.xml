@@ -7,6 +7,7 @@
   <select id="findById">
     SELECT
       user_id,
+      nickname,
       created_at,
       updated_at
     FROM users
@@ -15,8 +16,8 @@
 
   <!-- 新規追加 -->
   <insert id="insert" parameterType="com.chibitaka.tremane_backend.entity.UserEntity">
-    INSERT INTO users (user_id)
-    VALUES (#{userId})
+    INSERT INTO users (user_id, nickname)
+    VALUES (#{userId}, #{nickname})
   </insert>
 
   <!-- 削除 -->

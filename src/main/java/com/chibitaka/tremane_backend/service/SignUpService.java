@@ -23,6 +23,7 @@ public class SignUpService {
     public void signUp(SignUpForm form) {
         UserEntity user = new UserEntity();
         user.setUserId(form.getUserId());
+        user.setNickname(form.getNickname());
         userRepository.insert(user);
     }
 }

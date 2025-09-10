@@ -2,6 +2,7 @@
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
 	user_id TEXT PRIMARY KEY,
+	nickname VARCHAR(200),
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -110,6 +111,6 @@ CREATE TABLE friend_requests (
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	UNIQUE(request_user_id, receive_user_id),
-	FOREIGN KEY (request_user_id) REFERENCES users(user_id),
-	FOREIGN KEY (receive_user_id) REFERENCES users(user_id)
+	FOREIGN KEY (request_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+	FOREIGN KEY (receive_user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
