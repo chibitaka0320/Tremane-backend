@@ -82,15 +82,16 @@
 
   <!-- タイムライン取得 -->
   <select id="getTimelineTraining">
-    SELECT t.user_id, t.date, b.parts_id, b.name body_parts_name
+    SELECT t.user_id, u.nickname, t.date, b.parts_id, b.name body_parts_name
     FROM trainings t
     LEFT JOIN exercises e ON t.exercise_id = CAST(e.exercise_id AS TEXT)
     LEFT JOIN body_parts b ON e.parts_id = CAST(b.parts_id AS BIGINT)
+    LEFT JOIN users u ON t.user_id = u.user_id
     WHERE t.user_id IN
       <foreach item="userId" collection="userIds" open="(" separator="," close=")">
         #{userId}
       </foreach>
-    GROUP BY t.user_id, t.date, b.parts_id, b.name
+    GROUP BY t.user_id, u.nickname, t.date, b.parts_id, b.name
     ORDER BY t.date DESC, b.parts_id, MAX(t.created_at) DESC;
   </select>
 

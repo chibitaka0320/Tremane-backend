@@ -203,6 +203,7 @@ public class FriendService {
 
         for (Map<String, Object> row : rows) {
             String id = row.get("user_id").toString();
+            String nickname = row.get("nickname").toString();
             LocalDate date = LocalDate.parse(row.get("date").toString());
             String key = id + "_" + date;
 
@@ -211,6 +212,7 @@ public class FriendService {
             if (dto == null) {
                 dto = new TimelineTrainingResponseDto();
                 dto.setUserId(id);
+                dto.setNickname(nickname);
                 dto.setDate(date);
                 dto.setBodyParts(new ArrayList<>());
                 timelineMap.put(key, dto);
