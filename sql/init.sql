@@ -114,3 +114,13 @@ CREATE TABLE friend_requests (
 	FOREIGN KEY (request_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
 	FOREIGN KEY (receive_user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+-- プッシュ通知トークンテーブル
+DROP TABLE IF EXISTS user_push_tokens;
+CREATE TABLE user_push_tokens (
+	user_id VARCHAR(128) PRIMARY KEY,
+	push_token VARCHAR(255) NOT NULL,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
