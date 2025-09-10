@@ -11,8 +11,10 @@ import com.chibitaka.tremane_backend.dto.UserDto;
 import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
 import com.chibitaka.tremane_backend.entity.FriendRequestEntity;
+import com.chibitaka.tremane_backend.entity.UserEntity;
 import com.chibitaka.tremane_backend.entity.UserGoalEntity;
 import com.chibitaka.tremane_backend.entity.UserProfileEntity;
+import com.chibitaka.tremane_backend.form.UserForm;
 import com.chibitaka.tremane_backend.form.UserGoalForm;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
 import com.chibitaka.tremane_backend.repository.FriendRequestRepository;
@@ -37,6 +39,16 @@ public class UserService {
 
     /** 友達リクエストリポジトリ */
     private final FriendRequestRepository friendRepository;
+
+    public void updateUser(String userId, UserForm form) {
+        UserEntity entity = new UserEntity();
+        entity.setUserId(userId);
+        entity.setNickname(form.getNickname());
+        entity.setUpdatedAt(form.getUpdatedAt());
+
+        userRepository.update(entity);
+
+    }
 
     public UserDto getUser(String userId) {
         UserDto dto = userRepository.findById(userId);

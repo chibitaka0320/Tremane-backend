@@ -18,4 +18,7 @@ public interface UserRepository {
         /** 削除 */
         int delete(String userId);
 
+        /** ユーザー情報更新 */
+        int update(UserEntity entity);
+
 }

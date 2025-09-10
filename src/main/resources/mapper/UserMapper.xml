@@ -25,4 +25,10 @@
     DELETE FROM users WHERE user_id = #{userId}
   </delete>
 
+  <!-- 更新 -->
+  <update id="update">
+    UPDATE users SET nickname = #{nickname}, updated_at = #{updatedAt}
+    WHERE user_id = #{userId}
+  </update>
+
 </mapper>

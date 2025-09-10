@@ -2,10 +2,12 @@ package com.chibitaka.tremane_backend.controller;
 
 import java.time.LocalDateTime;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +18,7 @@ import com.chibitaka.tremane_backend.dto.UserAccountInfoDto;
 import com.chibitaka.tremane_backend.dto.UserDto;
 import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
+import com.chibitaka.tremane_backend.form.UserForm;
 import com.chibitaka.tremane_backend.form.UserGoalForm;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
 import com.chibitaka.tremane_backend.service.UserService;
@@ -29,6 +32,15 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
+
+    @PutMapping("")
+    public ResponseEntity<Void> updateUserInfo(@RequestBody UserForm form) {
+        String userId = UserInfo.getUserId();
+
+        userService.updateUser(userId, form);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     /** ユーザープロフィール情報取得 */
     @GetMapping("/profile")
