@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,5 +39,14 @@ public class NotificationController {
         int count = notificationService.getUnreadNotificationsCount(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(count);
+    }
+
+    /** ユーザー通知を全て既読にする */
+    @PutMapping("/read")
+    public ResponseEntity<Void> markAllRead() {
+        String userId = UserInfo.getUserId();
+        notificationService.markAllRead(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

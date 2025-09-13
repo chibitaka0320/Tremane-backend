@@ -46,4 +46,9 @@ public class NotificationService {
     public int getUnreadNotificationsCount(String userId) {
         return notificationRepository.countUnreadNotificationsByUserId(userId);
     }
+
+    /** ユーザー通知を全て既読にする */
+    public void markAllRead(String userId) {
+        notificationRepository.markAllReadByUserId(userId);
+    }
 }
