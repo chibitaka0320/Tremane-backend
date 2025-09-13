@@ -21,4 +21,9 @@ public class PushTokenService {
         pushTokenRepository.saveOrUpdate(userId, token);
     }
 
+    /** トークンの削除 */
+    public void deleteToken(String userId) {
+        pushTokenRepository.delete(userId);
+    }
+
 }

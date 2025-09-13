@@ -11,4 +11,7 @@ public interface UserPushTokenRepository {
 
     /** プッシュ通知トークン取得 */
     String findTokenByUserId(String userId);
+
+    /** 削除 */
+    void delete(String userId);
 }
