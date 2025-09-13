@@ -130,6 +130,7 @@ DROP TABLE IF EXISTS notifications;
 CREATE TABLE notifications (
 	notification_id SERIAL PRIMARY KEY,
 	user_id VARCHAR(128) NOT NULL,
+	notification_source VARCHAR(128),
 	type VARCHAR(50) NOT NULL,
 	message TEXT NOT NULL,
 	related_id VARCHAR(128),

@@ -4,16 +4,24 @@
 <mapper namespace="com.chibitaka.tremane_backend.repository.NotificationRepository">
   <!-- 登録 -->
   <insert id="insert">
-    INSERT INTO notifications (user_id, type, message, related_id)
-    VALUES (#{userId}, #{type}, #{message}, #{relatedId})
+    INSERT INTO notifications (user_id, notification_source, type, message, related_id)
+    VALUES (#{userId}, #{notificationSource}, #{type}, #{message}, #{relatedId})
   </insert>
 
   <!-- 一覧取得(ユーザーID検索, 作成日の新しい順) -->
   <select id="findByUserId">
-    SELECT notification_id, user_id, type, message, related_id, is_read, created_at, updated_at
+    SELECT notification_id, user_id, notification_source, type, message, related_id, is_read, created_at, updated_at
     FROM notifications
     WHERE user_id = #{userId}
     ORDER BY created_at DESC
+  </select>
+
+  <!-- 未読件数の取得 -->
+  <select id="countUnreadNotificationsByUserId">
+    SELECT COUNT(*)
+    FROM notifications
+    WHERE user_id = #{userId}
+    AND is_read = false
   </select>
 
   <!-- 全通知を既読にする -->

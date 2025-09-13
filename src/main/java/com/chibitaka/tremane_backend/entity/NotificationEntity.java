@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class NotificationEntity {
     private String notificationId; // 通知ID
     private String userId; // ユーザーID
+    private String notificationSource; // 通知元
 
     // TODO: ENUMにする
     private String type; // 通知タイプ

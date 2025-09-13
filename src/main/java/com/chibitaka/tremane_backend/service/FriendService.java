@@ -79,6 +79,7 @@ public class FriendService {
 
         // 通知テーブルにレコード追加
         NotificationEntity notificationEntity = new NotificationEntity(null, friendEntity.getReceiveUserId(),
+                friendEntity.getRequestUserId(),
                 "FRIEND_REQUEST", friendEntity.getRequestId(), requestUserId + " があなたに友達申請しました。", false, null, null);
         notificationRepository.insert(notificationEntity);
 
@@ -125,6 +126,7 @@ public class FriendService {
 
             if (targetRecieveRequestEntity != null) {
                 friendRepository.deleteFriendRequest(targetRecieveRequestEntity.getRequestId());
+                notificationRepository.deleteByRelatedId(targetRecieveRequestEntity.getRequestId());
             }
             return true;
         }
