@@ -41,4 +41,9 @@ public class NotificationService {
 
         return notificationDtos;
     }
+
+    /** ユーザー通知未読件数の取得 */
+    public int getUnreadNotificationsCount(String userId) {
+        return notificationRepository.countUnreadNotificationsByUserId(userId);
+    }
 }

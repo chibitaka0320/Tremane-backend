@@ -30,4 +30,13 @@ public class NotificationController {
 
         return ResponseEntity.status(HttpStatus.OK).body(notificationDtos);
     }
+
+    /** ユーザー通知の未読件数取得 */
+    @GetMapping("/noread")
+    public ResponseEntity<Integer> getNoreadCount() {
+        String userId = UserInfo.getUserId();
+        int count = notificationService.getUnreadNotificationsCount(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(count);
+    }
 }

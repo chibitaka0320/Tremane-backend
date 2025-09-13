@@ -24,4 +24,7 @@ public interface NotificationRepository {
 
     /** 通知の削除（関連リソースID） */
     void deleteByRelatedId(String relatedId);
+
+    /** 未読件数の取得 */
+    int countUnreadNotificationsByUserId(String userId);
 }
