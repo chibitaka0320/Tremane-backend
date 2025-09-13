@@ -123,6 +123,7 @@ public class FriendService {
                     .getFirendRequest(targetRequestEntity.getReceiveUserId(), targetRequestEntity.getRequestUserId());
 
             friendRepository.deleteFriendRequest(targetRequestEntity.getRequestId());
+            notificationRepository.deleteByRelatedId(targetRequestEntity.getRequestId());
 
             if (targetRecieveRequestEntity != null) {
                 friendRepository.deleteFriendRequest(targetRecieveRequestEntity.getRequestId());
