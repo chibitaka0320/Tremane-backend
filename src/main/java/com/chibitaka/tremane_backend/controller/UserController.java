@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
-import com.chibitaka.tremane_backend.dto.UserAccountInfoDto;
+import com.chibitaka.tremane_backend.dto.UserSearchResultDto;
 import com.chibitaka.tremane_backend.dto.UserDto;
 import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
@@ -25,88 +25,94 @@ import com.chibitaka.tremane_backend.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
-/** ユーザー用コントローラー */
+/** ユーザー用Controller */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
+    private final UserService userService; // ユーザーService
 
-    @PutMapping("")
-    public ResponseEntity<Void> updateUserInfo(@RequestBody UserForm form) {
+    /** ユーザー取得 */
+    @GetMapping("")
+    public ResponseEntity<UserDto> getUser() {
         String userId = UserInfo.getUserId();
+        UserDto dto = userService.getUserById(userId);
 
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    /** ユーザー更新 */
+    @PutMapping("")
+    public ResponseEntity<Void> updateUser(@RequestBody UserForm form) {
+        String userId = UserInfo.getUserId();
         userService.updateUser(userId, form);
 
+        // TODO: ステータス検討
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    /** ユーザープロフィール情報取得 */
+    /** ユーザー削除 */
+    @DeleteMapping("")
+    public ResponseEntity<Void> deleteUser() {
+        String userId = UserInfo.getUserId();
+        userService.deleteUser(userId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /** ユーザープロフィール取得 */
     @GetMapping("/profile")
     public ResponseEntity<UserProfileDto> getUserProfile(@RequestParam LocalDateTime updatedAt) {
         String userId = UserInfo.getUserId();
-        UserProfileDto userDto = userService.getUserInfo(userId, updatedAt);
+        UserProfileDto userDto = userService.getUserProfileByUserId(userId, updatedAt);
 
+        // TODO: エラーハンドリング検討
         if (userDto == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            return ResponseEntity.ok(userDto);
+            return ResponseEntity.status(HttpStatus.OK).body(userDto);
         }
     }
 
-    /** ユーザープロフィール情報追加更新 */
+    /** ユーザープロフィール追加更新 */
     @PostMapping("/profile")
-    public ResponseEntity<Void> updateUser(@RequestBody UserProfileForm form) {
+    public ResponseEntity<Void> saveUserProfile(@RequestBody UserProfileForm form) {
         String userId = UserInfo.getUserId();
-        userService.upsertUserInfo(userId, form);
+        userService.saveUserProfile(userId, form);
 
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /* ユーザー目標取得 */
     @GetMapping("/goal")
     public ResponseEntity<UserGoalDto> getUserGoal(@RequestParam LocalDateTime updatedAt) {
         String userId = UserInfo.getUserId();
-        UserGoalDto goalDto = userService.getUserGoal(userId, updatedAt);
+        UserGoalDto goalDto = userService.getUserGoalByUserId(userId, updatedAt);
 
+        // TODO: エラーハンドリング検討
         if (goalDto == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            return ResponseEntity.ok(goalDto);
+            return ResponseEntity.status(HttpStatus.OK).body(goalDto);
         }
     }
 
+    /** ユーザー目標追加更新 */
     @PostMapping("/goal")
-    public ResponseEntity<Void> updateUserGoal(@RequestBody UserGoalForm form) {
+    public ResponseEntity<Void> saveUserGoal(@RequestBody UserGoalForm form) {
         String userId = UserInfo.getUserId();
-        userService.upsertUserGoal(userId, form);
+        userService.saveUserGoal(userId, form);
 
-        return ResponseEntity.status(204).build();
-    }
-
-    @GetMapping("")
-    public ResponseEntity<UserDto> getUser() {
-        String userId = UserInfo.getUserId();
-        UserDto dto = userService.getUser(userId);
-
-        return ResponseEntity.ok(dto);
-    }
-
-    @DeleteMapping("")
-    public ResponseEntity<Void> deleteUser() {
-        String userId = UserInfo.getUserId();
-        userService.deleteUser(userId);
-
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     // ユーザーメールアドレス検索
     @GetMapping("/search")
-    public ResponseEntity<UserAccountInfoDto> searchUserByEmail(@RequestParam String email) {
+    public ResponseEntity<UserSearchResultDto> searchUserByEmail(@RequestParam String email) {
         String userId = UserInfo.getUserId();
-        UserAccountInfoDto userDto = userService.searchUserByEmail(email, userId);
+        UserSearchResultDto userDto = userService.getUserByEmail(email, userId);
 
-        return ResponseEntity.ok(userDto);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 }

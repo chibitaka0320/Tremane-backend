@@ -2,11 +2,12 @@ package com.chibitaka.tremane_backend.service;
 
 import java.time.LocalDateTime;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chibitaka.tremane_backend.common.error.ApiResponseException;
-import com.chibitaka.tremane_backend.dto.UserAccountInfoDto;
+import com.chibitaka.tremane_backend.dto.UserSearchResultDto;
 import com.chibitaka.tremane_backend.dto.UserDto;
 import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
@@ -27,149 +28,114 @@ import com.google.firebase.auth.UserRecord;
 
 import lombok.RequiredArgsConstructor;
 
-/** ユーザーサービスクラス */
+/** ユーザー関連Service */
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
 
-    private final UserProfileRepository userProfileRepository;
-    private final UserGoalRepository userGoalRepository;
-    private final UserRepository userRepository;
+    private final UserRepository userRepository; // ユーザーRepository
+    private final UserGoalRepository userGoalRepository; // ユーザーゴールRepository
+    private final UserProfileRepository userProfileRepository; // ユーザープロフィールRepository
+    private final FriendRequestRepository friendRepository; // 友達リクエストRepository
+    private final ModelMapper modelMapper; // ModelMapper
 
-    /** 友達リクエストリポジトリ */
-    private final FriendRequestRepository friendRepository;
-
-    public void updateUser(String userId, UserForm form) {
-        UserEntity entity = new UserEntity();
-        entity.setUserId(userId);
-        entity.setNickname(form.getNickname());
-        entity.setUpdatedAt(form.getUpdatedAt());
-
-        userRepository.update(entity);
-
-    }
-
-    public UserDto getUser(String userId) {
-        UserDto dto = userRepository.findById(userId);
-        return dto;
-    }
-
-    /** ユーザープロフィール情報取得 */
-    public UserProfileDto getUserInfo(String userId, LocalDateTime updatedAt) {
-
-        UserProfileEntity userEntity = userProfileRepository.findById(userId, updatedAt);
-
-        if (userEntity == null) {
-            return null;
-        }
-
-        UserProfileDto userDto = new UserProfileDto();
-        userDto.setUserId(userId);
-        userDto.setHeight(userEntity.getHeight());
-        userDto.setWeight(userEntity.getWeight());
-        userDto.setBirthday(userEntity.getBirthday());
-        userDto.setGender(userEntity.getGender());
-        userDto.setActiveLevel(userEntity.getActiveLevel());
-        userDto.setCreatedAt(userEntity.getCreatedAt());
-        userDto.setUpdatedAt(userEntity.getUpdatedAt());
-
+    /** ユーザー取得（ID） */
+    public UserDto getUserById(String userId) {
+        UserEntity userEntity = userRepository.findById(userId);
+        UserDto userDto = modelMapper.map(userEntity, UserDto.class);
         return userDto;
     }
 
-    /** プロフィール情報追加更新 */
-    public void upsertUserInfo(String userId, UserProfileForm form) {
-        UserProfileEntity userEntity = new UserProfileEntity();
-        userEntity.setUserId(userId);
-        userEntity.setHeight(form.getHeight());
-        userEntity.setWeight(form.getWeight());
-        userEntity.setBirthday(form.getBirthday());
-        userEntity.setGender(form.getGender());
-        userEntity.setActiveLevel(form.getActiveLevel());
-        userEntity.setCreatedAt(form.getCreatedAt());
-        userEntity.setUpdatedAt(form.getUpdatedAt());
+    /** ユーザー取得（Email） */
+    public UserSearchResultDto getUserByEmail(String email, String requestUserId) {
+        UserSearchResultDto resultDto = new UserSearchResultDto();
+        try {
+            // firebaseからメールアドレス検索
+            UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
 
-        userProfileRepository.upsert(userEntity);
-    }
+            // 取得したIDからフレンド情報取得
+            String receiveUserId = userRecord.getUid();
 
-    /** 目標取得 */
-    public UserGoalDto getUserGoal(String userId, LocalDateTime updatedAt) {
+            // 本人の場合は404エラーにする。
+            // TODO: エラーステータスやハンドリングについては検討
+            if (requestUserId.equals(receiveUserId)) {
+                throw new ApiResponseException(404, "404", "見つかりませんでした");
+            }
+            resultDto.setUserId(receiveUserId);
+            resultDto.setEmail(userRecord.getEmail());
+            resultDto.setNickname(userRecord.getDisplayName());
 
-        // 目標を取得し未設定であればnullを返す
-        UserGoalEntity goalEntity = userGoalRepository.findById(userId, updatedAt);
-
-        if (goalEntity == null) {
-            return null;
+            // 友達リクエスト状況を取得
+            FriendRequestEntity friendRequestEntity = friendRepository.getFirendRequest(requestUserId, receiveUserId);
+            if (friendRequestEntity != null) {
+                resultDto.setStatus(friendRequestEntity.getStatus());
+                resultDto.setRequestId(friendRequestEntity.getRequestId());
+            } else {
+                // 検索対象者からのリクエスト状況を取得
+                FriendRequestEntity friendReceiveEntity = friendRepository.getFirendRequest(receiveUserId,
+                        requestUserId);
+                if (friendReceiveEntity != null) {
+                    resultDto.setStatus("receive");
+                    resultDto.setRequestId(friendReceiveEntity.getRequestId());
+                }
+            }
+            return resultDto;
+        } catch (FirebaseAuthException e) {
+            // TODO: エラーステータスやハンドリングについては検討
+            throw new ApiResponseException(400, e.getErrorCode().toString(), e.getMessage());
         }
-
-        UserGoalDto dto = new UserGoalDto();
-        dto.setUserId(userId);
-        dto.setWeight(goalEntity.getWeight());
-        dto.setGoalWeight(goalEntity.getGoalWeight());
-        dto.setStart(goalEntity.getStart());
-        dto.setFinish(goalEntity.getFinish());
-        dto.setPfc(goalEntity.getPfc());
-        dto.setCreatedAt(goalEntity.getCreatedAt());
-        dto.setUpdatedAt(goalEntity.getUpdatedAt());
-
-        return dto;
     }
 
-    /** 目標設定 */
-    public void upsertUserGoal(String userId, UserGoalForm form) {
-        UserGoalEntity entity = new UserGoalEntity();
-        entity.setUserId(userId);
-        entity.setWeight(form.getWeight());
-        entity.setGoalWeight(form.getGoalWeight());
-        entity.setStart(form.getStart());
-        entity.setFinish(form.getFinish());
-        entity.setPfc(form.getPfc());
-        entity.setCreatedAt(form.getCreatedAt());
-        entity.setUpdatedAt(form.getUpdatedAt());
-
-        userGoalRepository.upsert(entity);
+    /** ユーザー更新 */
+    public void updateUser(String userId, UserForm form) {
+        UserEntity entity = new UserEntity(userId, form.getNickname(), null, form.getUpdatedAt());
+        userRepository.update(entity);
     }
 
     /** ユーザー削除 */
     public void deleteUser(String userId) {
-        userRepository.delete(userId);
+        userRepository.deleteById(userId);
     }
 
-    /** ユーザーEmail検索 */
-    public UserAccountInfoDto searchUserByEmail(String email, String userId) {
-        UserAccountInfoDto userDto = new UserAccountInfoDto();
-        try {
-            // firebaseからメールアドレス検索
-            UserRecord record = FirebaseAuth.getInstance().getUserByEmail(email);
+    /** ユーザープロフィール取得 */
+    public UserProfileDto getUserProfileByUserId(String userId, LocalDateTime updatedAt) {
+        UserProfileEntity userProfileEntity = userProfileRepository.findById(userId, updatedAt);
 
-            // 取得したIDからフレンド情報取得
-            String receiveUserId = record.getUid();
-
-            if (userId.equals(receiveUserId)) {
-                throw new ApiResponseException(404, "404", "見つかりませんでした");
-            }
-
-            FriendRequestEntity friendRequestEntity = friendRepository.getFirendRequest(userId, receiveUserId);
-
-            userDto.setUserId(receiveUserId);
-            userDto.setEmail(record.getEmail());
-            userDto.setNickname(record.getDisplayName());
-
-            if (friendRequestEntity != null) {
-                userDto.setStatus(friendRequestEntity.getStatus());
-                userDto.setRequestId(friendRequestEntity.getRequestId());
-            } else {
-                FriendRequestEntity friendReceiveEntity = friendRepository.getFirendRequest(receiveUserId, userId);
-
-                if (friendReceiveEntity != null) {
-                    userDto.setStatus("receive");
-                    userDto.setRequestId(friendReceiveEntity.getRequestId());
-                }
-            }
-
-            return userDto;
-        } catch (FirebaseAuthException e) {
-            throw new ApiResponseException(400, e.getErrorCode().toString(), e.getMessage());
+        if (userProfileEntity == null) {
+            return null;
         }
+
+        UserProfileDto userProfileDto = modelMapper.map(userProfileEntity, UserProfileDto.class);
+        return userProfileDto;
     }
+
+    /** ユーザープロフィール追加更新 */
+    public void saveUserProfile(String userId, UserProfileForm form) {
+        UserProfileEntity userEntity = modelMapper.map(form, UserProfileEntity.class);
+        userEntity.setUserId(userId);
+
+        userProfileRepository.upsert(userEntity);
+    }
+
+    /** ユーザー目標取得 */
+    public UserGoalDto getUserGoalByUserId(String userId, LocalDateTime updatedAt) {
+        UserGoalEntity userGoalEntity = userGoalRepository.findById(userId, updatedAt);
+
+        if (userGoalEntity == null) {
+            return null;
+        }
+
+        UserGoalDto userGoalDto = modelMapper.map(userGoalEntity, UserGoalDto.class);
+        return userGoalDto;
+    }
+
+    /** ユーザー目標追加更新 */
+    public void saveUserGoal(String userId, UserGoalForm form) {
+        UserGoalEntity entity = modelMapper.map(form, UserGoalEntity.class);
+        entity.setUserId(userId);
+
+        userGoalRepository.upsert(entity);
+    }
+
 }

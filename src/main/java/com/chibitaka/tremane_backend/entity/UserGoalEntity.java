@@ -3,17 +3,21 @@ package com.chibitaka.tremane_backend.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/** ユーザー目標テーブルエンティティ */
+/** ユーザー目標テーブルEntity */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserGoalEntity {
-    private String userId;
-    private Double weight;
-    private Double goalWeight;
-    private LocalDate start;
-    private LocalDate finish;
-    private Integer pfc;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String userId; // ユーザーID
+    private Double weight; // 体重
+    private Double goalWeight; // 目標体重
+    private LocalDate start; // 開始日
+    private LocalDate finish; // 終了日
+    private Integer pfc; // PFC
+    private LocalDateTime createdAt; // 作成日時
+    private LocalDateTime updatedAt; // 更新日時
 }

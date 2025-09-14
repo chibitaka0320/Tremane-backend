@@ -2,23 +2,20 @@ package com.chibitaka.tremane_backend.repository;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.chibitaka.tremane_backend.dto.UserDto;
 import com.chibitaka.tremane_backend.entity.UserEntity;
 
 /** ユーザーテーブル操作用インターフェース */
 @Mapper
 public interface UserRepository {
-
         /** ユーザーのID検索 */
-        UserDto findById(String id);
+        UserEntity findById(String userId);
 
         /** ユーザー登録 */
-        int insert(UserEntity record);
+        int insert(UserEntity user);
 
         /** 削除 */
-        int delete(String userId);
+        int deleteById(String userId);
 
         /** ユーザー情報更新 */
-        int update(UserEntity entity);
-
+        int update(UserEntity user);
 }

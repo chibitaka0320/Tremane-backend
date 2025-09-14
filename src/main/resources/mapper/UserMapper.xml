@@ -15,7 +15,7 @@
   </select>
 
   <!-- 新規追加 -->
-  <insert id="insert" parameterType="com.chibitaka.tremane_backend.entity.UserEntity">
+  <insert id="insert">
     INSERT INTO users (user_id, nickname)
     VALUES (#{userId}, #{nickname})
   </insert>

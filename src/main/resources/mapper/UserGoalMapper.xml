@@ -4,7 +4,7 @@
 <mapper namespace="com.chibitaka.tremane_backend.repository.UserGoalRepository">
   
   <!-- ID検索 -->
-  <select id="findById" resultMap="UserResultMap">
+  <select id="findById">
     SELECT
       user_id,
       weight,
@@ -20,7 +20,7 @@
   </select>
 
   <!-- 追加更新 -->
-  <insert id="upsert" parameterType="com.chibitaka.tremane_backend.entity.UserGoalEntity">
+  <insert id="upsert">
     INSERT INTO users_goal (user_id, weight, goal_weight, start, finish, pfc, created_at, updated_at)
     VALUES (#{userId}, #{weight}, #{goalWeight}, #{start}, #{finish}, #{pfc}, #{createdAt}, #{updatedAt})
     ON CONFLICT (user_id) DO UPDATE SET
@@ -31,15 +31,5 @@
     pfc=EXCLUDED.pfc,
     updated_at=EXCLUDED.updated_at
   </insert>
-
-  <!-- マッピング -->
-  <resultMap id="UserResultMap" type="com.chibitaka.tremane_backend.entity.UserGoalEntity">
-    <result property="userId" column="user_id"/>
-    <result property="weight" column="weight"/>
-    <result property="goalWeight" column="goal_weight"/>
-    <result property="start" column="start"/>
-    <result property="finish" column="finish"/>
-    <result property="pfc" column="pfc"/>
-  </resultMap>
 
 </mapper>

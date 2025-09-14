@@ -1,15 +1,15 @@
 package com.chibitaka.tremane_backend.common.config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestClient;
 
-/** RestClient設定クラス */
+/** ModelMapper設定クラス */
 @Configuration
-public class RestClientConfig {
+public class ModelMapperConfig {
 
     @Bean
-    RestClient restClient() {
-        return RestClient.create();
+    ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }
