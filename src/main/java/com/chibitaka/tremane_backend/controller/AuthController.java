@@ -1,49 +1,38 @@
 package com.chibitaka.tremane_backend.controller;
 
-import java.util.Map;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chibitaka.tremane_backend.common.util.UserInfo;
 import com.chibitaka.tremane_backend.form.SignUpForm;
-import com.chibitaka.tremane_backend.service.SignUpService;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseToken;
+import com.chibitaka.tremane_backend.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 
-/**
- * 認証系コントローラー
- */
+/** 認証用コントローラー */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final SignUpService signUpService;
+    private final AuthService authService; // 認証Service
 
-    /**
-     * ユーザー新規登録
-     */
-    @PostMapping("/signUp")
-    public ResponseEntity<Void> signUp(@Validated @RequestBody SignUpForm form) {
-        signUpService.signUp(form);
-        return ResponseEntity.status(204).build();
+    /** ユーザー新規登録 */
+    @PostMapping("/signup")
+    public ResponseEntity<Void> signUp(@RequestBody SignUpForm form) {
+        authService.signUp(form);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    /** 匿名ユーザーカスタムトークン発行 */
-    @PostMapping("/reauth_token")
-    public Map<String, String> issueReauthToken(@RequestHeader("Authorization") String bearer) throws Exception {
-        String idToken = bearer.replace("Bearer ", "");
-
-        FirebaseToken decoded = FirebaseAuth.getInstance().verifyIdToken(idToken);
-        String uid = decoded.getUid();
-        String customToken = FirebaseAuth.getInstance().createCustomToken(uid);
-        return Map.of("customToken", customToken);
+    /** 再認証トークン発行 */
+    @PostMapping("/reauth-token")
+    public ResponseEntity<String> issueReauthToken() throws Exception {
+        String userId = UserInfo.getUserId();
+        String customToken = authService.issueReauthToken(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(customToken);
     }
 }

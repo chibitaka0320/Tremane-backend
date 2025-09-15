@@ -25,7 +25,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/bodyparts/**").permitAll()
                 .requestMatchers("/exercise").permitAll()
-                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/auth/signup").permitAll()
                 .anyRequest().authenticated());
 
         // CSRF（クロスサイトリクエストフォージェリ）保護を無効化
