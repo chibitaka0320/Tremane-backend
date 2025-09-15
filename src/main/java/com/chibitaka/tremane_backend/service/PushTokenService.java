@@ -7,21 +7,20 @@ import com.chibitaka.tremane_backend.repository.UserPushTokenRepository;
 
 import lombok.RequiredArgsConstructor;
 
-/** プッシュ通知トークン用Service */
+/** プッシュ通知トークン関連Service */
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class PushTokenService {
 
-    /** ユーザープッシュ通知トークンRepository */
-    private final UserPushTokenRepository pushTokenRepository;
+    private final UserPushTokenRepository pushTokenRepository; // プッシュ通知トークンRepository
 
-    /** トークンの追加 or 更新 */
+    /** トークン追加・更新 */
     public void saveOrUpdateToken(String userId, String token) {
         pushTokenRepository.saveOrUpdate(userId, token);
     }
 
-    /** トークンの削除 */
+    /** トークン削除 */
     public void deleteToken(String userId) {
         pushTokenRepository.delete(userId);
     }

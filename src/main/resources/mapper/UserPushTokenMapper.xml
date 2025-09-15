@@ -3,7 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chibitaka.tremane_backend.repository.UserPushTokenRepository">
 
-    <!-- 追加 または 更新 -->
+    <!-- トークン追加更新 -->
     <insert id="saveOrUpdate">
         INSERT INTO user_push_tokens (user_id, push_token)
         VALUES (#{userId}, #{token})
@@ -12,13 +12,13 @@
             updated_at = NOW()
     </insert>
 
-    <!-- トークンの取得 -->
+    <!-- トークン取得 -->
     <select id="findTokenByUserId">
       SELECT push_token FROM user_push_tokens
       WHERE user_id = #{userId}
     </select>
 
-    <!-- 削除 -->
+    <!-- トークン削除 -->
     <delete id="delete">
       DELETE FROM user_push_tokens
       WHERE user_id = #{userId}

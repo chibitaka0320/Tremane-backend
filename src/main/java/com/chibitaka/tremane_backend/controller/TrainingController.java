@@ -24,9 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-/**
- * トレーニング用Controller
- */
+/** トレーニング用Controller */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/training")

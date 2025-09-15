@@ -20,8 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/push")
 public class PushTokenController {
 
-    /** プッシュトークンService */
-    private final PushTokenService pushTokenService;
+    private final PushTokenService pushTokenService; // プッシュ通知トークンService
 
     /** プッシュトークン登録 */
     @PostMapping("/register")
@@ -29,7 +28,7 @@ public class PushTokenController {
         String userId = UserInfo.getUserId();
         pushTokenService.saveOrUpdateToken(userId, form.getToken());
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /** プッシュトークン削除 */
@@ -38,6 +37,6 @@ public class PushTokenController {
         String userId = UserInfo.getUserId();
         pushTokenService.deleteToken(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
