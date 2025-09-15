@@ -55,7 +55,7 @@ public class TrainingService {
         }
     }
 
-    /** トレーニング記録削除 */
+    /** トレーニング削除 */
     public void deleteTraining(String userId, String trainingId) {
         trainingRepository.delete(userId, trainingId);
     }

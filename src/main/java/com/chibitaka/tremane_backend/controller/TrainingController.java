@@ -39,9 +39,9 @@ public class TrainingController {
     public ResponseEntity<List<TrainingDto>> getTrainings(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime updatedAt) {
         String userId = UserInfo.getUserId();
-        List<TrainingDto> dtos = trainingService.getTrainingsByUserId(userId,
+        List<TrainingDto> trainingDtos = trainingService.getTrainingsByUserId(userId,
                 updatedAt);
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(trainingDtos);
     }
 
     /** トレーニング詳細取得 */
