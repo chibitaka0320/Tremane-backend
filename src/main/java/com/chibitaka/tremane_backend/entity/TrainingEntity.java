@@ -3,17 +3,21 @@ package com.chibitaka.tremane_backend.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/** トレーニングエンティティ */
+/** トレーニングテーブルEntity */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TrainingEntity {
-    private String trainingId;
-    private LocalDate date;
-    private String userId;
-    private String exerciseId;
-    private double weight;
-    private int reps;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String trainingId; // トレーニングID
+    private LocalDate date; // 日付
+    private String userId; // ユーザーID
+    private String exerciseId; // 種目ID
+    private double weight; // 重量
+    private int reps; // 回数
+    private LocalDateTime createdAt; // 作成日時
+    private LocalDateTime updatedAt; // 更新日時
 }

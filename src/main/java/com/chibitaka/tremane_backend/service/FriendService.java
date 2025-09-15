@@ -198,7 +198,7 @@ public class FriendService {
         LocalDate now = LocalDate.now();
         LocalDate startDate = now.with(TemporalAdjusters.firstDayOfMonth());
         LocalDate endDate = now.with(TemporalAdjusters.lastDayOfMonth());
-        List<Map<String, Object>> monthlyTrainingList = trainingRepository.getMonthlyTrainingCount(friendList,
+        List<Map<String, Object>> monthlyTrainingList = trainingRepository.findMonthlyTrainingCountByUserIds(friendList,
                 startDate,
                 endDate);
 
@@ -223,7 +223,7 @@ public class FriendService {
         List<String> friendList = friendRepository.getFriends(userId);
         friendList.add(userId);
 
-        List<Map<String, Object>> rows = trainingRepository.getTimelineTraining(friendList);
+        List<Map<String, Object>> rows = trainingRepository.findTimelineByUserIds(friendList);
         Map<String, TimelineTrainingResponseDto> timelineMap = new LinkedHashMap<>();
 
         for (Map<String, Object> row : rows) {

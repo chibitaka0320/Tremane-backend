@@ -7,34 +7,29 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.chibitaka.tremane_backend.dto.TrainingDto;
-import com.chibitaka.tremane_backend.dto.response.TrainingResponseDto;
+import com.chibitaka.tremane_backend.dto.TrainingDetailDto;
 import com.chibitaka.tremane_backend.entity.TrainingEntity;
-import com.chibitaka.tremane_backend.entity.TrainingRecordEntity;
 
+/** トレーニングテーブル操作用インターフェース */
 @Mapper
 public interface TrainingRepository {
 
-    /** トレーニング記録更新情報取得 */
-    List<TrainingDto> getTrainings(String userId, LocalDateTime updatedAt);
+    /** トレーニング詳細取得（ID） */
+    TrainingDetailDto findById(String trainingId);
 
-    /** ユーザーID、日付検索 */
-    List<TrainingRecordEntity> findByUserIdAndDate(TrainingEntity entity);
+    /** ユーザートレーニング一覧取得(更新情報、ID昇順) */
+    List<TrainingEntity> findByUserId(String userId, LocalDateTime updatedAt);
 
-    /** トレーニングID検索 */
-    TrainingResponseDto findById(String trainingId);
+    /** トレーニング追加更新 */
+    int upsert(TrainingEntity entity);
 
-    /** トレーニング記録追加 */
-    int upsertTraining(TrainingEntity entity);
-
-    /** トレーニング記録更新 */
-    int update(TrainingEntity entity);
-
-    /** トレーニング記録削除 */
+    /** トレーニング削除 */
     int delete(String userId, String trainingId);
 
-    /** 月別トレーニング日数取得 */
-    List<Map<String, Object>> getMonthlyTrainingCount(List<String> userIds, LocalDate startDate, LocalDate endDate);
+    /** ユーザー月別トレーニング日数取得 */
+    List<Map<String, Object>> findMonthlyTrainingCountByUserIds(List<String> userIds, LocalDate startDate,
+            LocalDate endDate);
 
-    List<Map<String, Object>> getTimelineTraining(List<String> userIds);
+    /** タイムライン情報取得 */
+    List<Map<String, Object>> findTimelineByUserIds(List<String> userIds);
 }
