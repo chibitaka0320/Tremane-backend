@@ -2,28 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chibitaka.tremane_backend.repository.BodyPartRepository">
-  <select id="getBodyPartExerciseList" resultMap="BodyPartListResultMap">
-    SELECT
-    	b.parts_id, b.name as body_part_name, e.exercise_id, e.name exercise_name
-    FROM body_parts b
-    JOIN exercises e ON b.parts_id = e.parts_id
-    ORDER BY b.parts_id, e.exercise_id
-  </select>
-
-  <select id="getBodyPart">
+  <!-- 部位一覧取得 -->
+  <select id="findAll">
     SELECT
       parts_id, name, created_at, updated_at
     FROM body_parts
     WHERE updated_at > #{updatedAt}
     ORDER BY parts_id
   </select>
-
-  <resultMap id="BodyPartListResultMap" type="com.chibitaka.tremane_backend.entity.BodyPartEntity">
-    <result property="partsId" column="parts_id"/>
-    <result property="name" column="body_part_name"/>
-    <collection property="exercises" ofType="com.chibitaka.tremane_backend.entity.ExerciseEntity">
-        <result property="exerciseId" column="exercise_id" />
-        <result property="name" column="exercise_name" />
-    </collection>
-  </resultMap>
 </mapper>

@@ -5,15 +5,12 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.chibitaka.tremane_backend.dto.BodyPartDto;
 import com.chibitaka.tremane_backend.entity.BodyPartEntity;
 
+/** トレーニング部位操作用インターフェース */
 @Mapper
 public interface BodyPartRepository {
 
-    /** 部位一覧取得 */
-    List<BodyPartEntity> getBodyPartExerciseList();
-
-    /** 部位更新情報取得 */
-    List<BodyPartDto> getBodyPart(LocalDateTime updatedAt);
+    /** 部位更新情報一覧取得 */
+    List<BodyPartEntity> findAll(LocalDateTime updatedAt);
 }
