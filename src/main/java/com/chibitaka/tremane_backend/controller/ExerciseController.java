@@ -3,6 +3,7 @@ package com.chibitaka.tremane_backend.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,44 +21,47 @@ import com.chibitaka.tremane_backend.service.ExerciseService;
 
 import lombok.RequiredArgsConstructor;
 
+/** トレーニング種目用Controller */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/exercise")
 public class ExerciseController {
 
-    private final ExerciseService exerciseService;
+    private final ExerciseService exerciseService; // トレーニング種目Service
 
+    /** トレーニング種目一覧取得 */
     @GetMapping("")
     public ResponseEntity<List<ExerciseDto>> getExercises(@RequestParam LocalDateTime updatedAt) {
-        List<ExerciseDto> exerciseDtos = exerciseService.getBodyPartList(updatedAt);
-        return ResponseEntity.ok(exerciseDtos);
+        List<ExerciseDto> exerciseDtos = exerciseService.getExercisesBySystem(updatedAt);
+
+        return ResponseEntity.status(HttpStatus.OK).body(exerciseDtos);
     }
 
-    /** マイ種目リスト取得 */
+    /** マイトレーニング種目一覧取得 */
     @GetMapping("/myself")
     public ResponseEntity<List<ExerciseDto>> getMyExercises(@RequestParam LocalDateTime updatedAt) {
         String userId = UserInfo.getUserId();
+        List<ExerciseDto> exerciseDtos = exerciseService.getExercisesByUserId(userId, updatedAt);
 
-        List<ExerciseDto> exerciseDtos = exerciseService.getMyExerciseList(userId, updatedAt);
-        return ResponseEntity.ok(exerciseDtos);
+        return ResponseEntity.status(HttpStatus.OK).body(exerciseDtos);
     }
 
-    /** マイ種目追加 */
+    /** マイトレーニング種目追加更新 */
     @PostMapping("/myself")
-    public ResponseEntity<Void> postMyExercises(@RequestBody ExerciseForm[] forms) {
+    public ResponseEntity<Void> saveMyExercises(@RequestBody ExerciseForm[] forms) {
         String userId = UserInfo.getUserId();
 
-        exerciseService.upsertMyExercise(userId, forms);
-        return ResponseEntity.status(204).build();
+        exerciseService.saveMyExercises(userId, forms);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    /** マイ種目削除 */
+    /** マイトレーニング種目削除 */
     @DeleteMapping("/myself/{exerciseId}")
-    public ResponseEntity<Void> deleteMyExercises(@PathVariable String exerciseId) {
+    public ResponseEntity<Void> deleteMyExercise(@PathVariable String exerciseId) {
         String userId = UserInfo.getUserId();
 
-        exerciseService.deleteMyExercises(userId, exerciseId);
-        return ResponseEntity.status(204).build();
+        exerciseService.deleteMyExercise(userId, exerciseId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

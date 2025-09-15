@@ -2,14 +2,19 @@ package com.chibitaka.tremane_backend.entity;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/** トレーニング部位テーブルEntity */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ExerciseEntity {
-    private String exerciseId;
-    private String ownerUserId;
-    private Long partsId;
-    private String name;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String exerciseId; // 種目ID
+    private String ownerUserId; // オーナーユーザーID
+    private Long partsId; // 部位ID
+    private String name; // 種目名
+    private LocalDateTime createdAt; // 作成日時
+    private LocalDateTime updatedAt; // 更新日時
 }

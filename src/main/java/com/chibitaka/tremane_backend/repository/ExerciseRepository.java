@@ -5,19 +5,21 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.chibitaka.tremane_backend.dto.ExerciseDto;
-import com.chibitaka.tremane_backend.entity.MyExerciseEntity;
+import com.chibitaka.tremane_backend.entity.ExerciseEntity;
 
+/** トレーニング種目操作用インターフェース */
 @Mapper
 public interface ExerciseRepository {
 
-    List<ExerciseDto> getExercise(LocalDateTime updatedAt);
+    /** トレーニング種目一覧取得(システム登録) */
+    List<ExerciseEntity> findBySystemUser(LocalDateTime updatedAt);
 
-    List<ExerciseDto> getMyExercise(String userId, LocalDateTime updatedAt);
+    /** マイトレーニング種目一覧取得 */
+    List<ExerciseEntity> findByUserId(String userId, LocalDateTime updatedAt);
 
-    /** マイ種目追加・更新 */
-    int upsertMyExercise(MyExerciseEntity entity);
+    /** マイトレーニング種目追加・更新 */
+    int upsertMyExercise(ExerciseEntity entity);
 
-    /** マイ種目削除 */
+    /** マイトレーニング種目削除 */
     int deleteMyExercise(String userId, String exerciseId);
 }

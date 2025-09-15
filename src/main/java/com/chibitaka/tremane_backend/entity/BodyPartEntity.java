@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BodyPartEntity {
     private Long partsId; // 部位ID
-    private String name; // 名前
+    private String name; // 部位名
     private LocalDateTime createdAt; // 作成日時
     private LocalDateTime updatedAt; // 更新日時
 }

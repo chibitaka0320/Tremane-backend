@@ -4,13 +4,12 @@ import java.time.LocalDateTime;
 
 import lombok.Data;
 
-/** マイ種目リクエストフォーム */
+/** トレーニング種目追加更新用Form */
 @Data
 public class ExerciseForm {
-    private String exerciseId;
-    private String ownerUserId;
-    private long partsId;
-    private String name;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String exerciseId; // 種目ID
+    private long partsId; // 部位ID
+    private String name; // 種目名
+    private LocalDateTime createdAt; // 作成日時
+    private LocalDateTime updatedAt; // 更新日時
 }

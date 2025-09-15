@@ -41,7 +41,8 @@ public class TrainingController {
         String userId = UserInfo.getUserId();
         List<TrainingDto> trainingDtos = trainingService.getTrainingsByUserId(userId,
                 updatedAt);
-        return ResponseEntity.ok(trainingDtos);
+
+        return ResponseEntity.status(HttpStatus.OK).body(trainingDtos);
     }
 
     /** トレーニング詳細取得 */
