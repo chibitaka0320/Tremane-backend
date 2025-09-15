@@ -10,7 +10,7 @@ import com.chibitaka.tremane_backend.entity.NotificationEntity;
 @Mapper
 public interface NotificationRepository {
 
-    /** 登録 */
+    /** 通知登録 */
     void insert(NotificationEntity notification);
 
     /** ユーザーの通知一覧取得（作成日時の降順） */

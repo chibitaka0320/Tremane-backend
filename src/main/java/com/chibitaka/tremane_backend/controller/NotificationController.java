@@ -23,20 +23,20 @@ public class NotificationController {
 
     private final NotificationService notificationService; // 通知Service
 
-    /** ユーザー通知一覧の取得 */
+    /** ユーザー通知一覧取得 */
     @GetMapping("")
     public ResponseEntity<List<NotificationDto>> getNotifications() {
         String userId = UserInfo.getUserId();
-        List<NotificationDto> notificationDtos = notificationService.getNotifications(userId);
+        List<NotificationDto> notificationDtos = notificationService.getNotificationsByUserId(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(notificationDtos);
     }
 
-    /** ユーザー通知の未読件数取得 */
+    /** ユーザー通知未読件数取得 */
     @GetMapping("/noread")
     public ResponseEntity<Integer> getNoreadCount() {
         String userId = UserInfo.getUserId();
-        int count = notificationService.getUnreadNotificationsCount(userId);
+        int count = notificationService.getUnreadNotificationsCountByUserId(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(count);
     }
@@ -45,7 +45,7 @@ public class NotificationController {
     @PutMapping("/read")
     public ResponseEntity<Void> markAllRead() {
         String userId = UserInfo.getUserId();
-        notificationService.markAllRead(userId);
+        notificationService.markAllReadByUserId(userId);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
