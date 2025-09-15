@@ -13,7 +13,7 @@ import com.chibitaka.tremane_backend.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 
-/** 認証用コントローラー */
+/** 認証用Controller */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")

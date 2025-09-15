@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
- * トレーニング用コントローラー
+ * トレーニング用Controller
  */
 @RestController
 @RequiredArgsConstructor

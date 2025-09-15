@@ -24,9 +24,7 @@ import com.chibitaka.tremane_backend.service.EatingService;
 
 import lombok.RequiredArgsConstructor;
 
-/**
- * 食事用コントローラー
- */
+/** 食事用Controller */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/eating")
