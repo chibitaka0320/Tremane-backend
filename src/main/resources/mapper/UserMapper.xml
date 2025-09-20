@@ -21,7 +21,7 @@
   </insert>
 
   <!-- 削除 -->
-  <delete id="delete">
+  <delete id="deleteById">
     DELETE FROM users WHERE user_id = #{userId}
   </delete>
 

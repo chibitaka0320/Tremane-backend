@@ -25,7 +25,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(@RequestBody SignUpForm form) {
         authService.signUp(form);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /** 再認証トークン発行 */

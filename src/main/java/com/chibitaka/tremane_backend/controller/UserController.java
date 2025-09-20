@@ -49,7 +49,7 @@ public class UserController {
         userService.updateUser(userId, form);
 
         // TODO: ステータス検討
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /** ユーザー削除 */

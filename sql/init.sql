@@ -1,3 +1,40 @@
+-- 部位マスタテーブル
+DROP TABLE IF EXISTS body_parts;
+CREATE TABLE body_parts (
+	parts_id SERIAL PRIMARY KEY,
+	name VARCHAR(50),
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 種目マスタテーブル
+DROP TABLE IF EXISTS exercises;
+CREATE TABLE exercises (
+	exercise_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+	owner_user_id TEXT DEFAULT NULL,
+	parts_id BIGINT NOT NULL,
+	name VARCHAR(255),
+	is_deleted INT DEFAULT 0,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (parts_id) REFERENCES body_parts(parts_id) ON DELETE CASCADE
+);
+
+-- マイ種目マスタテーブル
+DROP TABLE IF EXISTS my_exercises;
+CREATE TABLE my_exercises (
+	exercise_id TEXT,
+	user_id TEXT,
+	parts_id BIGINT NOT NULL,
+	name VARCHAR(255),
+	created_at TIMESTAMP NOT NULL,
+	updated_at TIMESTAMP NOT NULL,
+	PRIMARY KEY (exercise_id, user_id),
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+	FOREIGN KEY (parts_id) REFERENCES body_parts(parts_id) ON DELETE CASCADE
+);
+
+
 -- ユーザーテーブル
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
@@ -33,42 +70,6 @@ CREATE TABLE users_goal (
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
--- 部位マスタ
-DROP TABLE IF EXISTS body_parts;
-CREATE TABLE body_parts (
-	parts_id SERIAL PRIMARY KEY,
-	name VARCHAR(50),
-	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
--- 種目マスタ
-DROP TABLE IF EXISTS exercises;
-CREATE TABLE exercises (
-	exercise_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-	owner_user_id TEXT DEFAULT NULL,
-	parts_id BIGINT NOT NULL,
-	name VARCHAR(255),
-	is_deleted INT DEFAULT 0,
-	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (parts_id) REFERENCES body_parts(parts_id) ON DELETE CASCADE
-);
-
--- ユーザー種目テーブル
-DROP TABLE IF EXISTS my_exercises;
-CREATE TABLE my_exercises (
-	exercise_id TEXT,
-	user_id TEXT,
-	parts_id BIGINT NOT NULL,
-	name VARCHAR(255),
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL,
-	PRIMARY KEY (exercise_id, user_id),
-	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-	FOREIGN KEY (parts_id) REFERENCES body_parts(parts_id) ON DELETE CASCADE
 );
 
 -- トレーニングトランザクション

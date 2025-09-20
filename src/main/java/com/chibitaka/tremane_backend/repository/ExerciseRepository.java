@@ -15,7 +15,7 @@ public interface ExerciseRepository {
     List<ExerciseEntity> findBySystemUser(LocalDateTime updatedAt);
 
     /** マイトレーニング種目一覧取得 */
-    List<ExerciseEntity> findByUserId(String userId, LocalDateTime updatedAt);
+    List<ExerciseEntity> findByUserId(String ownerUserId, LocalDateTime updatedAt);
 
     /** マイトレーニング種目追加・更新 */
     int upsertMyExercise(ExerciseEntity entity);

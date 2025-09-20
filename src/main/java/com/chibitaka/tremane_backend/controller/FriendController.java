@@ -20,14 +20,13 @@ import com.chibitaka.tremane_backend.service.FriendService;
 
 import lombok.RequiredArgsConstructor;
 
-/** 友達申請関連Controller */
+/** 友達申請用Controller */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/friends")
 public class FriendController {
 
-    /** 友達申請Service */
-    private final FriendService friendService;
+    private final FriendService friendService; // 友達申請Service
 
     /** 友達申請（追加） */
     @PostMapping("/{receiveUserId}")
