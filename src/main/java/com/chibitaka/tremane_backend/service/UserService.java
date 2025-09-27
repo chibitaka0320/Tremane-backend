@@ -83,7 +83,11 @@ public class UserService {
             return resultDto;
         } catch (FirebaseAuthException e) {
             // TODO: エラーステータスやハンドリングについては検討
-            throw new ApiResponseException(400, e.getErrorCode().toString(), e.getMessage());
+            if ("NOT_FOUND".equals(e.getErrorCode().name())) {
+                throw new ApiResponseException(404, e.getErrorCode().toString(), e.getMessage());
+            } else {
+                throw new ApiResponseException(400, e.getErrorCode().toString(), e.getMessage());
+            }
         }
     }
 
