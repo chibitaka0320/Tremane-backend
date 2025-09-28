@@ -30,28 +30,10 @@ public class FriendController {
 
     /** 友達申請（追加） */
     @PostMapping("/{receiveUserId}")
-    public ResponseEntity<String> requestFriend(@PathVariable String receiveUserId) {
+    public ResponseEntity<InsertFriendRequestResponseDto> requestFriend(@PathVariable String receiveUserId) {
         String userId = UserInfo.getUserId();
-
         InsertFriendRequestResponseDto resultDto = friendService.insertFriendRequest(userId, receiveUserId);
-        String requestId = resultDto.getRequestId();
-        String status = resultDto.getStatus();
-
-        if ("success".equals(status)) {
-            return ResponseEntity.ok(requestId);
-        }
-
-        else if ("conflict".equals(status)) {
-            return ResponseEntity.status(409).body(requestId);
-        }
-
-        else if ("receive".equals(status)) {
-            return ResponseEntity.status(418).body(requestId);
-        }
-
-        else {
-            return ResponseEntity.badRequest().body(null);
-        }
+        return ResponseEntity.ok(resultDto);
 
     }
 
