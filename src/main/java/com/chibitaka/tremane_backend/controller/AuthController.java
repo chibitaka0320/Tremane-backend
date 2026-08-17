@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chibitaka.tremane_backend.common.util.UserInfo;
 import com.chibitaka.tremane_backend.form.SignUpForm;
 import com.chibitaka.tremane_backend.service.AuthService;
+import com.google.firebase.auth.FirebaseAuthException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,5 +35,13 @@ public class AuthController {
         String userId = UserInfo.getUserId();
         String customToken = authService.issueReauthToken(userId);
         return ResponseEntity.status(HttpStatus.OK).body(customToken);
+    }
+
+    /** メールアドレス確認メール送信 */
+    @PostMapping("/send-verification-email")
+    public ResponseEntity<Void> sendVerificationEmail() throws FirebaseAuthException {
+        String userId = UserInfo.getUserId();
+        authService.sendVerificationEmail(userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

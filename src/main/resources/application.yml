@@ -16,6 +16,12 @@ spring:
   messages:
     basename: messages
     encoding: UTF-8
+
+resend:
+  api-key: ${RESEND_API_KEY:}
+  api-url: ${RESEND_API_URL:https://api.resend.com/emails}
+  from-address: "${RESEND_FROM_ADDRESS:TREMANE <noreply@tremane.click>}"
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.chibitaka.tremane_backend.entity
