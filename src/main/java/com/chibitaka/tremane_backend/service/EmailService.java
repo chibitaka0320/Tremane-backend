@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /** メール送信用Service（Resend API経由） */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -45,5 +47,7 @@ public class EmailService {
                 .body(payload)
                 .retrieve()
                 .toBodilessEntity();
+
+        log.info("メール送信完了: to={}, subject={}", to, subject);
     }
 }

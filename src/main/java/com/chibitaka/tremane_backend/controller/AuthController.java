@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
+import com.chibitaka.tremane_backend.form.ChangeEmailForm;
 import com.chibitaka.tremane_backend.form.PasswordResetForm;
 import com.chibitaka.tremane_backend.form.SignUpForm;
 import com.chibitaka.tremane_backend.service.AuthService;
@@ -50,6 +51,14 @@ public class AuthController {
     @PostMapping("/send-password-reset-email")
     public ResponseEntity<Void> sendPasswordResetEmail(@RequestBody PasswordResetForm form) throws FirebaseAuthException {
         authService.sendPasswordResetEmail(form.getEmail());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /** メールアドレス変更確認メール送信 */
+    @PostMapping("/send-change-email-verification")
+    public ResponseEntity<Void> sendChangeEmailVerification(@RequestBody ChangeEmailForm form) throws Exception {
+        String userId = UserInfo.getUserId();
+        authService.sendChangeEmailVerification(userId, form.getNewEmail());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
