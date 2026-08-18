@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chibitaka.tremane_backend.repository.UserProfileRepository">
+  
+  <!-- ID検索 -->
+  <select id="findById">
+    SELECT
+      user_id,
+      height,
+      weight,
+      birthday,
+      gender,
+      active_level,
+      created_at,
+      updated_at
+    FROM users_profile
+    WHERE user_id = #{userId}
+      AND updated_at > #{updatedAt}
+  </select>
+
+  <!-- 追加更新 -->
+  <insert id="upsert">
+    INSERT INTO users_profile (user_id, height, weight, birthday, gender, active_level, created_at, updated_at)
+    VALUES (#{userId}, #{height}, #{weight}, #{birthday}, #{gender}, #{activeLevel}, #{createdAt}, #{updatedAt})
+    ON CONFLICT (user_id) DO UPDATE SET
+    height = EXCLUDED.height,
+    weight = EXCLUDED.weight,
+    birthday = EXCLUDED.birthday,
+    gender = EXCLUDED.gender,
+    active_level = EXCLUDED.active_level,
+    updated_at = EXCLUDED.updated_at
+  </insert>
+
+</mapper>

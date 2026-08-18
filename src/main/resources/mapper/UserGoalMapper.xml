@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chibitaka.tremane_backend.repository.UserGoalRepository">
+  
+  <!-- ID検索 -->
+  <select id="findById">
+    SELECT
+      user_id,
+      weight,
+      goal_weight,
+      start,
+      finish,
+      pfc,
+      created_at,
+      updated_at
+    FROM users_goal
+    WHERE user_id = #{userId}
+      AND updated_at > #{updatedAt}
+  </select>
+
+  <!-- 追加更新 -->
+  <insert id="upsert">
+    INSERT INTO users_goal (user_id, weight, goal_weight, start, finish, pfc, created_at, updated_at)
+    VALUES (#{userId}, #{weight}, #{goalWeight}, #{start}, #{finish}, #{pfc}, #{createdAt}, #{updatedAt})
+    ON CONFLICT (user_id) DO UPDATE SET
+    weight=EXCLUDED.weight,
+    goal_weight=EXCLUDED.goal_weight,
+    start=EXCLUDED.start,
+    finish=EXCLUDED.finish,
+    pfc=EXCLUDED.pfc,
+    updated_at=EXCLUDED.updated_at
+  </insert>
+
+</mapper>

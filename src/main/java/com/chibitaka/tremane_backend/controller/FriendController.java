@@ -1,0 +1,80 @@
+package com.chibitaka.tremane_backend.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.chibitaka.tremane_backend.common.util.UserInfo;
+import com.chibitaka.tremane_backend.dto.response.InsertFriendRequestResponseDto;
+import com.chibitaka.tremane_backend.dto.response.TimelineTrainingResponseDto;
+import com.chibitaka.tremane_backend.dto.response.TrainingRankingResponseDto;
+import com.chibitaka.tremane_backend.service.FriendService;
+
+import lombok.RequiredArgsConstructor;
+
+/** 友達申請用Controller */
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/friends")
+public class FriendController {
+
+    private final FriendService friendService; // 友達申請Service
+
+    /** 友達申請（追加） */
+    @PostMapping("/{receiveUserId}")
+    public ResponseEntity<InsertFriendRequestResponseDto> requestFriend(@PathVariable String receiveUserId) {
+        String userId = UserInfo.getUserId();
+        InsertFriendRequestResponseDto resultDto = friendService.insertFriendRequest(userId, receiveUserId);
+        return ResponseEntity.ok(resultDto);
+
+    }
+
+    /** 友達取り消し（友達取り消し、申請取り消し、申請拒否） */
+    @DeleteMapping("/{requestId}")
+    public ResponseEntity<Void> revokeFriend(@PathVariable String requestId) {
+
+        friendService.deleteFriendRequest(requestId);
+
+        return ResponseEntity.ok().build();
+
+    }
+
+    /** 友達申請許可 */
+    @PutMapping("/{requestId}/accept")
+    public ResponseEntity<String> acceptFriend(@PathVariable String requestId) {
+        String userId = UserInfo.getUserId();
+        requestId = friendService.receiveFriendRequest(requestId, userId);
+
+        if (requestId == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(requestId);
+        }
+    }
+
+    /** 月間トレーニング数ランキング取得 */
+    @GetMapping("/ranking")
+    public ResponseEntity<List<TrainingRankingResponseDto>> getRankingMonthly() {
+        String userId = UserInfo.getUserId();
+        List<TrainingRankingResponseDto> trainingRankingResponseDtos = friendService.getRankingMonthly(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(trainingRankingResponseDtos);
+    }
+
+    /** タイムライン情報取得 */
+    @GetMapping("/timeline")
+    public ResponseEntity<List<TimelineTrainingResponseDto>> getTimelineTraining() {
+        String userId = UserInfo.getUserId();
+        List<TimelineTrainingResponseDto> timelineTrainingResponseDtos = friendService.getTimelineTraining(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(timelineTrainingResponseDtos);
+    }
+}

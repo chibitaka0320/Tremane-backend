@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chibitaka.tremane_backend.repository.TrainingRepository">
+  <!-- トレーニング詳細取得（ID） -->
+  <select id="findById">
+    SELECT
+      t.training_id,
+      t.date,
+      e.parts_id,
+      e.exercise_id,
+      t.weight,
+      t.reps
+    FROM trainings t
+    LEFT JOIN exercises e ON t.exercise_id = e.exercise_id
+    WHERE t.training_id = #{trainingId}
+  </select>
+
+<!-- ユーザートレーニング一覧取得 -->
+  <select id="findByUserId">
+    SELECT
+      training_id, date, user_id, exercise_id, weight, reps, created_at, updated_at
+    FROM trainings
+    WHERE user_id = #{userId}
+      AND updated_at > #{updatedAt}
+    ORDER BY training_id
+  </select>
+
+  <!-- トレーニング追加更新 -->
+  <insert id="upsert">
+    INSERT INTO trainings (training_id, date, user_id, exercise_id, weight, reps, created_at, updated_at)
+    VALUES (#{trainingId}, #{date}, #{userId}, #{exerciseId}, #{weight}, #{reps}, #{createdAt}, #{updatedAt})
+    ON CONFLICT (training_id) DO UPDATE SET
+    date=EXCLUDED.date,
+    exercise_id=EXCLUDED.exercise_id,
+    weight=EXCLUDED.weight,
+    reps=EXCLUDED.reps,
+    updated_at=EXCLUDED.updated_at
+  </insert>
+
+  <!-- トレーニング削除 -->
+  <delete id="delete">
+    DELETE FROM trainings WHERE training_id = #{trainingId} AND user_id = #{userId}
+  </delete>
+
+  <!-- 月別トレーニング件数取得 -->
+  <select id="findMonthlyTrainingCountByUserIds">
+    SELECT
+      user_id,
+      COUNT(DISTINCT date) AS training_counts
+    FROM trainings
+    WHERE user_id IN
+      <foreach item="userId" collection="userIds" open="(" separator="," close=")">
+        #{userId}
+      </foreach>
+      AND date BETWEEN #{startDate} AND #{endDate}
+    GROUP BY user_id
+  </select>
+
+  <!-- タイムライン情報取得 -->
+  <select id="findTimelineByUserIds">
+    SELECT t.user_id, u.nickname, t.date, b.parts_id, b.name body_parts_name
+    FROM trainings t
+    LEFT JOIN exercises e ON t.exercise_id = CAST(e.exercise_id AS TEXT)
+    LEFT JOIN body_parts b ON e.parts_id = CAST(b.parts_id AS BIGINT)
+    LEFT JOIN users u ON t.user_id = u.user_id
+    WHERE t.user_id IN
+      <foreach item="userId" collection="userIds" open="(" separator="," close=")">
+        #{userId}
+      </foreach>
+    GROUP BY t.user_id, u.nickname, t.date, b.parts_id, b.name
+    ORDER BY t.date DESC, b.parts_id, MAX(t.created_at) DESC;
+  </select>
+
+</mapper>

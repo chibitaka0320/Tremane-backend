@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chibitaka.tremane_backend.repository.BodyPartRepository">
+  <!-- 部位一覧取得 -->
+  <select id="findAll">
+    SELECT
+      parts_id, name, created_at, updated_at
+    FROM body_parts
+    WHERE updated_at > #{updatedAt}
+    ORDER BY parts_id
+  </select>
+</mapper>

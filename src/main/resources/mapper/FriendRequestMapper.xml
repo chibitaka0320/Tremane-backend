@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chibitaka.tremane_backend.repository.FriendRequestRepository">
+
+  <!-- 友達リクエスト情報取得 -->
+  <select id="getFirendRequest">
+    SELECT request_id, request_user_id, receive_user_id, status, created_at, updated_at
+    FROM friend_requests
+    WHERE request_user_id = #{userId}
+    AND receive_user_id = #{receiveUserId}
+  </select>
+
+  <!-- 友達リクエスト情報検索 -->
+  <select id="findById">
+    SELECT request_id, request_user_id, receive_user_id, status, created_at, updated_at
+    FROM friend_requests
+    WHERE request_id = CAST(#{requestId} AS UUID)
+  </select>
+
+  <!-- 友達リクエスト追加 -->
+  <insert id="insertFriendRequest" useGeneratedKeys="true" keyProperty="requestId">
+    INSERT INTO friend_requests(request_user_id, receive_user_id, status)
+    VALUES (#{requestUserId}, #{receiveUserId}, #{status})
+  </insert>
+
+  <!-- 友達リクエスト削除 -->
+  <delete id="deleteFriendRequest">
+    DELETE FROM friend_requests
+    WHERE request_id = CAST(#{requestId} AS UUID)
+  </delete>
+
+  <!-- 友達リクエスト更新 -->
+  <update id="updateFriendRequest">
+    UPDATE friend_requests SET status = #{status}, updated_at = #{updatedAt}
+    WHERE request_id = CAST(#{requestId} AS UUID)
+  </update>
+
+  <!-- 友達一覧取得 -->
+  <select id="getFriends">
+    SELECT receive_user_id
+    FROM friend_requests
+    WHERE request_user_id = #{userId}
+    AND status = 'accepted'
+  </select>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chibitaka.tremane_backend.repository.NotificationRepository">
+  <!-- 通知登録 -->
+  <insert id="insert">
+    INSERT INTO notifications (user_id, notification_source, type, message, related_id)
+    VALUES (#{userId}, #{notificationSource}, #{type}, #{message}, #{relatedId})
+  </insert>
+
+  <!-- 一覧取得(ユーザーID検索, 作成日の新しい順) -->
+  <select id="findByUserId">
+    SELECT notification_id, user_id, notification_source, type, message, related_id, is_read, created_at, updated_at
+    FROM notifications
+    WHERE user_id = #{userId}
+    ORDER BY created_at DESC
+  </select>
+
+  <!-- 未読件数の取得 -->
+  <select id="countUnreadNotificationsByUserId">
+    SELECT COUNT(*)
+    FROM notifications
+    WHERE user_id = #{userId}
+    AND is_read = false
+  </select>
+
+  <!-- 全通知を既読にする -->
+  <update id="markAllReadByUserId">
+    UPDATE notifications
+    SET is_read = true
+    WHERE user_id = #{userId}
+  </update>
+
+  <!-- 削除（1件） -->
+  <delete id="deleteById">
+    DELETE FROM notifications
+    WHERE notification_id = #{notificationId}
+  </delete>
+
+  <!-- 削除（関連リソースID） -->
+  <delete id="deleteByRelatedId">
+    DELETE FROM notifications
+    WHERE related_id = #{relatedId}
+  </delete>
+</mapper>

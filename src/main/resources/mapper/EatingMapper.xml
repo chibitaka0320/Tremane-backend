@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chibitaka.tremane_backend.repository.EatingRepository">
+  <!-- 食事詳細取得(ID) -->
+  <select id="findById">
+    SELECT
+      eating_id,
+      date,
+      name,
+      protein,
+      fat,
+      carbo
+    FROM eatings
+    WHERE eating_id = #{eatingId}
+  </select>
+
+  <!-- ユーザー食事記一覧取得 -->
+  <select id="findByUserId">
+    SELECT
+      eating_id, date, user_id, name, calories, protein, fat, carbo, created_at, updated_at
+    FROM eatings
+    WHERE user_id = #{userId}
+      AND updated_at > #{updatedAt}
+    ORDER BY eating_id
+  </select>
+  
+  <!-- 食事追加更新 -->
+  <insert id="upsert" parameterType="com.chibitaka.tremane_backend.entity.EatingEntity">
+    INSERT INTO eatings(eating_id, date, user_id, name, calories, protein, fat, carbo, created_at, updated_at)
+    VALUES( #{eatingId}, #{date}, #{userId}, #{name}, #{calories}, #{protein}, #{fat}, #{carbo}, #{createdAt}, #{updatedAt})
+    ON CONFLICT (eating_id) DO UPDATE SET
+    date=EXCLUDED.date,
+    name=EXCLUDED.name,
+    calories=EXCLUDED.calories,
+    protein=EXCLUDED.protein,
+    fat=EXCLUDED.fat,
+    carbo=EXCLUDED.carbo,
+    updated_at=EXCLUDED.updated_at
+  </insert>
+
+  <!-- 食事削除 -->
+  <delete id="delete">
+    DELETE FROM eatings
+    WHERE eating_id = #{eatingId}
+      AND user_id = #{userId}
+  </delete>
+</mapper>
