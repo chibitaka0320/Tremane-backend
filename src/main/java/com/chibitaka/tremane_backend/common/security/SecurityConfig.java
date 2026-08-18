@@ -26,6 +26,7 @@ public class SecurityConfig {
                 .requestMatchers("/bodyparts/**").permitAll()
                 .requestMatchers("/exercise").permitAll()
                 .requestMatchers("/auth/signup").permitAll()
+                .requestMatchers("/auth/send-password-reset-email").permitAll()
                 .anyRequest().authenticated());
 
         // CSRF（クロスサイトリクエストフォージェリ）保護を無効化

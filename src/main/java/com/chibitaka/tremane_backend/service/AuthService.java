@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chibitaka.tremane_backend.entity.UserEntity;
 import com.chibitaka.tremane_backend.form.SignUpForm;
 import com.chibitaka.tremane_backend.repository.UserRepository;
+import com.google.firebase.auth.AuthErrorCode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
@@ -48,6 +49,25 @@ public class AuthService {
 
         String subject = messageSource.getMessage("email.verification.subject", null, Locale.JAPAN);
         String body = messageSource.getMessage("email.verification.body", new Object[] { link }, Locale.JAPAN);
+
+        emailService.sendPlainTextEmail(email, subject, body);
+    }
+
+    /** パスワード再設定メール送信 */
+    public void sendPasswordResetEmail(String email) throws FirebaseAuthException {
+        String link;
+        try {
+            link = FirebaseAuth.getInstance().generatePasswordResetLink(email);
+        } catch (FirebaseAuthException e) {
+            // 未登録メールアドレスの場合は何もせず正常終了扱いにする（メールアドレスの存在有無を推測されないようにするため）
+            if (e.getAuthErrorCode() == AuthErrorCode.USER_NOT_FOUND) {
+                return;
+            }
+            throw e;
+        }
+
+        String subject = messageSource.getMessage("email.password_reset.subject", null, Locale.JAPAN);
+        String body = messageSource.getMessage("email.password_reset.body", new Object[] { link }, Locale.JAPAN);
 
         emailService.sendPlainTextEmail(email, subject, body);
     }
