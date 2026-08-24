@@ -56,3 +56,17 @@ jobs:
               exit 1
             fi
           EOF
+
+      - name: Notify Slack on success
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"✅ *Tremane-backend* 本番デプロイ成功\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Actionsログを見る>\"}" \
+            "${{ secrets.SLACK_WEBHOOK_URL }}"
+
+      - name: Notify Slack on failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"🚨 *Tremane-backend* 本番デプロイ失敗\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Actionsログを見る>\"}" \
+            "${{ secrets.SLACK_WEBHOOK_URL }}"
