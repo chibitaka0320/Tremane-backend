@@ -18,6 +18,14 @@
     WHERE request_id = CAST(#{requestId} AS UUID)
   </select>
 
+  <!-- ユーザーが関わる友達リクエスト一覧取得（申請者・受信者いずれも対象） -->
+  <select id="findAllByUserId">
+    SELECT request_id, request_user_id, receive_user_id, status, created_at, updated_at
+    FROM friend_requests
+    WHERE request_user_id = #{userId}
+    OR receive_user_id = #{userId}
+  </select>
+
   <!-- 友達リクエスト追加 -->
   <insert id="insertFriendRequest" useGeneratedKeys="true" keyProperty="requestId">
     INSERT INTO friend_requests(request_user_id, receive_user_id, status)
