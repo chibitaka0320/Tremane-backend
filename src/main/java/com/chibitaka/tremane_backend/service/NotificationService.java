@@ -1,6 +1,7 @@
 package com.chibitaka.tremane_backend.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,12 @@ public class NotificationService {
             if ("FRIEND_REQUEST".equals(notificationEntity.getType())) {
                 // 申請状況を取得する
                 FriendRequestEntity targetRequestEntity = friendRepository.findById(notificationEntity.getRelatedId());
+
+                // 対象の友達申請が既に存在しない場合（相手アカウントの退会等）は通知として表示しない
+                if (targetRequestEntity == null) {
+                    return null;
+                }
+
                 NotificationDto notificationDto = modelMapper.map(notificationEntity, NotificationDto.class);
                 notificationDto.setStatus(targetRequestEntity.getStatus());
 
@@ -44,7 +51,7 @@ public class NotificationService {
                 // 現在はFRIEND_REQUESTのみ（今後拡張予定）
                 return new NotificationDto();
             }
-        }).toList();
+        }).filter(Objects::nonNull).toList();
 
         return notificationDtos;
     }

@@ -19,10 +19,12 @@ import com.chibitaka.tremane_backend.dto.response.TimelineTrainingResponseDto.Ti
 import com.chibitaka.tremane_backend.dto.response.TrainingRankingResponseDto;
 import com.chibitaka.tremane_backend.entity.FriendRequestEntity;
 import com.chibitaka.tremane_backend.entity.NotificationEntity;
+import com.chibitaka.tremane_backend.entity.UserEntity;
 import com.chibitaka.tremane_backend.repository.FriendRequestRepository;
 import com.chibitaka.tremane_backend.repository.NotificationRepository;
 import com.chibitaka.tremane_backend.repository.TrainingRepository;
 import com.chibitaka.tremane_backend.repository.UserPushTokenRepository;
+import com.chibitaka.tremane_backend.repository.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.GetUsersResult;
@@ -43,6 +45,7 @@ public class FriendService {
     private final UserPushTokenRepository pushTokenRepository; // プッシュ通知トークンRepository
     private final NotificationRepository notificationRepository; // 通知Repository
     private final PushNotificationService pushNotificationService; // プッシュ通知Service
+    private final UserRepository userRepository; // ユーザーRepository
 
     /** 友達申請（追加） */
     public InsertFriendRequestResponseDto insertFriendRequest(String requestUserId, String receiveUserId) {
@@ -77,16 +80,21 @@ public class FriendService {
         resultDto.setRequestId(friendEntity.getRequestId());
         resultDto.setStatus("success");
 
+        // 申請者のニックネーム取得
+        UserEntity requestUserEntity = userRepository.findById(requestUserId);
+        String requestUserNickname = requestUserEntity != null ? requestUserEntity.getNickname() : requestUserId;
+
         // 通知テーブルにレコード追加
         NotificationEntity notificationEntity = new NotificationEntity(null, friendEntity.getReceiveUserId(),
                 friendEntity.getRequestUserId(),
-                "FRIEND_REQUEST", friendEntity.getRequestId(), requestUserId + " があなたに友達申請しました。", false, null, null);
+                "FRIEND_REQUEST", friendEntity.getRequestId(), requestUserNickname + " があなたに友達申請しました。", false, null,
+                null);
         notificationRepository.insert(notificationEntity);
 
         // プッシュ通知処理
         String token = pushTokenRepository.findTokenByUserId(receiveUserId);
         String title = "友達申請が届きました";
-        String body = "ユーザー " + requestUserId + " から友達リクエストがあります";
+        String body = requestUserNickname + " さんから友達リクエストがあります";
         int tryCount = 3;
         if (token != null) {
             try {
