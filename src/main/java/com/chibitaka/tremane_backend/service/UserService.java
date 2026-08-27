@@ -1,6 +1,7 @@
 package com.chibitaka.tremane_backend.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import com.chibitaka.tremane_backend.form.UserForm;
 import com.chibitaka.tremane_backend.form.UserGoalForm;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
 import com.chibitaka.tremane_backend.repository.FriendRequestRepository;
+import com.chibitaka.tremane_backend.repository.NotificationRepository;
 import com.chibitaka.tremane_backend.repository.UserGoalRepository;
 import com.chibitaka.tremane_backend.repository.UserProfileRepository;
 import com.chibitaka.tremane_backend.repository.UserRepository;
@@ -38,6 +40,7 @@ public class UserService {
     private final UserGoalRepository userGoalRepository; // ユーザーゴールRepository
     private final UserProfileRepository userProfileRepository; // ユーザープロフィールRepository
     private final FriendRequestRepository friendRepository; // 友達リクエストRepository
+    private final NotificationRepository notificationRepository; // 通知Repository
     private final ModelMapper modelMapper; // ModelMapper
 
     /** ユーザー取得（ID） */
@@ -99,6 +102,13 @@ public class UserService {
 
     /** ユーザー削除 */
     public void deleteUser(String userId) {
+        // 退会ユーザーが関わる友達リクエストは以降のユーザー削除でCASCADE削除されるが、
+        // notifications.related_idは外部キーではなく連動しないため、相手側に残る通知を先に削除する
+        List<FriendRequestEntity> friendRequests = friendRepository.findAllByUserId(userId);
+        for (FriendRequestEntity friendRequest : friendRequests) {
+            notificationRepository.deleteByRelatedId(friendRequest.getRequestId());
+        }
+
         userRepository.deleteById(userId);
     }
 
