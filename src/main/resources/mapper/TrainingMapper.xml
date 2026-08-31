@@ -72,4 +72,25 @@
     ORDER BY t.date DESC, b.parts_id, MAX(t.created_at) DESC;
   </select>
 
+  <!-- タイムライン集計情報取得（種目数・総負荷量・推定カロリー算出用） -->
+  <select id="findTimelineSummaryByUserIds">
+    SELECT
+      t.user_id,
+      t.date,
+      COUNT(DISTINCT t.exercise_id) AS exercise_count,
+      SUM(t.weight * t.reps) AS total_volume,
+      COUNT(*) AS total_sets,
+      MAX(t.created_at) AS last_activity_at,
+      p.weight AS profile_weight
+    FROM trainings t
+    INNER JOIN exercises e ON t.exercise_id = CAST(e.exercise_id AS TEXT)
+    INNER JOIN body_parts b ON e.parts_id = CAST(b.parts_id AS BIGINT)
+    LEFT JOIN users_profile p ON t.user_id = p.user_id
+    WHERE t.user_id IN
+      <foreach item="userId" collection="userIds" open="(" separator="," close=")">
+        #{userId}
+      </foreach>
+    GROUP BY t.user_id, t.date, p.weight
+  </select>
+
 </mapper>

@@ -32,4 +32,7 @@ public interface TrainingRepository {
 
     /** タイムライン情報取得 */
     List<Map<String, Object>> findTimelineByUserIds(List<String> userIds);
+
+    /** タイムライン集計情報取得（種目数・総負荷量・推定カロリー算出用） */
+    List<Map<String, Object>> findTimelineSummaryByUserIds(List<String> userIds);
 }
