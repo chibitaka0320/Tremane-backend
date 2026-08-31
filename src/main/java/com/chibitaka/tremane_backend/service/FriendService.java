@@ -1,5 +1,6 @@
 package com.chibitaka.tremane_backend.service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
@@ -8,6 +9,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -257,7 +259,41 @@ public class FriendService {
             dto.getBodyParts().add(bodyParts);
         }
 
-        return new ArrayList<>(timelineMap.values());
+        // 種目数・総負荷量・推定消費カロリー・最終活動日時の集計
+        List<Map<String, Object>> summaryRows = trainingRepository.findTimelineSummaryByUserIds(friendList);
+        for (Map<String, Object> row : summaryRows) {
+            String id = row.get("user_id").toString();
+            LocalDate date = LocalDate.parse(row.get("date").toString());
+            String key = id + "_" + date;
+
+            TimelineTrainingResponseDto dto = timelineMap.get(key);
+            if (dto == null) {
+                continue;
+            }
+
+            int totalSets = Integer.parseInt(row.get("total_sets").toString());
+            Object profileWeight = row.get("profile_weight");
+
+            dto.setExerciseCount(Integer.parseInt(row.get("exercise_count").toString()));
+            dto.setTotalVolume(Integer.parseInt(row.get("total_volume").toString()));
+            dto.setLastActivityAt(((Timestamp) row.get("last_activity_at")).toLocalDateTime());
+            dto.setEstimatedCalories(
+                    profileWeight != null ? calcTrainingCalories(totalSets, Integer.parseInt(profileWeight.toString()))
+                            : null);
+        }
+
+        return timelineMap.values().stream()
+                .sorted(Comparator.comparing(TimelineTrainingResponseDto::getLastActivityAt).reversed())
+                .collect(Collectors.toList());
+    }
+
+    /** トレーニング推定消費カロリー計算（MET法、MET=5.0固定・1セット3分想定） */
+    private Integer calcTrainingCalories(int totalSets, int weightKg) {
+        final double MET = 5.0;
+        final int MINUTES_PER_SET = 3;
+        double durationMinutes = totalSets * MINUTES_PER_SET;
+        double calorie = (MET * 3.5 * weightKg) / 200 * durationMinutes;
+        return (int) Math.round(calorie);
     }
 
 }
