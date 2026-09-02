@@ -1,7 +1,9 @@
 package com.chibitaka.tremane_backend.service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
+
+    // ID（検索用ハンドル）フォーマット：英数字・._-のみ、8〜16文字
+    private static final Pattern HANDLE_PATTERN = Pattern.compile("^[A-Za-z0-9_.-]{8,16}$");
+    // ID変更後、再変更できるようになるまでの日数
+    private static final long HANDLE_CHANGE_COOLDOWN_DAYS = 14;
 
     private final UserRepository userRepository; // ユーザーRepository
     private final UserGoalRepository userGoalRepository; // ユーザーゴールRepository
@@ -96,8 +103,51 @@ public class UserService {
 
     /** ユーザー更新 */
     public void updateUser(String userId, UserForm form) {
-        UserEntity entity = new UserEntity(userId, form.getNickname(), null, form.getUpdatedAt());
+        UserEntity entity = new UserEntity();
+        entity.setUserId(userId);
+        entity.setNickname(form.getNickname());
+        entity.setUpdatedAt(form.getUpdatedAt());
         userRepository.update(entity);
+    }
+
+    /** ユーザーID（検索用ハンドル）更新 */
+    public void updateUserHandle(String userId, String handle) {
+        if (handle == null || !HANDLE_PATTERN.matcher(handle).matches()) {
+            throw new ApiResponseException(400, "400", "IDは英数字と._-のみ使用可能で、8〜16文字で入力してください");
+        }
+
+        UserEntity currentUser = userRepository.findById(userId);
+        if (currentUser == null) {
+            throw new ApiResponseException(404, "404", "ユーザーが見つかりませんでした");
+        }
+
+        // 現在と全く同じ値であれば変更不要（クールダウン・重複チェックは行わない）
+        if (handle.equals(currentUser.getHandle())) {
+            return;
+        }
+
+        // 2回目以降の変更の場合のみクールダウンを判定する（初回登録は対象外）
+        if (currentUser.getHandleUpdatedAt() != null) {
+            LocalDateTime cooldownEnd = currentUser.getHandleUpdatedAt().plusDays(HANDLE_CHANGE_COOLDOWN_DAYS);
+            LocalDateTime now = LocalDateTime.now();
+            if (now.isBefore(cooldownEnd)) {
+                long remainingDays = ChronoUnit.DAYS.between(now, cooldownEnd) + 1;
+                throw new ApiResponseException(409, "409", "IDの変更は14日に1回までです。あと" + remainingDays + "日で変更できます");
+            }
+        }
+
+        // 重複チェック（大文字小文字区別なし、自分自身は除外）
+        UserEntity existingUser = userRepository.findByHandle(handle);
+        if (existingUser != null && !existingUser.getUserId().equals(userId)) {
+            throw new ApiResponseException(409, "409", "このIDは既に使用されています");
+        }
+
+        UserEntity entity = new UserEntity();
+        entity.setUserId(userId);
+        entity.setHandle(handle);
+        entity.setHandleUpdatedAt(LocalDateTime.now());
+        entity.setUpdatedAt(LocalDateTime.now());
+        userRepository.updateHandle(entity);
     }
 
     /** ユーザー削除 */
