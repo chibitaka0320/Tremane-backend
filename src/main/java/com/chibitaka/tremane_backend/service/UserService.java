@@ -26,9 +26,6 @@ import com.chibitaka.tremane_backend.repository.NotificationRepository;
 import com.chibitaka.tremane_backend.repository.UserGoalRepository;
 import com.chibitaka.tremane_backend.repository.UserProfileRepository;
 import com.chibitaka.tremane_backend.repository.UserRepository;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.UserRecord;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,48 +54,47 @@ public class UserService {
         return userDto;
     }
 
-    /** ユーザー取得（Email） */
-    public UserSearchResultDto getUserByEmail(String email, String requestUserId) {
+    /** ユーザー検索（IDで検索し、未設定ユーザーの救済としてuser_idの完全一致も許可する） */
+    public UserSearchResultDto searchUser(String query, String requestUserId) {
+        // ①ID（検索用ハンドル、大文字小文字区別なし）で検索
+        UserEntity userEntity = userRepository.findByHandle(query);
+        if (userEntity == null) {
+            // ②IDを設定していないユーザーの救済として、user_id（Firebase UID）の完全一致も許可する
+            userEntity = userRepository.findById(query);
+        }
+
+        if (userEntity == null) {
+            throw new ApiResponseException(404, "404", "見つかりませんでした");
+        }
+
+        String receiveUserId = userEntity.getUserId();
+
+        // 本人の場合は404エラーにする。
+        // TODO: エラーステータスやハンドリングについては検討
+        if (requestUserId.equals(receiveUserId)) {
+            throw new ApiResponseException(404, "404", "見つかりませんでした");
+        }
+
         UserSearchResultDto resultDto = new UserSearchResultDto();
-        try {
-            // firebaseからメールアドレス検索
-            UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
+        resultDto.setUserId(receiveUserId);
+        resultDto.setHandle(userEntity.getHandle());
+        resultDto.setNickname(userEntity.getNickname());
 
-            // 取得したIDからフレンド情報取得
-            String receiveUserId = userRecord.getUid();
-
-            // 本人の場合は404エラーにする。
-            // TODO: エラーステータスやハンドリングについては検討
-            if (requestUserId.equals(receiveUserId)) {
-                throw new ApiResponseException(404, "404", "見つかりませんでした");
-            }
-            resultDto.setUserId(receiveUserId);
-            resultDto.setEmail(userRecord.getEmail());
-            resultDto.setNickname(userRecord.getDisplayName());
-
-            // 友達リクエスト状況を取得
-            FriendRequestEntity friendRequestEntity = friendRepository.getFirendRequest(requestUserId, receiveUserId);
-            if (friendRequestEntity != null) {
-                resultDto.setStatus(friendRequestEntity.getStatus());
-                resultDto.setRequestId(friendRequestEntity.getRequestId());
-            } else {
-                // 検索対象者からのリクエスト状況を取得
-                FriendRequestEntity friendReceiveEntity = friendRepository.getFirendRequest(receiveUserId,
-                        requestUserId);
-                if (friendReceiveEntity != null) {
-                    resultDto.setStatus("receive");
-                    resultDto.setRequestId(friendReceiveEntity.getRequestId());
-                }
-            }
-            return resultDto;
-        } catch (FirebaseAuthException e) {
-            // TODO: エラーステータスやハンドリングについては検討
-            if ("NOT_FOUND".equals(e.getErrorCode().name())) {
-                throw new ApiResponseException(404, e.getErrorCode().toString(), e.getMessage());
-            } else {
-                throw new ApiResponseException(400, e.getErrorCode().toString(), e.getMessage());
+        // 友達リクエスト状況を取得
+        FriendRequestEntity friendRequestEntity = friendRepository.getFirendRequest(requestUserId, receiveUserId);
+        if (friendRequestEntity != null) {
+            resultDto.setStatus(friendRequestEntity.getStatus());
+            resultDto.setRequestId(friendRequestEntity.getRequestId());
+        } else {
+            // 検索対象者からのリクエスト状況を取得
+            FriendRequestEntity friendReceiveEntity = friendRepository.getFirendRequest(receiveUserId,
+                    requestUserId);
+            if (friendReceiveEntity != null) {
+                resultDto.setStatus("receive");
+                resultDto.setRequestId(friendReceiveEntity.getRequestId());
             }
         }
+        return resultDto;
     }
 
     /** ユーザー更新 */
