@@ -8,10 +8,25 @@
     SELECT
       user_id,
       nickname,
+      handle,
+      handle_updated_at,
       created_at,
       updated_at
     FROM users
     WHERE user_id = #{userId}
+  </select>
+
+  <!-- ハンドル（検索用ID）検索（大文字小文字区別なし） -->
+  <select id="findByHandle">
+    SELECT
+      user_id,
+      nickname,
+      handle,
+      handle_updated_at,
+      created_at,
+      updated_at
+    FROM users
+    WHERE LOWER(handle) = LOWER(#{handle})
   </select>
 
   <!-- 新規追加 -->
@@ -28,6 +43,12 @@
   <!-- 更新 -->
   <update id="update">
     UPDATE users SET nickname = #{nickname}, updated_at = #{updatedAt}
+    WHERE user_id = #{userId}
+  </update>
+
+  <!-- ハンドル（検索用ID）更新 -->
+  <update id="updateHandle">
+    UPDATE users SET handle = #{handle}, handle_updated_at = #{handleUpdatedAt}, updated_at = #{updatedAt}
     WHERE user_id = #{userId}
   </update>
 

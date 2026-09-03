@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserSearchResultDto {
     private String userId; // ユーザーID
-    private String email; // メールアドレス
+    private String handle; // ID（検索用ハンドル）
     private String nickname; // ニックネーム
     private String status; // 友達ステータス
     private String requestId; // 友達リクエストID

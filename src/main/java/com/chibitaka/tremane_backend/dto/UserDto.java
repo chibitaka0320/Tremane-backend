@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class UserDto {
     private String userId; // ユーザーID
     private String nickname; // ニックネーム
+    private String handle; // ID（検索用ハンドル）
     private LocalDateTime createdAt; // 作成日時
     private LocalDateTime updatedAt; // 更新日時
 }
