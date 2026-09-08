@@ -20,6 +20,7 @@ import com.chibitaka.tremane_backend.dto.UserGoalDto;
 import com.chibitaka.tremane_backend.dto.UserProfileDto;
 import com.chibitaka.tremane_backend.form.UserForm;
 import com.chibitaka.tremane_backend.form.UserGoalForm;
+import com.chibitaka.tremane_backend.form.UserHandleForm;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
 import com.chibitaka.tremane_backend.service.UserService;
 
@@ -49,6 +50,15 @@ public class UserController {
         userService.updateUser(userId, form);
 
         // TODO: ステータス検討
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /** ユーザーID（検索用ハンドル）更新 */
+    @PutMapping("/handle")
+    public ResponseEntity<Void> updateUserHandle(@RequestBody UserHandleForm form) {
+        String userId = UserInfo.getUserId();
+        userService.updateUserHandle(userId, form.getHandle());
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -107,11 +117,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    // ユーザーメールアドレス検索
+    // ユーザーID検索（ID未設定ユーザーはuser_idの完全一致でも検索可能）
     @GetMapping("/search")
-    public ResponseEntity<UserSearchResultDto> searchUserByEmail(@RequestParam String email) {
+    public ResponseEntity<UserSearchResultDto> searchUser(@RequestParam String handle) {
         String userId = UserInfo.getUserId();
-        UserSearchResultDto userDto = userService.getUserByEmail(email, userId);
+        UserSearchResultDto userDto = userService.searchUser(handle, userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
