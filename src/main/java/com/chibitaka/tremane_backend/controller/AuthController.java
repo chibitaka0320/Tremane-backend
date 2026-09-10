@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chibitaka.tremane_backend.common.util.UserInfo;
 import com.chibitaka.tremane_backend.form.ChangeEmailForm;
 import com.chibitaka.tremane_backend.form.PasswordResetForm;
+import com.chibitaka.tremane_backend.form.ResetPasswordForm;
 import com.chibitaka.tremane_backend.form.SignUpForm;
 import com.chibitaka.tremane_backend.form.VerifyEmailChangeCodeForm;
 import com.chibitaka.tremane_backend.form.VerifyEmailCodeForm;
@@ -61,6 +62,13 @@ public class AuthController {
     @PostMapping("/send-password-reset-email")
     public ResponseEntity<Void> sendPasswordResetEmail(@RequestBody PasswordResetForm form) throws FirebaseAuthException {
         authService.sendPasswordResetEmail(form.getEmail());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /** パスワード再設定（トークン検証・更新） */
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordForm form) throws FirebaseAuthException {
+        authService.resetPassword(form.getToken(), form.getNewPassword());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

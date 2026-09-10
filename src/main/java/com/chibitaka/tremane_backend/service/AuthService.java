@@ -1,21 +1,30 @@
 package com.chibitaka.tremane_backend.service;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Locale;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StreamUtils;
 
 import com.chibitaka.tremane_backend.common.error.ApiResponseException;
 import com.chibitaka.tremane_backend.entity.EmailChangeRequestEntity;
 import com.chibitaka.tremane_backend.entity.EmailVerificationCodeEntity;
+import com.chibitaka.tremane_backend.entity.PasswordResetTokenEntity;
 import com.chibitaka.tremane_backend.entity.UserEntity;
 import com.chibitaka.tremane_backend.form.SignUpForm;
 import com.chibitaka.tremane_backend.repository.EmailChangeRequestRepository;
 import com.chibitaka.tremane_backend.repository.EmailVerificationCodeRepository;
+import com.chibitaka.tremane_backend.repository.PasswordResetTokenRepository;
 import com.chibitaka.tremane_backend.repository.UserRepository;
 import com.google.firebase.auth.AuthErrorCode;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,9 +44,18 @@ public class AuthService {
     private final UserRepository userRepository; // ユーザーRepository
     private final EmailVerificationCodeRepository emailVerificationCodeRepository; // 確認コードRepository
     private final EmailChangeRequestRepository emailChangeRequestRepository; // メールアドレス変更リクエストRepository
+    private final PasswordResetTokenRepository passwordResetTokenRepository; // パスワード再設定トークンRepository
     private final ModelMapper modelMapper; // ModelMapper
     private final EmailService emailService; // メール送信Service
     private final MessageSource messageSource; // メッセージソース
+
+    /** パスワード再設定メールのHTMLテンプレート */
+    @Value("classpath:templates/email/password-reset.html")
+    private Resource passwordResetEmailTemplate;
+
+    /** パスワード再設定リンク（Universal Links）のベースURL */
+    @Value("${app.universal-link-base-url}")
+    private String universalLinkBaseUrl;
 
     private final SecureRandom secureRandom = new SecureRandom();
 
@@ -45,6 +63,10 @@ public class AuthService {
     private static final int VERIFICATION_CODE_TTL_MINUTES = 10;
     private static final int VERIFICATION_CODE_RESEND_COOLDOWN_SECONDS = 60;
     private static final int VERIFICATION_CODE_MAX_ATTEMPT_COUNT = 5;
+
+    /** パスワード再設定トークン関連の設定値 */
+    private static final int PASSWORD_RESET_TOKEN_TTL_MINUTES = 60;
+    private static final int PASSWORD_RESET_RESEND_COOLDOWN_SECONDS = 60;
 
     /** ユーザー新規登録 */
     public void signUp(SignUpForm form) {
@@ -104,9 +126,9 @@ public class AuthService {
 
     /** パスワード再設定メール送信 */
     public void sendPasswordResetEmail(String email) throws FirebaseAuthException {
-        String link;
+        UserRecord userRecord;
         try {
-            link = FirebaseAuth.getInstance().generatePasswordResetLink(email);
+            userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
         } catch (FirebaseAuthException e) {
             // 未登録メールアドレスの場合は何もせず正常終了扱いにする（メールアドレスの存在有無を推測されないようにするため）
             if (e.getAuthErrorCode() == AuthErrorCode.USER_NOT_FOUND) {
@@ -114,17 +136,53 @@ public class AuthService {
             }
             throw e;
         }
+        String uid = userRecord.getUid();
 
-        // メール列挙保護が有効な場合、未登録メールアドレスに対しては例外を投げずlinkがnullで返る
-        if (link == null) {
-            log.warn("パスワード再設定リンクが生成されなかったため送信をスキップ: email={}", email);
-            return;
+        // 直近の発行から一定時間内は再送を拒否する（連打防止）
+        PasswordResetTokenEntity existing = passwordResetTokenRepository.findByUserId(uid);
+        if (existing != null && existing.getCreatedAt()
+                .isAfter(LocalDateTime.now().minusSeconds(PASSWORD_RESET_RESEND_COOLDOWN_SECONDS))) {
+            throw new ApiResponseException(429, "429", "しばらく時間を置いてから再送してください");
         }
 
-        String subject = messageSource.getMessage("email.password_reset.subject", null, Locale.JAPAN);
-        String body = messageSource.getMessage("email.password_reset.body", new Object[] { link }, Locale.JAPAN);
+        byte[] randomBytes = new byte[32];
+        secureRandom.nextBytes(randomBytes);
+        String token = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(PASSWORD_RESET_TOKEN_TTL_MINUTES);
+        passwordResetTokenRepository.upsert(new PasswordResetTokenEntity(uid, token, expiresAt, null));
 
-        emailService.sendPlainTextEmail(email, subject, body);
+        String link = universalLinkBaseUrl + "/resetPasswordConfirm?token=" + token;
+        String subject = messageSource.getMessage("email.password_reset.subject", null, Locale.JAPAN);
+        String body = loadPasswordResetEmailHtml(link);
+
+        emailService.sendHtmlEmail(email, subject, body);
+    }
+
+    /** パスワード再設定メールのHTML本文を組み立てる */
+    private String loadPasswordResetEmailHtml(String link) {
+        try {
+            String template = StreamUtils.copyToString(passwordResetEmailTemplate.getInputStream(),
+                    StandardCharsets.UTF_8);
+            return template.replace("{{RESET_LINK}}", link);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /** パスワード再設定（トークン検証・更新） */
+    public void resetPassword(String token, String newPassword) throws FirebaseAuthException {
+        PasswordResetTokenEntity entity = passwordResetTokenRepository.findByToken(token);
+        if (entity == null) {
+            throw new ApiResponseException(400, "400", "リンクが無効です。再度パスワード再設定をお試しください");
+        }
+        if (entity.getExpiresAt().isBefore(LocalDateTime.now())) {
+            passwordResetTokenRepository.deleteByUserId(entity.getUserId());
+            throw new ApiResponseException(400, "400", "リンクの有効期限が切れています。再度パスワード再設定をお試しください");
+        }
+
+        FirebaseAuth.getInstance()
+                .updateUser(new UserRecord.UpdateRequest(entity.getUserId()).setPassword(newPassword));
+        passwordResetTokenRepository.deleteByUserId(entity.getUserId());
     }
 
     /** メールアドレス変更確認コード（OTP）送信 */
