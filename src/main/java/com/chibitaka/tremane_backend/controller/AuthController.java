@@ -11,6 +11,7 @@ import com.chibitaka.tremane_backend.common.util.UserInfo;
 import com.chibitaka.tremane_backend.form.ChangeEmailForm;
 import com.chibitaka.tremane_backend.form.PasswordResetForm;
 import com.chibitaka.tremane_backend.form.SignUpForm;
+import com.chibitaka.tremane_backend.form.VerifyEmailCodeForm;
 import com.chibitaka.tremane_backend.service.AuthService;
 import com.google.firebase.auth.FirebaseAuthException;
 
@@ -39,11 +40,19 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(customToken);
     }
 
-    /** メールアドレス確認メール送信 */
+    /** メールアドレス確認コード（OTP）送信 */
     @PostMapping("/send-verification-email")
     public ResponseEntity<Void> sendVerificationEmail() throws FirebaseAuthException {
         String userId = UserInfo.getUserId();
         authService.sendVerificationEmail(userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /** メールアドレス確認コード（OTP）検証 */
+    @PostMapping("/verify-email-code")
+    public ResponseEntity<Void> verifyEmailCode(@RequestBody VerifyEmailCodeForm form) throws FirebaseAuthException {
+        String userId = UserInfo.getUserId();
+        authService.verifyEmailCode(userId, form.getCode());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
