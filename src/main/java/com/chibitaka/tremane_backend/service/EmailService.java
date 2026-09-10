@@ -50,4 +50,23 @@ public class EmailService {
 
         log.info("メール送信完了: to={}, subject={}", to, subject);
     }
+
+    /** HTMLメール送信 */
+    public void sendHtmlEmail(String to, String subject, String html) {
+        Map<String, Object> payload = Map.of(
+                "from", fromAddress,
+                "to", List.of(to),
+                "subject", subject,
+                "html", html);
+
+        restClient.post()
+                .uri(resendApiUrl)
+                .header("Authorization", "Bearer " + resendApiKey)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(payload)
+                .retrieve()
+                .toBodilessEntity();
+
+        log.info("メール送信完了: to={}, subject={}", to, subject);
+    }
 }
