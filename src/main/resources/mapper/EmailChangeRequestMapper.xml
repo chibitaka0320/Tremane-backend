@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chibitaka.tremane_backend.repository.EmailChangeRequestRepository">
+
+  <!-- ユーザーIDで検索 -->
+  <select id="findByUserId">
+    SELECT
+      user_id,
+      new_email,
+      code,
+      expires_at,
+      attempt_count,
+      created_at
+    FROM email_change_requests
+    WHERE user_id = #{userId}
+  </select>
+
+  <!-- 新規発行（既存行があれば上書き） -->
+  <insert id="upsert">
+    INSERT INTO email_change_requests (user_id, new_email, code, expires_at, attempt_count)
+    VALUES (#{userId}, #{newEmail}, #{code}, #{expiresAt}, 0)
+    ON CONFLICT (user_id) DO UPDATE
+    SET new_email = #{newEmail}, code = #{code}, expires_at = #{expiresAt}, attempt_count = 0, created_at = CURRENT_TIMESTAMP
+  </insert>
+
+  <!-- 試行回数のインクリメント -->
+  <update id="incrementAttemptCount">
+    UPDATE email_change_requests
+    SET attempt_count = attempt_count + 1
+    WHERE user_id = #{userId}
+  </update>
+
+  <!-- 削除（認証成功時） -->
+  <delete id="deleteByUserId">
+    DELETE FROM email_change_requests WHERE user_id = #{userId}
+  </delete>
+
+</mapper>

@@ -11,6 +11,7 @@ import com.chibitaka.tremane_backend.common.util.UserInfo;
 import com.chibitaka.tremane_backend.form.ChangeEmailForm;
 import com.chibitaka.tremane_backend.form.PasswordResetForm;
 import com.chibitaka.tremane_backend.form.SignUpForm;
+import com.chibitaka.tremane_backend.form.VerifyEmailChangeCodeForm;
 import com.chibitaka.tremane_backend.form.VerifyEmailCodeForm;
 import com.chibitaka.tremane_backend.service.AuthService;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -63,11 +64,21 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    /** メールアドレス変更確認メール送信 */
+    /** メールアドレス変更確認コード（OTP）送信 */
     @PostMapping("/send-change-email-verification")
-    public ResponseEntity<Void> sendChangeEmailVerification(@RequestBody ChangeEmailForm form) throws Exception {
+    public ResponseEntity<Void> sendChangeEmailVerification(@RequestBody ChangeEmailForm form)
+            throws FirebaseAuthException {
         String userId = UserInfo.getUserId();
         authService.sendChangeEmailVerification(userId, form.getNewEmail());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /** メールアドレス変更確認コード（OTP）検証 */
+    @PostMapping("/verify-email-change-code")
+    public ResponseEntity<Void> verifyEmailChangeCode(@RequestBody VerifyEmailChangeCodeForm form)
+            throws FirebaseAuthException {
+        String userId = UserInfo.getUserId();
+        authService.verifyEmailChangeCode(userId, form.getCode());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
