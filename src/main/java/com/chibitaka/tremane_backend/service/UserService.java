@@ -1,5 +1,6 @@
 package com.chibitaka.tremane_backend.service;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -39,6 +40,8 @@ public class UserService {
     private static final Pattern HANDLE_PATTERN = Pattern.compile("^[A-Za-z0-9_.-]{8,16}$");
     // ID変更後、再変更できるようになるまでの日数
     private static final long HANDLE_CHANGE_COOLDOWN_DAYS = 14;
+    // アイコンURLとして許可するFirebase Storageのホスト名
+    private static final String ICON_URL_ALLOWED_HOST = "firebasestorage.googleapis.com";
 
     private final UserRepository userRepository; // ユーザーRepository
     private final UserGoalRepository userGoalRepository; // ユーザーゴールRepository
@@ -144,6 +147,41 @@ public class UserService {
         entity.setHandleUpdatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());
         userRepository.updateHandle(entity);
+    }
+
+    /** プロフィールアイコン更新 */
+    public void updateUserIcon(String userId, String iconUrl) {
+        if (!isValidIconUrl(iconUrl, userId)) {
+            throw new ApiResponseException(400, "400", "無効な画像URLです");
+        }
+
+        UserEntity currentUser = userRepository.findById(userId);
+        if (currentUser == null) {
+            throw new ApiResponseException(404, "404", "ユーザーが見つかりませんでした");
+        }
+
+        UserEntity entity = new UserEntity();
+        entity.setUserId(userId);
+        entity.setIconUrl(iconUrl);
+        entity.setIconUpdatedAt(LocalDateTime.now());
+        entity.setUpdatedAt(LocalDateTime.now());
+        userRepository.updateIcon(entity);
+    }
+
+    // アイコンURLの検証（Firebase Storageのホスト名かつパスに呼び出し元UIDを含むことを確認する多層防御。
+    // 本来のアクセス制御はFirebase Storage Security Rules側で行う）
+    private static boolean isValidIconUrl(String iconUrl, String userId) {
+        if (iconUrl == null) {
+            return true;
+        }
+        try {
+            URI uri = URI.create(iconUrl);
+            return ICON_URL_ALLOWED_HOST.equals(uri.getHost())
+                    && uri.getPath() != null
+                    && uri.getPath().contains(userId);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /** ユーザー削除 */

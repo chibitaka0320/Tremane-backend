@@ -10,6 +10,8 @@
       nickname,
       handle,
       handle_updated_at,
+      icon_url,
+      icon_updated_at,
       created_at,
       updated_at
     FROM users
@@ -23,6 +25,8 @@
       nickname,
       handle,
       handle_updated_at,
+      icon_url,
+      icon_updated_at,
       created_at,
       updated_at
     FROM users
@@ -49,6 +53,12 @@
   <!-- ハンドル（検索用ID）更新 -->
   <update id="updateHandle">
     UPDATE users SET handle = #{handle}, handle_updated_at = #{handleUpdatedAt}, updated_at = #{updatedAt}
+    WHERE user_id = #{userId}
+  </update>
+
+  <!-- アイコン更新 -->
+  <update id="updateIcon">
+    UPDATE users SET icon_url = #{iconUrl}, icon_updated_at = #{iconUpdatedAt}, updated_at = #{updatedAt}
     WHERE user_id = #{userId}
   </update>
 
