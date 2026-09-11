@@ -22,6 +22,9 @@ resend:
   api-url: ${RESEND_API_URL:https://api.resend.com/emails}
   from-address: "${RESEND_FROM_ADDRESS:TREMANE <noreply@tremane.click>}"
 
+app:
+  universal-link-base-url: ${APP_UNIVERSAL_LINK_BASE_URL:https://tremane-dev.web.app}
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.chibitaka.tremane_backend.entity
