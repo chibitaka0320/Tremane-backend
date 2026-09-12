@@ -196,6 +196,7 @@ public class FriendService {
                 TrainingRankingResponseDto rankingResponseDto = new TrainingRankingResponseDto();
                 rankingResponseDto.setUserId(userRecord.getUid());
                 rankingResponseDto.setNickname(userRecord.getDisplayName());
+                rankingResponseDto.setIconUrl(userRecord.getPhotoUrl());
 
                 rankingList.add(rankingResponseDto);
             }
