@@ -240,6 +240,7 @@ public class FriendService {
         for (Map<String, Object> row : rows) {
             String id = row.get("user_id").toString();
             String nickname = row.get("nickname").toString();
+            Object iconUrl = row.get("icon_url");
             LocalDate date = LocalDate.parse(row.get("date").toString());
             String key = id + "_" + date;
 
@@ -249,6 +250,7 @@ public class FriendService {
                 dto = new TimelineTrainingResponseDto();
                 dto.setUserId(id);
                 dto.setNickname(nickname);
+                dto.setIconUrl(iconUrl != null ? iconUrl.toString() : null);
                 dto.setDate(date);
                 dto.setBodyParts(new ArrayList<>());
                 timelineMap.put(key, dto);

@@ -59,7 +59,7 @@
 
   <!-- タイムライン情報取得 -->
   <select id="findTimelineByUserIds">
-    SELECT t.user_id, u.nickname, t.date, b.parts_id, b.name body_parts_name
+    SELECT t.user_id, u.nickname, u.icon_url, t.date, b.parts_id, b.name body_parts_name
     FROM trainings t
     INNER JOIN exercises e ON t.exercise_id = CAST(e.exercise_id AS TEXT)
     INNER JOIN body_parts b ON e.parts_id = CAST(b.parts_id AS BIGINT)
@@ -68,7 +68,7 @@
       <foreach item="userId" collection="userIds" open="(" separator="," close=")">
         #{userId}
       </foreach>
-    GROUP BY t.user_id, u.nickname, t.date, b.parts_id, b.name
+    GROUP BY t.user_id, u.nickname, u.icon_url, t.date, b.parts_id, b.name
     ORDER BY t.date DESC, b.parts_id, MAX(t.created_at) DESC;
   </select>
 
