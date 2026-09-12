@@ -82,6 +82,7 @@ public class UserService {
         resultDto.setUserId(receiveUserId);
         resultDto.setHandle(userEntity.getHandle());
         resultDto.setNickname(userEntity.getNickname());
+        resultDto.setIconUrl(userEntity.getIconUrl());
 
         // 友達リクエスト状況を取得
         FriendRequestEntity friendRequestEntity = friendRepository.getFirendRequest(requestUserId, receiveUserId);
