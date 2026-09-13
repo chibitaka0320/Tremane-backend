@@ -17,6 +17,7 @@ public class NotificationDto {
     private String type; // 通知種類
     private String relatedId; // 関連リソースID
     private String message; // 表示メッセージ
+    private String iconUrl; // 通知元ユーザーのプロフィールアイコンURL
     private boolean isRead; // 既読フラグ
     private LocalDateTime createdAt; // 作成日時
     private LocalDateTime updatedAt; // 更新日時
