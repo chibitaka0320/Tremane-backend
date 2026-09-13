@@ -21,6 +21,7 @@ import com.chibitaka.tremane_backend.dto.UserProfileDto;
 import com.chibitaka.tremane_backend.form.UserForm;
 import com.chibitaka.tremane_backend.form.UserGoalForm;
 import com.chibitaka.tremane_backend.form.UserHandleForm;
+import com.chibitaka.tremane_backend.form.UserIconForm;
 import com.chibitaka.tremane_backend.form.UserProfileForm;
 import com.chibitaka.tremane_backend.service.UserService;
 
@@ -58,6 +59,15 @@ public class UserController {
     public ResponseEntity<Void> updateUserHandle(@RequestBody UserHandleForm form) {
         String userId = UserInfo.getUserId();
         userService.updateUserHandle(userId, form.getHandle());
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /** プロフィールアイコン更新 */
+    @PutMapping("/icon")
+    public ResponseEntity<Void> updateUserIcon(@RequestBody UserIconForm form) {
+        String userId = UserInfo.getUserId();
+        userService.updateUserIcon(userId, form.getIconUrl());
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
