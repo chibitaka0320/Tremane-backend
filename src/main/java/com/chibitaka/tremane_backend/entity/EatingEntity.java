@@ -20,6 +20,8 @@ public class EatingEntity {
     private double protein; // タンパク質
     private double fat; // 脂質
     private double carbo; // 糖質
+    private String mealId; // 所属する食事記録ID（単独の食品記録の場合はnull）
+    private String unit; // 単位（kg / count）
     private LocalDateTime createdAt; // 作成日時
     private LocalDateTime updatedAt; // 更新日時
 }
