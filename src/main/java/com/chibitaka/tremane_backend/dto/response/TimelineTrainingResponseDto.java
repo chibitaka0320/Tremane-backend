@@ -11,6 +11,7 @@ import lombok.Data;
 public class TimelineTrainingResponseDto {
     private String userId; // ユーザーID
     private String nickname; // ニックネーム
+    private String iconUrl; // プロフィールアイコンURL
     private LocalDate date; // トレーニング日付
     private List<TimelineBodyParts> bodyParts; // 部位一覧
     private Integer exerciseCount; // 種目数

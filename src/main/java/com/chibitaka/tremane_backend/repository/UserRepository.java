@@ -24,4 +24,7 @@ public interface UserRepository {
 
         /** ハンドル（検索用ID）更新 */
         int updateHandle(UserEntity user);
+
+        /** アイコン更新 */
+        int updateIcon(UserEntity user);
 }

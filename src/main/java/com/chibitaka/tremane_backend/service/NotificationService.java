@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chibitaka.tremane_backend.dto.NotificationDto;
 import com.chibitaka.tremane_backend.entity.FriendRequestEntity;
 import com.chibitaka.tremane_backend.entity.NotificationEntity;
+import com.chibitaka.tremane_backend.entity.UserEntity;
 import com.chibitaka.tremane_backend.repository.FriendRequestRepository;
 import com.chibitaka.tremane_backend.repository.NotificationRepository;
+import com.chibitaka.tremane_backend.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +25,7 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository; // 通知Repository
     private final FriendRequestRepository friendRepository; // 友達リクエストRepository
+    private final UserRepository userRepository; // ユーザーRepository
     private final ModelMapper modelMapper; // ModelMapper
 
     /** ユーザー通知一覧の取得 */
@@ -42,6 +45,12 @@ public class NotificationService {
 
                 NotificationDto notificationDto = modelMapper.map(notificationEntity, NotificationDto.class);
                 notificationDto.setStatus(targetRequestEntity.getStatus());
+
+                // 通知元（申請者）のプロフィールアイコンを取得
+                UserEntity sourceUserEntity = userRepository.findById(notificationEntity.getNotificationSource());
+                if (sourceUserEntity != null) {
+                    notificationDto.setIconUrl(sourceUserEntity.getIconUrl());
+                }
 
                 return notificationDto;
             }

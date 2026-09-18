@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.chibitaka.tremane_backend.common.error.ApiResponseException;
 import com.chibitaka.tremane_backend.dto.EatingDto;
 import com.chibitaka.tremane_backend.entity.EatingEntity;
 import com.chibitaka.tremane_backend.form.EatingForm;
@@ -38,8 +39,11 @@ public class EatingService {
     }
 
     /** 食事詳細取得 */
-    public EatingDto getEatingById(String eatingId) {
-        EatingEntity eatingEntity = eatingRepository.findById(eatingId);
+    public EatingDto getEatingById(String userId, String eatingId) {
+        EatingEntity eatingEntity = eatingRepository.findById(eatingId, userId);
+        if (eatingEntity == null) {
+            throw new ApiResponseException(404, "404", "見つかりませんでした");
+        }
         EatingDto eatingDto = modelMapper.map(eatingEntity, EatingDto.class);
 
         return eatingDto;

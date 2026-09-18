@@ -16,53 +16,53 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chibitaka.tremane_backend.common.util.UserInfo;
-import com.chibitaka.tremane_backend.dto.EatingDto;
-import com.chibitaka.tremane_backend.form.EatingForm;
-import com.chibitaka.tremane_backend.service.EatingService;
+import com.chibitaka.tremane_backend.dto.MealDto;
+import com.chibitaka.tremane_backend.form.MealForm;
+import com.chibitaka.tremane_backend.service.MealService;
 
 import lombok.RequiredArgsConstructor;
 
-/** 食事用Controller */
+/** 食事記録用Controller */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/eating")
-public class EatingController {
+@RequestMapping("/meals")
+public class MealController {
 
-    private final EatingService eatingService; // 食事Service
+    private final MealService mealService; // 食事記録Service
 
-    /** ユーザー食事更新情報取得 */
+    /** ユーザー食事記録更新情報取得 */
     @GetMapping("")
-    public ResponseEntity<List<EatingDto>> getEatings(
+    public ResponseEntity<List<MealDto>> getMeals(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime updatedAt) {
         String userId = UserInfo.getUserId();
-        List<EatingDto> eatingDtos = eatingService.getEatingsByUserId(userId, updatedAt);
+        List<MealDto> mealDtos = mealService.getMealsByUserId(userId, updatedAt);
 
-        return ResponseEntity.status(HttpStatus.OK).body(eatingDtos);
+        return ResponseEntity.status(HttpStatus.OK).body(mealDtos);
     }
 
-    /** 食事詳細取得 */
-    @GetMapping("/{eatingId}")
-    public ResponseEntity<EatingDto> getEatingDetail(@PathVariable String eatingId) {
+    /** 食事記録詳細取得 */
+    @GetMapping("/{mealId}")
+    public ResponseEntity<MealDto> getMealDetail(@PathVariable String mealId) {
         String userId = UserInfo.getUserId();
-        EatingDto eatingDto = eatingService.getEatingById(userId, eatingId);
+        MealDto mealDto = mealService.getMealById(userId, mealId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(eatingDto);
+        return ResponseEntity.status(HttpStatus.OK).body(mealDto);
     }
 
-    /** 食事追加更新 */
+    /** 食事記録追加更新 */
     @PostMapping("")
-    public ResponseEntity<Void> saveEatings(@RequestBody EatingForm[] forms) {
+    public ResponseEntity<Void> saveMeals(@RequestBody MealForm[] forms) {
         String userId = UserInfo.getUserId();
-        eatingService.saveEatings(userId, forms);
+        mealService.saveMeals(userId, forms);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    /** 食事削除 */
-    @DeleteMapping("/{eatingId}")
-    public ResponseEntity<Void> deleteEating(@PathVariable String eatingId) {
+    /** 食事記録削除 */
+    @DeleteMapping("/{mealId}")
+    public ResponseEntity<Void> deleteMeal(@PathVariable String mealId) {
         String userId = UserInfo.getUserId();
-        eatingService.deleteEating(userId, eatingId);
+        mealService.deleteMeal(userId, mealId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
