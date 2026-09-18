@@ -25,6 +25,9 @@ resend:
 app:
   universal-link-base-url: ${APP_UNIVERSAL_LINK_BASE_URL:https://tremane-dev.web.app}
 
+firebase:
+  storage-bucket: ${FIREBASE_STORAGE_BUCKET:tremane-dev.firebasestorage.app}
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.chibitaka.tremane_backend.entity
