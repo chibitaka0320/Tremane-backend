@@ -27,13 +27,17 @@ import com.chibitaka.tremane_backend.repository.NotificationRepository;
 import com.chibitaka.tremane_backend.repository.UserGoalRepository;
 import com.chibitaka.tremane_backend.repository.UserProfileRepository;
 import com.chibitaka.tremane_backend.repository.UserRepository;
+import com.google.cloud.storage.Blob;
+import com.google.firebase.cloud.StorageClient;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /** ユーザー関連Service */
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class UserService {
 
     // ID（検索用ハンドル）フォーマット：英数字・._-のみ、8〜16文字
@@ -195,6 +199,20 @@ public class UserService {
         }
 
         userRepository.deleteById(userId);
+
+        deleteUserIcon(userId);
+    }
+
+    /** プロフィールアイコン画像をFirebase Storageから削除（未設定の場合は何もしない） */
+    private void deleteUserIcon(String userId) {
+        try {
+            Blob blob = StorageClient.getInstance().bucket().get("avatars/" + userId + ".jpg");
+            if (blob != null) {
+                blob.delete();
+            }
+        } catch (Exception e) {
+            log.warn("プロフィールアイコンの削除に失敗しました: userId={}", userId, e);
+        }
     }
 
     /** ユーザープロフィール取得 */
