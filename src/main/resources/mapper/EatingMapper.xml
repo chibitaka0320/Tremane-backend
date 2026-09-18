@@ -2,33 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chibitaka.tremane_backend.repository.EatingRepository">
-  <!-- 食事詳細取得(ID) -->
+  <!-- 食事詳細取得(ID、所有者チェックあり) -->
   <select id="findById">
     SELECT
-      eating_id,
-      date,
-      name,
-      protein,
-      fat,
-      carbo
+      eating_id, date, user_id, name, calories, protein, fat, carbo, meal_id, unit, quantity, created_at, updated_at
     FROM eatings
     WHERE eating_id = #{eatingId}
+      AND user_id = #{userId}
   </select>
 
   <!-- ユーザー食事記一覧取得 -->
   <select id="findByUserId">
     SELECT
-      eating_id, date, user_id, name, calories, protein, fat, carbo, created_at, updated_at
+      eating_id, date, user_id, name, calories, protein, fat, carbo, meal_id, unit, quantity, created_at, updated_at
     FROM eatings
     WHERE user_id = #{userId}
       AND updated_at > #{updatedAt}
     ORDER BY eating_id
   </select>
-  
+
+  <!-- 食事記録IDに紐づく食品を一括削除（食事記録削除時のカスケード用） -->
+  <delete id="deleteByMealId">
+    DELETE FROM eatings
+    WHERE meal_id = #{mealId}
+      AND user_id = #{userId}
+  </delete>
+
   <!-- 食事追加更新 -->
   <insert id="upsert" parameterType="com.chibitaka.tremane_backend.entity.EatingEntity">
-    INSERT INTO eatings(eating_id, date, user_id, name, calories, protein, fat, carbo, created_at, updated_at)
-    VALUES( #{eatingId}, #{date}, #{userId}, #{name}, #{calories}, #{protein}, #{fat}, #{carbo}, #{createdAt}, #{updatedAt})
+    INSERT INTO eatings(eating_id, date, user_id, name, calories, protein, fat, carbo, meal_id, unit, quantity, created_at, updated_at)
+    VALUES( #{eatingId}, #{date}, #{userId}, #{name}, #{calories}, #{protein}, #{fat}, #{carbo}, #{mealId}, #{unit}, #{quantity}, #{createdAt}, #{updatedAt})
     ON CONFLICT (eating_id) DO UPDATE SET
     date=EXCLUDED.date,
     name=EXCLUDED.name,
@@ -36,6 +39,9 @@
     protein=EXCLUDED.protein,
     fat=EXCLUDED.fat,
     carbo=EXCLUDED.carbo,
+    meal_id=EXCLUDED.meal_id,
+    unit=EXCLUDED.unit,
+    quantity=EXCLUDED.quantity,
     updated_at=EXCLUDED.updated_at
   </insert>
 
