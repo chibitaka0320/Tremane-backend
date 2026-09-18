@@ -3,6 +3,7 @@ package com.chibitaka.tremane_backend.common.firebase;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,9 +22,11 @@ public class FirebaseConfig {
     }
 
     @Bean
-    public FirebaseApp firebaseApp(GoogleCredentials firebaseCredentials) {
+    public FirebaseApp firebaseApp(GoogleCredentials firebaseCredentials,
+            @Value("${firebase.storage-bucket}") String storageBucket) {
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(firebaseCredentials)
+                .setStorageBucket(storageBucket)
                 .build();
 
         if (FirebaseApp.getApps().isEmpty()) {
