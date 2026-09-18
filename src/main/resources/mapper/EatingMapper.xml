@@ -5,7 +5,7 @@
   <!-- 食事詳細取得(ID、所有者チェックあり) -->
   <select id="findById">
     SELECT
-      eating_id, date, user_id, name, calories, protein, fat, carbo, meal_id, unit, created_at, updated_at
+      eating_id, date, user_id, name, calories, protein, fat, carbo, meal_id, unit, quantity, created_at, updated_at
     FROM eatings
     WHERE eating_id = #{eatingId}
       AND user_id = #{userId}
@@ -14,7 +14,7 @@
   <!-- ユーザー食事記一覧取得 -->
   <select id="findByUserId">
     SELECT
-      eating_id, date, user_id, name, calories, protein, fat, carbo, meal_id, unit, created_at, updated_at
+      eating_id, date, user_id, name, calories, protein, fat, carbo, meal_id, unit, quantity, created_at, updated_at
     FROM eatings
     WHERE user_id = #{userId}
       AND updated_at > #{updatedAt}
@@ -30,8 +30,8 @@
 
   <!-- 食事追加更新 -->
   <insert id="upsert" parameterType="com.chibitaka.tremane_backend.entity.EatingEntity">
-    INSERT INTO eatings(eating_id, date, user_id, name, calories, protein, fat, carbo, meal_id, unit, created_at, updated_at)
-    VALUES( #{eatingId}, #{date}, #{userId}, #{name}, #{calories}, #{protein}, #{fat}, #{carbo}, #{mealId}, #{unit}, #{createdAt}, #{updatedAt})
+    INSERT INTO eatings(eating_id, date, user_id, name, calories, protein, fat, carbo, meal_id, unit, quantity, created_at, updated_at)
+    VALUES( #{eatingId}, #{date}, #{userId}, #{name}, #{calories}, #{protein}, #{fat}, #{carbo}, #{mealId}, #{unit}, #{quantity}, #{createdAt}, #{updatedAt})
     ON CONFLICT (eating_id) DO UPDATE SET
     date=EXCLUDED.date,
     name=EXCLUDED.name,
@@ -41,6 +41,7 @@
     carbo=EXCLUDED.carbo,
     meal_id=EXCLUDED.meal_id,
     unit=EXCLUDED.unit,
+    quantity=EXCLUDED.quantity,
     updated_at=EXCLUDED.updated_at
   </insert>
 
