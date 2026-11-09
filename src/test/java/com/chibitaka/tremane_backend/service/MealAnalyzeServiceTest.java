@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.chibitaka.tremane_backend.common.error.ApiResponseException;
 import com.chibitaka.tremane_backend.dto.MealAnalysisDto;
 import com.chibitaka.tremane_backend.dto.MealAnalysisDto.Food;
+import com.chibitaka.tremane_backend.dto.response.MealAnalyzeResponseDto;
 import com.chibitaka.tremane_backend.form.MealAnalyzeForm;
 import com.chibitaka.tremane_backend.service.analyzer.FoodImageAnalyzer;
 
@@ -70,7 +71,7 @@ class MealAnalyzeServiceTest {
                         new Food("焼き鮭", 18.0, -1.0, 0.1),
                         new Food(" ", 1, 1, 1))));
 
-        MealAnalysisDto result = mealAnalyzeService.analyze(USER_ID, form(IMAGE, "image/jpeg"));
+        MealAnalyzeResponseDto result = mealAnalyzeService.analyze(USER_ID, form(IMAGE, "image/jpeg"));
 
         assertThat(result.mealName()).isEqualTo("焼き魚定食");
         assertThat(result.foods()).containsExactly(
@@ -82,7 +83,7 @@ class MealAnalyzeServiceTest {
     void 食べ物が写っていなければ空の結果を返す() {
         when(foodImageAnalyzer.analyze(anyString(), anyString())).thenReturn(new MealAnalysisDto(null, null));
 
-        MealAnalysisDto result = mealAnalyzeService.analyze(USER_ID, form(IMAGE, "image/png"));
+        MealAnalyzeResponseDto result = mealAnalyzeService.analyze(USER_ID, form(IMAGE, "image/png"));
 
         assertThat(result.mealName()).isEmpty();
         assertThat(result.foods()).isEmpty();
@@ -114,5 +115,24 @@ class MealAnalyzeServiceTest {
                 .isInstanceOfSatisfying(ApiResponseException.class,
                         e -> assertThat(e.getResponseCode()).isEqualTo(400));
         verify(foodImageAnalyzer, never()).analyze(any(), any());
+    }
+
+    @Test
+    void 解析のたびに残り回数が減り結果にも含まれる() {
+        when(foodImageAnalyzer.analyze(anyString(), anyString())).thenReturn(new MealAnalysisDto("", List.of()));
+
+        assertThat(mealAnalyzeService.getRemainingCount(USER_ID)).isEqualTo(5);
+        assertThat(mealAnalyzeService.analyze(USER_ID, form(IMAGE, "image/jpeg")).remainingCount()).isEqualTo(4);
+        assertThat(mealAnalyzeService.analyze(USER_ID, form(IMAGE, "image/jpeg")).remainingCount()).isEqualTo(3);
+        assertThat(mealAnalyzeService.getRemainingCount(USER_ID)).isEqualTo(3);
+        assertThat(mealAnalyzeService.getRemainingCount("user-2")).isEqualTo(5);
+    }
+
+    @Test
+    void 入力エラーでは残り回数は減らない() {
+        assertThatThrownBy(() -> mealAnalyzeService.analyze(USER_ID, form(IMAGE, "image/gif")))
+                .isInstanceOf(ApiResponseException.class);
+
+        assertThat(mealAnalyzeService.getRemainingCount(USER_ID)).isEqualTo(5);
     }
 }
