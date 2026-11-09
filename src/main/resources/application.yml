@@ -22,6 +22,15 @@ resend:
   api-url: ${RESEND_API_URL:https://api.resend.com/emails}
   from-address: "${RESEND_FROM_ADDRESS:TREMANE <noreply@tremane.click>}"
 
+anthropic:
+  api-key: ${ANTHROPIC_API_KEY:}
+
+# 食事写真解析（Claude API）
+meal-analysis:
+  model: ${MEAL_ANALYSIS_MODEL:claude-opus-5-5}
+  effort: ${MEAL_ANALYSIS_EFFORT:low}
+  timeout-seconds: ${MEAL_ANALYSIS_TIMEOUT_SECONDS:30}
+
 app:
   universal-link-base-url: ${APP_UNIVERSAL_LINK_BASE_URL:https://tremane-dev.web.app}
 
